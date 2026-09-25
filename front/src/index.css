@@ -1,0 +1,30 @@
+/*
+ * Reset minimal. Ce fichier contenait le CSS du template de demarrage Vite
+ * (#root en 1126px, text-align:center, palette claire, styles de demo) : il
+ * centrait tout le texte de l'application et dupliquait une palette
+ * concurrente de celle d'App.css. Tout le style du produit vit dans App.css.
+ */
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Evite tout debordement horizontal sur mobile, quoi qu'il arrive. */
+body {
+  overflow-x: hidden;
+}
+
+img,
+video {
+  max-width: 100%;
+}

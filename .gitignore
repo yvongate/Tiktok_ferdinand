@@ -1,0 +1,31 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+api.txt
+
+# --- Dependances / builds ---
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# --- Donnees generees (jobs, videos, images, audio) ---
+back/data/
+*.mp4
+*.wav
+*.mp3
+*.png
+*.jpg
+*.jpeg
+
+# --- Logs ---
+*.log
+back_dev.log
+front_dev.log
+
+# --- Divers ---
+.DS_Store
+Thumbs.db
+.claude/
