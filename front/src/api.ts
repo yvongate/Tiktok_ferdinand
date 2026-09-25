@@ -86,7 +86,18 @@ export interface HealthReport {
   checks: CheckResult[]
 }
 
-const BASE = '/api/generation'
+/**
+ * En developpement, VITE_API_BASE est vide : les appels partent en relatif
+ * (`/api/...`) et le proxy Vite les renvoie vers localhost:3000 — meme origine,
+ * donc aucun souci de CORS.
+ *
+ * En production le front est sur Vercel et le backend sur Render : deux
+ * domaines differents. Sans base explicite, `/api/...` taperait sur Vercel,
+ * qui n'a aucun backend — c'est le piege classique de ce decoupage.
+ */
+const ROOT = (import.meta.env.VITE_API_BASE ?? '').replace(/\/+$/, '')
+
+const BASE = `${ROOT}/api/generation`
 
 async function handle<T>(request: Promise<Response>): Promise<T> {
   const res = await request
@@ -115,7 +126,7 @@ export const api = {
 
   videoUrl: (id: string) => `${BASE}/${id}/video`,
 
-  health: () => handle<HealthReport>(fetch('/api/health')),
+  health: () => handle<HealthReport>(fetch(`${ROOT}/api/health`)),
 
   /** Suivi live d'un job. Renvoie une fonction de nettoyage. */
   subscribe: (id: string, onJob: (job: Job) => void): (() => void) => {

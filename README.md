@@ -108,13 +108,69 @@ PYTHON_SCRIPT_PATH=./python/_mock_generate.py npm run start:dev
 | `DELETE` | `/api/generation/:id` | Annule un job |
 | `GET` | `/api/health` | Pré-vol : clé API, Python, FFmpeg, disque |
 
-## Hébergement (Render)
+## Hébergement — front sur Vercel, back sur Render
 
-L'image Docker doit contenir **Node, Python et FFmpeg**. Points d'attention :
+Les deux sont sur des domaines différents : c'est ce qui impose `VITE_API_BASE`
+côté front et `FRONT_ORIGIN` côté back. Déployer le backend **en premier** :
+son URL est nécessaire pour construire le front.
 
-- Déployer le backend en **Background Worker** ou Web Service avec un
-  timeout large — les jobs durent bien plus qu'une requête HTTP classique.
-- Le disque de Render est **éphémère** : monter un disque persistant sur
-  `DATA_DIR`, ou pousser les vidéos vers un stockage objet (S3, R2), sinon
-  elles disparaissent à chaque redéploiement.
-- Renseigner `KIE_API_KEY`, `FRONT_ORIGIN` et `PYTHON_BIN=python3`.
+### 1. Backend sur Render
+
+Le `render.yaml` à la racine décrit le service ; l'importer via
+**New > Blueprint**. En configuration manuelle : runtime **Docker**,
+Dockerfile `./back/Dockerfile`, contexte `./back`.
+
+Variables à renseigner dans le tableau de bord :
+
+| Variable | Valeur |
+|---|---|
+| `KIE_API_KEY` | ta clé KIE.AI |
+| `FRONT_ORIGIN` | l'URL Vercel, sans slash final (plusieurs séparées par des virgules) |
+
+`DATA_DIR`, `PYTHON_BIN` et `PYTHON_SCRIPT_PATH` sont déjà posés par l'image.
+
+> **Ne pas prendre le plan gratuit.** Une instance gratuite s'endort après
+> ~15 min sans requête entrante. Une génération dure 15 à 90 min : fermer
+> l'onglet suffirait à tuer le job en cours, après des appels déjà facturés.
+
+> **Le disque doit être persistant.** Sans le bloc `disk` du `render.yaml`, le
+> système de fichiers est éphémère et les vidéos disparaissent à chaque
+> redéploiement *et* à chaque redémarrage.
+
+### 2. Frontend sur Vercel
+
+**Root Directory : `front`** (sinon Vercel construit la racine et ne trouve
+rien). Le framework Vite est détecté automatiquement.
+
+Une seule variable, dans *Settings > Environment Variables* :
+
+```
+VITE_API_BASE = https://<ton-service>.onrender.com
+```
+
+> **Vite fige cette valeur au moment du build.** La modifier dans Vercel ne
+> change rien tant qu'un nouveau déploiement n'a pas été lancé.
+
+### 3. Boucler le CORS
+
+Une fois l'URL Vercel connue, revenir sur Render et mettre `FRONT_ORIGIN` à
+cette URL. Sans ça le navigateur bloque tous les appels, et l'interface reste
+vide sans message explicite.
+
+Vercel crée aussi une URL par déploiement de préversion : les ajouter à
+`FRONT_ORIGIN` séparées par des virgules si tu veux qu'elles fonctionnent.
+
+### Vérifier
+
+```bash
+curl https://<ton-service>.onrender.com/api/health
+```
+
+Doit répondre `ok: true` avec Python, FFmpeg, FFprobe et la clé API au vert.
+Sinon l'interface affichera le bandeau rouge de pré-vol.
+
+### Point de sécurité
+
+Il n'y a **aucune authentification** : qui connaît l'URL Render peut lancer
+des générations facturées sur ta clé KIE.AI. Choix assumé (URL privée). Si
+l'URL fuite, la parade immédiate est de changer `KIE_API_KEY`.

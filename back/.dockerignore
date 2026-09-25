@@ -1,0 +1,11 @@
+node_modules
+dist
+data
+test
+.env
+.env.*
+!.env.example
+python/api.txt
+python/__pycache__
+*.log
+.git

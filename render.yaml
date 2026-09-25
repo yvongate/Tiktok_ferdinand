@@ -1,0 +1,39 @@
+# Infrastructure Render (Blueprint). A importer via "New > Blueprint".
+# Les valeurs marquees sync:false sont a renseigner dans le tableau de bord :
+# elles ne doivent jamais etre versionnees.
+
+services:
+  - type: web
+    name: ferdinand-back
+    runtime: docker
+    dockerfilePath: ./back/Dockerfile
+    dockerContext: ./back
+    region: frankfurt
+
+    # PAS de plan "free" : une generation dure 15 a 90 minutes, or une instance
+    # gratuite s'endort apres ~15 minutes sans requete entrante. Fermer l'onglet
+    # pendant une generation suffirait a tuer le job en cours.
+    plan: starter
+
+    # Le health check verifie seulement que le process repond. /api/health
+    # renvoie 200 meme quand la cle API manque : c'est voulu, on ne veut pas
+    # que Render redemarre le service en boucle parce que KIE.AI est indisponible.
+    healthCheckPath: /api/health
+
+    # Sans disque persistant, le systeme de fichiers est ephemere : les videos
+    # produites disparaissent a chaque redeploiement ET a chaque redemarrage.
+    disk:
+      name: ferdinand-data
+      mountPath: /var/data
+      sizeGB: 5
+
+    envVars:
+      - key: KIE_API_KEY
+        sync: false
+      - key: FRONT_ORIGIN
+        # URL(s) du front Vercel, separees par des virgules.
+        sync: false
+      - key: DATA_DIR
+        value: /var/data
+      - key: PYTHON_BIN
+        value: python3
