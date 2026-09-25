@@ -8,6 +8,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   Res,
   Sse,
 } from '@nestjs/common';
@@ -74,6 +75,7 @@ export class GenerationController {
   video(
     @Param('id') id: string,
     @Headers('range') range: string | undefined,
+    @Query('download') download: string | undefined,
     @Res() res: Response,
   ): void {
     const job = this.jobs.get(id);
@@ -87,6 +89,16 @@ export class GenerationController {
     const size = fs.statSync(job.videoPath).size;
     res.setHeader('Content-Type', 'video/mp4');
     res.setHeader('Accept-Ranges', 'bytes');
+
+    // Le front (Vercel) et cette API (Render) sont sur deux domaines : les
+    // navigateurs IGNORENT l'attribut `download` d'un lien cross-origin. Sans
+    // cet en-tete, "Telecharger" ouvrirait simplement la video dans un onglet.
+    if (download !== undefined && download !== '0') {
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${this.downloadName(job)}"`,
+      );
+    }
 
     const match = range ? /bytes=(\d*)-(\d*)/.exec(range) : null;
     if (!match) {
@@ -123,5 +135,22 @@ export class GenerationController {
     res.setHeader('Content-Range', `bytes ${start}-${end}/${size}`);
     res.setHeader('Content-Length', end - start + 1);
     fs.createReadStream(job.videoPath, { start, end }).pipe(res);
+  }
+
+  /**
+   * Nom de fichier propose au telechargement, construit depuis le titre de la
+   * video. Reduit a l'ASCII sans guillemet ni saut de ligne : ce texte vient
+   * d'un modele de langage et finit dans un en-tete HTTP, ou un caractere de
+   * controle permettrait d'injecter d'autres en-tetes.
+   */
+  private downloadName(job: Job): string {
+    const slug = (job.progress.idea ?? '')
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '') // enleve les accents
+      .replace(/[^a-zA-Z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60)
+      .toLowerCase();
+    return `${slug || `ferdinand-${job.id.slice(0, 8)}`}.mp4`;
   }
 }

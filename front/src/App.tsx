@@ -339,7 +339,7 @@ function JobDetail({ job, onCancel }: { job: Job; onCancel: (id: string) => void
       {job.status === 'done' && (
         <div className="result">
           <video src={api.videoUrl(job.id)} controls />
-          <a className="download" href={api.videoUrl(job.id)} download={`${job.id}.mp4`}>
+          <a className="download" href={api.downloadUrl(job.id)}>
             Telecharger la video
           </a>
         </div>

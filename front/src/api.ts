@@ -126,6 +126,10 @@ export const api = {
 
   videoUrl: (id: string) => `${BASE}/${id}/video`,
 
+  /** Meme fichier, mais servi en piece jointe (voir Content-Disposition cote
+   *  backend) : l'attribut `download` d'un lien ne suffit pas entre domaines. */
+  downloadUrl: (id: string) => `${BASE}/${id}/video?download=1`,
+
   health: () => handle<HealthReport>(fetch(`${ROOT}/api/health`)),
 
   /** Suivi live d'un job. Renvoie une fonction de nettoyage. */
