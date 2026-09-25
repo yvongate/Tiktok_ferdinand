@@ -36,6 +36,8 @@ import urllib.error
 import http.client
 from pathlib import Path
 
+import subtitles
+
 
 def _load_api_key():
     """Cle API KIE.AI. Priorite a la variable d'environnement (indispensable
@@ -570,6 +572,8 @@ def main():
     parser.add_argument("--out-dir", default=None,
                          help="Dossier de sortie (defaut: a cote du script). Utilise par le backend "
                               "pour isoler chaque job dans son propre dossier.")
+    parser.add_argument("--no-subtitles", action="store_true",
+                         help="Desactive les sous-titres animes incrustes (actifs par defaut).")
     args = parser.parse_args()
 
     # Sortie non bufferisee : le backend lit la progression ligne par ligne en
@@ -694,6 +698,10 @@ def main():
     n_scenes = len(scenes)
     clip_paths = []
     audio_seg_paths = []
+    # (numero, texte parle, duree mesuree) - sert a construire les sous-titres.
+    # Alimente uniquement quand la scene aboutit : une scene ratee ne doit pas
+    # y figurer, sinon tous les sous-titres suivants sont decales.
+    sub_segments = []
     scenes_dir = OUT_DIR / f"scenes{suffix}"
     scenes_dir.mkdir(exist_ok=True)
 
@@ -706,6 +714,11 @@ def main():
             print(f"\n=== Scene {n}/{n_scenes} : deja generee, on reutilise ===")
             clip_paths.append((n, clip_path))
             audio_seg_paths.append((n, seg_audio_path))
+            # La duree est relue sur le fichier : sur une reprise, la voix n'a
+            # pas ete regeneree, donc seg_dur n'existe pas dans ce tour.
+            sub_segments.append(
+                (n, s.get("spoken_text", ""), get_duration(seg_audio_path))
+            )
             continue
 
         spoken_text = s.get("spoken_text", "").strip()
@@ -778,6 +791,7 @@ def main():
         print(f"  Video OK -> {clip_path} (calee sur {seg_dur:.2f}s)")
         clip_paths.append((n, clip_path))
         audio_seg_paths.append((n, seg_audio_path))
+        sub_segments.append((n, spoken_text, seg_dur))
 
     print("\n=== 5. Montage FFmpeg ===")
     clip_paths.sort(key=lambda x: x[0])
@@ -808,6 +822,35 @@ def main():
         check=False,
     )
     print(f"  Concat audio OK -> {audio_path}")
+
+    # --- Sous-titres incrustes ------------------------------------------
+    # A faire AVANT la fusion audio : sync_video_to_audio copie le flux video
+    # tel quel (-c:v copy), il n'y aurait plus d'occasion de les incruster.
+    if not args.no_subtitles:
+        print("  Sous-titres...")
+        sub_segments.sort(key=lambda x: x[0])
+        ass_path = OUT_DIR / f"subs{suffix}.ass"
+        n_lines = subtitles.build_ass(
+            [(text, dur) for _, text, dur in sub_segments], ass_path
+        )
+        if n_lines:
+            burned = OUT_DIR / f"concat_subs{suffix}.mp4"
+            result = subprocess.run(
+                ["ffmpeg", "-y", "-v", "error", "-i", str(concat_video),
+                 "-vf", subtitles.ass_filter(ass_path),
+                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
+                 "-pix_fmt", "yuv420p", "-an", str(burned)],
+                check=False,
+            )
+            if result.returncode == 0 and burned.exists():
+                concat_video = burned
+                print(f"  Sous-titres OK ({n_lines} mots) -> {burned}")
+            else:
+                # Non bloquant : une video sans sous-titres reste utilisable,
+                # perdre 30 minutes de generation pour ca ne le serait pas.
+                print("  ATTENTION : incrustation des sous-titres echouee, on continue sans.")
+        else:
+            print("  (aucun texte a sous-titrer)")
 
     final_video = OUT_DIR / f"final{suffix}.mp4"
     if audio_path.exists():
