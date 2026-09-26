@@ -1,0 +1,592 @@
+[
+  {
+    "file": "whoosh_1.wav",
+    "key": "whoosh",
+    "usage": "transition rapide entre deux plans",
+    "freesound_id": 60025,
+    "name": "Double Whoosh 2",
+    "author": "qubodup",
+    "license": "CC0 1.0",
+    "duration": 0.93
+  },
+  {
+    "file": "whoosh_2.wav",
+    "key": "whoosh",
+    "usage": "transition rapide entre deux plans",
+    "freesound_id": 464408,
+    "name": "Drawer_Open_Whoosh.wav",
+    "author": "michael_grinnell",
+    "license": "CC0 1.0",
+    "duration": 2.0
+  },
+  {
+    "file": "whoosh_3.wav",
+    "key": "whoosh",
+    "usage": "transition rapide entre deux plans",
+    "freesound_id": 369008,
+    "name": "Whoosh 01 (Mouth Fx)",
+    "author": "Flying_Deer_Fx",
+    "license": "CC0 1.0",
+    "duration": 0.44
+  },
+  {
+    "file": "swoosh_1.wav",
+    "key": "swoosh",
+    "usage": "transition douce, variante de whoosh",
+    "freesound_id": 585255,
+    "name": "swoosh-3-double.mp3",
+    "author": "lesaucisson",
+    "license": "CC0 1.0",
+    "duration": 0.63
+  },
+  {
+    "file": "swoosh_2.wav",
+    "key": "swoosh",
+    "usage": "transition douce, variante de whoosh",
+    "freesound_id": 475133,
+    "name": "FX - Swoosh - Slow",
+    "author": "bolkmar",
+    "license": "CC0 1.0",
+    "duration": 0.88
+  },
+  {
+    "file": "reverse_1.wav",
+    "key": "reverse",
+    "usage": "aspiration juste avant une revelation",
+    "freesound_id": 503813,
+    "name": "reverse fx 12.wav",
+    "author": "reathance",
+    "license": "CC0 1.0",
+    "duration": 0.51
+  },
+  {
+    "file": "reverse_2.wav",
+    "key": "reverse",
+    "usage": "aspiration juste avant une revelation",
+    "freesound_id": 751808,
+    "name": "Reverse shrieking sound",
+    "author": "Mastersoundboy2005",
+    "license": "CC0 1.0",
+    "duration": 2.43
+  },
+  {
+    "file": "impact.wav",
+    "key": "impact",
+    "usage": "ponctuation forte sur une phrase cle",
+    "freesound_id": 794195,
+    "name": "kicks bass impacts subs by CVLTIV8R 98.wav",
+    "author": "CVLTIV8R",
+    "license": "CC0 1.0",
+    "duration": 0.18
+  },
+  {
+    "file": "boom_1.wav",
+    "key": "boom",
+    "usage": "coup grave, revelation majeure",
+    "freesound_id": 361605,
+    "name": "boom_sine_tenor.mp3",
+    "author": "PearceL",
+    "license": "CC0 1.0",
+    "duration": 1.4
+  },
+  {
+    "file": "boom_2.wav",
+    "key": "boom",
+    "usage": "coup grave, revelation majeure",
+    "freesound_id": 350976,
+    "name": "Boom_C_01",
+    "author": "cabled_mess",
+    "license": "CC0 1.0",
+    "duration": 0.53
+  },
+  {
+    "file": "riser_1.wav",
+    "key": "riser",
+    "usage": "montee de tension avant une chute",
+    "freesound_id": 555643,
+    "name": "Risers and dopplers_07.wav",
+    "author": "WildBurne",
+    "license": "CC0 1.0",
+    "duration": 6.0
+  },
+  {
+    "file": "riser_2.wav",
+    "key": "riser",
+    "usage": "montee de tension avant une chute",
+    "freesound_id": 685255,
+    "name": "Riser sound effect long.wav",
+    "author": "syntheffects",
+    "license": "CC0 1.0",
+    "duration": 3.75
+  },
+  {
+    "file": "glitch_1.wav",
+    "key": "glitch",
+    "usage": "rupture, anomalie, chiffre choquant",
+    "freesound_id": 834161,
+    "name": "DSGNRythm_Glitch, One-shot, Stutter, Pitched, Hard, Digital, Rhythmic_11_JW Audio",
+    "author": "JW_Audio",
+    "license": "CC0 1.0",
+    "duration": 0.56
+  },
+  {
+    "file": "glitch_2.wav",
+    "key": "glitch",
+    "usage": "rupture, anomalie, chiffre choquant",
+    "freesound_id": 864184,
+    "name": "SFX_Damage_Glitch_2",
+    "author": "MirMaximus",
+    "license": "CC0 1.0",
+    "duration": 0.47
+  },
+  {
+    "file": "subdrop_1.wav",
+    "key": "subdrop",
+    "usage": "basse qui tombe, effet dramatique",
+    "freesound_id": 81145,
+    "name": "SUB OCEANO A.wav",
+    "author": "uzerx",
+    "license": "CC0 1.0",
+    "duration": 2.75
+  },
+  {
+    "file": "subdrop_2.wav",
+    "key": "subdrop",
+    "usage": "basse qui tombe, effet dramatique",
+    "freesound_id": 475005,
+    "name": "Synth Bass Drop Impact",
+    "author": "AlexLane",
+    "license": "CC0 1.0",
+    "duration": 2.79
+  },
+  {
+    "file": "cash_1.wav",
+    "key": "cash",
+    "usage": "argent encaisse, achat",
+    "freesound_id": 378269,
+    "name": "16. Cash-register_closing.wav",
+    "author": "13GPanska_Jirova_Tereza",
+    "license": "CC0 1.0",
+    "duration": 1.88
+  },
+  {
+    "file": "cash_2.wav",
+    "key": "cash",
+    "usage": "argent encaisse, achat",
+    "freesound_id": 184438,
+    "name": "Cash Register Fake.wav",
+    "author": "CapsLok",
+    "license": "CC0 1.0",
+    "duration": 2.2
+  },
+  {
+    "file": "coins_1.wav",
+    "key": "coins",
+    "usage": "petite somme, monnaie",
+    "freesound_id": 573373,
+    "name": "Coins33.wav",
+    "author": "doudar41",
+    "license": "CC0 1.0",
+    "duration": 0.57
+  },
+  {
+    "file": "coins_2.wav",
+    "key": "coins",
+    "usage": "petite somme, monnaie",
+    "freesound_id": 847348,
+    "name": "handful-of-coins-005",
+    "author": "ilyaShevelev",
+    "license": "CC0 1.0",
+    "duration": 0.24
+  },
+  {
+    "file": "coins_3.wav",
+    "key": "coins",
+    "usage": "petite somme, monnaie",
+    "freesound_id": 485767,
+    "name": "Coins Shake - 2",
+    "author": "SpaceJoe",
+    "license": "CC0 1.0",
+    "duration": 1.44
+  },
+  {
+    "file": "money_1.wav",
+    "key": "money",
+    "usage": "billets, liasse",
+    "freesound_id": 63523,
+    "name": "money4.wav",
+    "author": "florian_reinke",
+    "license": "CC0 1.0",
+    "duration": 0.75
+  },
+  {
+    "file": "money_2.wav",
+    "key": "money",
+    "usage": "billets, liasse",
+    "freesound_id": 485775,
+    "name": "Heavy Money Bag - 4",
+    "author": "SpaceJoe",
+    "license": "CC0 1.0",
+    "duration": 2.1
+  },
+  {
+    "file": "swipe_1.wav",
+    "key": "swipe",
+    "usage": "paiement par carte",
+    "freesound_id": 441849,
+    "name": "BB_1 quick metallic swipe.wav",
+    "author": "Yarmonics",
+    "license": "CC0 1.0",
+    "duration": 0.51
+  },
+  {
+    "file": "swipe_2.wav",
+    "key": "swipe",
+    "usage": "paiement par carte",
+    "freesound_id": 147286,
+    "name": "fh_Paper_Swipe_Surface2_Mid_01.wav",
+    "author": "Frank1100",
+    "license": "CC0 1.0",
+    "duration": 1.24
+  },
+  {
+    "file": "paper_1.wav",
+    "key": "paper",
+    "usage": "facture, document, contrat",
+    "freesound_id": 353125,
+    "name": "Paper Rustle",
+    "author": "BenjaminNelan",
+    "license": "CC0 1.0",
+    "duration": 1.13
+  },
+  {
+    "file": "paper_2.wav",
+    "key": "paper",
+    "usage": "facture, document, contrat",
+    "freesound_id": 10419,
+    "name": "rustle.paper_Tear_10.aif",
+    "author": "batchku",
+    "license": "CC0 1.0",
+    "duration": 0.78
+  },
+  {
+    "file": "paper_3.wav",
+    "key": "paper",
+    "usage": "facture, document, contrat",
+    "freesound_id": 693592,
+    "name": "rustle-effect-trash.mp3",
+    "author": "rottako",
+    "license": "CC0 1.0",
+    "duration": 1.28
+  },
+  {
+    "file": "pageturn_1.wav",
+    "key": "pageturn",
+    "usage": "consultation d'un dossier",
+    "freesound_id": 614080,
+    "name": "Page Turn 2",
+    "author": "mateusboga",
+    "license": "CC0 1.0",
+    "duration": 0.65
+  },
+  {
+    "file": "pageturn_2.wav",
+    "key": "pageturn",
+    "usage": "consultation d'un dossier",
+    "freesound_id": 484966,
+    "name": "Quiet Page Turn - 6",
+    "author": "SpaceJoe",
+    "license": "CC0 1.0",
+    "duration": 0.53
+  },
+  {
+    "file": "keyboard_1.wav",
+    "key": "keyboard",
+    "usage": "saisie, recherche en ligne",
+    "freesound_id": 841238,
+    "name": "keyboard_typing_loop1.wav",
+    "author": "peoplearehappy",
+    "license": "CC0 1.0",
+    "duration": 2.65
+  },
+  {
+    "file": "keyboard_2.wav",
+    "key": "keyboard",
+    "usage": "saisie, recherche en ligne",
+    "freesound_id": 527726,
+    "name": "Typing On A Keyboard",
+    "author": "lnab",
+    "license": "CC0 1.0",
+    "duration": 1.45
+  },
+  {
+    "file": "printer.wav",
+    "key": "printer",
+    "usage": "impression d'un releve",
+    "freesound_id": 377083,
+    "name": "Turn On Printer.wav",
+    "author": "cribbler",
+    "license": "CC0 1.0",
+    "duration": 2.78
+  },
+  {
+    "file": "door_1.wav",
+    "key": "door",
+    "usage": "depart, fermeture, fin d'un chapitre",
+    "freesound_id": 15418,
+    "name": "dorm door close.wav",
+    "author": "pagancow",
+    "license": "CC0 1.0",
+    "duration": 1.62
+  },
+  {
+    "file": "door_2.wav",
+    "key": "door",
+    "usage": "depart, fermeture, fin d'un chapitre",
+    "freesound_id": 652346,
+    "name": "Door closed_1",
+    "author": "Weak_Hero",
+    "license": "CC0 1.0",
+    "duration": 1.76
+  },
+  {
+    "file": "clock_1.wav",
+    "key": "clock",
+    "usage": "temps qui passe, urgence",
+    "freesound_id": 547305,
+    "name": "Tick Tock",
+    "author": "StarNinjas37",
+    "license": "CC0 1.0",
+    "duration": 0.85
+  },
+  {
+    "file": "clock_2.wav",
+    "key": "clock",
+    "usage": "temps qui passe, urgence",
+    "freesound_id": 349453,
+    "name": "Ticking Clock 60 Sec Hit Mark",
+    "author": "LilMati",
+    "license": "CC0 1.0",
+    "duration": 1.01
+  },
+  {
+    "file": "notification_1.wav",
+    "key": "notification",
+    "usage": "alerte, message recu",
+    "freesound_id": 554554,
+    "name": "Notification_2.wav",
+    "author": "Wax_vibe",
+    "license": "CC0 1.0",
+    "duration": 0.91
+  },
+  {
+    "file": "notification_2.wav",
+    "key": "notification",
+    "usage": "alerte, message recu",
+    "freesound_id": 629479,
+    "name": "Notification sample of woodpecker - 48k stereo mp3",
+    "author": "peter1955",
+    "license": "CC0 1.0",
+    "duration": 1.24
+  },
+  {
+    "file": "notification_3.wav",
+    "key": "notification",
+    "usage": "alerte, message recu",
+    "freesound_id": 571511,
+    "name": "Soft-Notifications - Bell - LowDing.mp3",
+    "author": "LegitCheese",
+    "license": "CC0 1.0",
+    "duration": 0.68
+  },
+  {
+    "file": "vibrate_1.wav",
+    "key": "vibrate",
+    "usage": "telephone qui vibre",
+    "freesound_id": 256211,
+    "name": "Cellphone-Vibration-on-a-plastic-music-stand_mono.wav",
+    "author": "hannagreen",
+    "license": "CC0 1.0",
+    "duration": 3.14
+  },
+  {
+    "file": "vibrate_2.wav",
+    "key": "vibrate",
+    "usage": "telephone qui vibre",
+    "freesound_id": 849576,
+    "name": "phone buzz disintro13",
+    "author": "PUMIQUXT",
+    "license": "CC0 1.0",
+    "duration": 3.88
+  },
+  {
+    "file": "click.wav",
+    "key": "click",
+    "usage": "interaction, choix",
+    "freesound_id": 421474,
+    "name": "CLICK_144.wav",
+    "author": "Jaszunio15",
+    "license": "CC0 1.0",
+    "duration": 0.52
+  },
+  {
+    "file": "ding_1.wav",
+    "key": "ding",
+    "usage": "validation, bonne nouvelle",
+    "freesound_id": 515643,
+    "name": "ding2.wav",
+    "author": "MashedTatoes2",
+    "license": "CC0 1.0",
+    "duration": 0.35
+  },
+  {
+    "file": "ding_2.wav",
+    "key": "ding",
+    "usage": "validation, bonne nouvelle",
+    "freesound_id": 187306,
+    "name": "NYC_Subway train, ding dong, door closing sound, voices.aif",
+    "author": "carroll27",
+    "license": "CC0 1.0",
+    "duration": 1.48
+  },
+  {
+    "file": "error_1.wav",
+    "key": "error",
+    "usage": "refus, echec, mauvaise nouvelle",
+    "freesound_id": 581602,
+    "name": "Beep error",
+    "author": "SamsterBirdies",
+    "license": "CC0 1.0",
+    "duration": 0.71
+  },
+  {
+    "file": "error_2.wav",
+    "key": "error",
+    "usage": "refus, echec, mauvaise nouvelle",
+    "freesound_id": 159367,
+    "name": "7 - Error",
+    "author": "Huminaatio",
+    "license": "CC0 1.0",
+    "duration": 0.2
+  },
+  {
+    "file": "pop_1.wav",
+    "key": "pop",
+    "usage": "apparition d'un detail a l'ecran",
+    "freesound_id": 244656,
+    "name": "Pop 6",
+    "author": "D.S.G.",
+    "license": "CC0 1.0",
+    "duration": 0.2
+  },
+  {
+    "file": "pop_2.wav",
+    "key": "pop",
+    "usage": "apparition d'un detail a l'ecran",
+    "freesound_id": 245645,
+    "name": "Cartoon Pop (Clean)",
+    "author": "unfa",
+    "license": "CC0 1.0",
+    "duration": 0.17
+  },
+  {
+    "file": "pop_3.wav",
+    "key": "pop",
+    "usage": "apparition d'un detail a l'ecran",
+    "freesound_id": 202230,
+    "name": "Pop sound",
+    "author": "deraj",
+    "license": "CC0 1.0",
+    "duration": 0.65
+  },
+  {
+    "file": "heartbeat_1.wav",
+    "key": "heartbeat",
+    "usage": "stress, enjeu personnel",
+    "freesound_id": 784657,
+    "name": "heartbeat sub kick - soft",
+    "author": "music_is_wiggly_air",
+    "license": "CC0 1.0",
+    "duration": 0.37
+  },
+  {
+    "file": "heartbeat_2.wav",
+    "key": "heartbeat",
+    "usage": "stress, enjeu personnel",
+    "freesound_id": 333483,
+    "name": "Heartbeat.wav",
+    "author": "Jeffreys2",
+    "license": "CC0 1.0",
+    "duration": 1.0
+  },
+  {
+    "file": "breath_1.wav",
+    "key": "breath",
+    "usage": "soulagement ou apprehension",
+    "freesound_id": 352396,
+    "name": "NPX Breath and Spit %22tuh%22 3.wav",
+    "author": "noahpardo",
+    "license": "CC0 1.0",
+    "duration": 1.5
+  },
+  {
+    "file": "breath_2.wav",
+    "key": "breath",
+    "usage": "soulagement ou apprehension",
+    "freesound_id": 843572,
+    "name": "Dying breath 3",
+    "author": "randbsoundbites",
+    "license": "CC0 1.0",
+    "duration": 1.18
+  },
+  {
+    "file": "crowd_1.wav",
+    "key": "crowd",
+    "usage": "pression sociale, comparaison aux autres",
+    "freesound_id": 340965,
+    "name": "Crowd cheering at parade",
+    "author": "SoundsAreGr8",
+    "license": "CC0 1.0",
+    "duration": 2.04
+  },
+  {
+    "file": "crowd_2.wav",
+    "key": "crowd",
+    "usage": "pression sociale, comparaison aux autres",
+    "freesound_id": 651640,
+    "name": "Crowd Cheer 4",
+    "author": "Krizin",
+    "license": "CC0 1.0",
+    "duration": 1.8
+  },
+  {
+    "file": "applause.wav",
+    "key": "applause",
+    "usage": "reussite, reconnaissance",
+    "freesound_id": 480686,
+    "name": "R02-13-Group Applause.wav",
+    "author": "craigsmith",
+    "license": "CC0 1.0",
+    "duration": 2.13
+  },
+  {
+    "file": "office.wav",
+    "key": "office",
+    "usage": "fond de bureau",
+    "freesound_id": 624237,
+    "name": "Strange Hall Ambience",
+    "author": "OneKellyOrdered",
+    "license": "CC0 1.0",
+    "duration": 6.1
+  },
+  {
+    "file": "city.wav",
+    "key": "city",
+    "usage": "fond de rue",
+    "freesound_id": 473697,
+    "name": "City Park Ambience At Night 1.wav",
+    "author": "Joao_Janz",
+    "license": "CC0 1.0",
+    "duration": 5.16
+  }
+]

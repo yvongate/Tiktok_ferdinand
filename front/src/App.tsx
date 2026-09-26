@@ -14,6 +14,9 @@ const ACTIVE: Job['status'][] = ['queued', 'running']
 
 const time = (iso: string) => new Date(iso).toLocaleTimeString('fr-FR')
 
+/** Nombre d'incidents, que le job vienne de l'historique allege ou du SSE. */
+const incidentTotal = (job: Job) => job.incidentCount ?? job.incidents?.length ?? 0
+
 /** "il y a 2 min 10" — un compteur fige est deja une information. */
 function since(iso: string, now: number): string {
   const s = Math.max(0, Math.round((now - Date.parse(iso)) / 1000))
@@ -173,8 +176,10 @@ function App() {
               </span>
               <span className="history-meta">
                 {job.params.mode} · {job.params.lang} · {job.params.videoModel}
-                {job.incidents?.length > 0 && (
-                  <span className="pill warn">{job.incidents.length} incident(s)</span>
+                {/* incidentCount vient de l'historique allege ; incidents du
+                    flux SSE, qui remplace l'entree par le job complet. */}
+                {incidentTotal(job) > 0 && (
+                  <span className="pill warn">{incidentTotal(job)} incident(s)</span>
                 )}
               </span>
               <span className="history-date">

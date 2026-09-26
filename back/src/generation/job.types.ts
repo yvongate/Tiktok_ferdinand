@@ -111,4 +111,11 @@ export interface Job {
   stalled?: boolean;
   /** Dernieres lignes de log, pour debug depuis l'UI. */
   logTail: string[];
+  /**
+   * Renseignes UNIQUEMENT dans la liste d'historique, ou logTail et incidents
+   * sont vides pour ne pas transporter des megaoctets inutiles : sur 14,5 Ko
+   * par job, 14,4 Ko sont des logs que la liste n'affiche jamais.
+   */
+  incidentCount?: number;
+  errorCount?: number;
 }

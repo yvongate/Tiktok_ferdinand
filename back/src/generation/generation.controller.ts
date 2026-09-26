@@ -36,9 +36,21 @@ export class GenerationController {
     });
   }
 
+  /**
+   * Historique allege : les logs et le detail des incidents sont retires.
+   * Ils representent 99% du poids d'un job (14,4 Ko sur 14,5) et la liste ne
+   * les affiche pas - seul leur NOMBRE apparait. Le detail complet reste
+   * disponible sur GET /:id et sur le flux SSE.
+   */
   @Get()
   list(): Job[] {
-    return this.jobs.list();
+    return this.jobs.list().map((job) => ({
+      ...job,
+      logTail: [],
+      incidents: [],
+      incidentCount: job.incidents?.length ?? 0,
+      errorCount: job.incidents?.filter((i) => i.level === 'error').length ?? 0,
+    }));
   }
 
   @Get(':id')

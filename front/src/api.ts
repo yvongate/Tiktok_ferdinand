@@ -72,6 +72,10 @@ export interface Job {
   lastOutputAt?: string
   stalled?: boolean
   logTail: string[]
+  /** Presents uniquement dans l'historique allege (logTail/incidents y sont
+   *  vides pour ne pas transporter des megaoctets de logs inutiles). */
+  incidentCount?: number
+  errorCount?: number
 }
 
 export interface CheckResult {
