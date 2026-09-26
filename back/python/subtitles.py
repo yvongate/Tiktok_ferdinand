@@ -73,57 +73,67 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
 
-def build_ass(segments, out_path):
-    """Ecrit un fichier .ass pour la suite de scenes donnee.
+def word_timeline(segments):
+    """Frise des mots sur la duree totale du montage.
 
     segments : liste de (texte_parle, duree_mesuree_de_la_voix), dans l'ordre
-    exact du montage - les scenes ratees ne doivent PAS y figurer, sinon tous
-    les sous-titres suivants sont decales.
+    exact du montage - les scenes ratees ne doivent PAS y figurer, sinon tout
+    ce qui suit est decale.
 
-    Renvoie le nombre de mots sous-titres (0 = rien a incruster).
+    Renvoie [(scene, index_du_mot, mot, debut, fin, mots_de_la_scene)].
+
+    Fonction PARTAGEE avec le module des bruitages : les deux doivent poser
+    leurs evenements sur exactement la meme frise, sinon un bruitage cale sur
+    un mot ne tombe plus sur le sous-titre correspondant.
     """
-    lines = []
+    out = []
     clock = 0.0
-
-    for text, duration in segments:
+    for scene, (text, duration) in enumerate(segments):
         # Les balises de jeu ([curious], [whispers]) pilotent la diction, elles
-        # ne sont pas prononcees : elles n'ont rien a faire a l'ecran.
+        # ne sont pas prononcees : elles n'ont rien a faire dans la frise.
         words = _TAG.sub("", text or "").split()
         if not words or duration <= 0:
             clock += max(0.0, duration)
             continue
-
         weights = _weights(words)
         total = sum(weights)
         cursor = clock
-
         for i, (word, weight) in enumerate(zip(words, weights)):
             span = duration * weight / total
-            start, end = cursor, cursor + span
-            cursor = end
-
-            # Fenetre centree sur le mot actif, recadree aux bords de la phrase.
-            low = max(0, i - 1)
-            high = min(len(words), low + WINDOW)
-            low = max(0, high - WINDOW)
-
-            parts = []
-            for j in range(low, high):
-                shown = _escape(words[j].upper())
-                if j == i:
-                    parts.append(
-                        f"{{\\1c{COLOR_ACTIVE}\\fscx110\\fscy110"
-                        f"\\t(0,90,0.5,\\fscx100\\fscy100)}}{shown}{{\\r}}"
-                    )
-                else:
-                    parts.append(f"{{\\alpha&H60&}}{shown}{{\\r}}")
-
-            lines.append(
-                f"Dialogue: 0,{_timestamp(start)},{_timestamp(end)},Pop,,0,0,0,,"
-                f"{{\\pos(360,980)}}{' '.join(parts)}"
-            )
-
+            out.append((scene, i, word, cursor, cursor + span, words))
+            cursor += span
         clock += duration
+    return out
+
+
+def build_ass(segments, out_path):
+    """Ecrit un fichier .ass pour la suite de scenes donnee.
+
+    Renvoie le nombre de mots sous-titres (0 = rien a incruster).
+    """
+    lines = []
+
+    for _scene, i, _word, start, end, words in word_timeline(segments):
+        # Fenetre centree sur le mot actif, recadree aux bords de la phrase.
+        low = max(0, i - 1)
+        high = min(len(words), low + WINDOW)
+        low = max(0, high - WINDOW)
+
+        parts = []
+        for j in range(low, high):
+            shown = _escape(words[j].upper())
+            if j == i:
+                parts.append(
+                    f"{{\\1c{COLOR_ACTIVE}\\fscx110\\fscy110"
+                    f"\\t(0,90,0.5,\\fscx100\\fscy100)}}{shown}{{\\r}}"
+                )
+            else:
+                parts.append(f"{{\\alpha&H60&}}{shown}{{\\r}}")
+
+        lines.append(
+            f"Dialogue: 0,{_timestamp(start)},{_timestamp(end)},Pop,,0,0,0,,"
+            f"{{\\pos(360,980)}}{' '.join(parts)}"
+        )
 
     if not lines:
         return 0

@@ -36,6 +36,7 @@ import urllib.error
 import http.client
 from pathlib import Path
 
+import sfx
 import subtitles
 
 
@@ -245,9 +246,15 @@ Each animation_prompt (max 50 words): camera motion and subject motion described
 
 Never use: "simple background", "clean background", "smooth skin", "vibrant colors", "cartoon", "Pixar", "octane render", "stylized", brand logos, "infographic", "flat design", "2D".
 
+SOUND DESIGN RULE: each scene may carry at most ONE sound effect, chosen ONLY from this closed list:
+{sfx_vocabulary}
+Set "sfx" to {{{{"cue": "<key from the list>", "word": "<one word copied EXACTLY from this scene's spoken_text>"}}}} - the effect will be played on that word. Use the key exactly as written; any other value is discarded.
+Leave "sfx" as null for AT LEAST HALF the scenes. A sound on every scene sounds cheap and buries the narration - restraint is what reads as a human edit. Only add one when the word genuinely evokes the sound (money, paper, a phone, a heartbeat, a revelation). Never pick a cue just to fill the field.
+
 Output ONLY valid JSON (no markdown fences, no preamble), matching exactly:
-{{{{"scenes": [{{{{"scene_no": 1, "spoken_text": "...", "medium": "real|3d_anatomical|3d_game", "camera_angle": "...", "image_prompt": "...", "animation_prompt": "..."}}}}]}}}}""".format(
-        n_scenes_hint=n_scenes_hint, style_lock=STYLE_LOCK, character=CHARACTER
+{{{{"scenes": [{{{{"scene_no": 1, "spoken_text": "...", "medium": "real|3d_anatomical|3d_game", "camera_angle": "...", "image_prompt": "...", "animation_prompt": "...", "sfx": null}}}}]}}}}""".format(
+        n_scenes_hint=n_scenes_hint, style_lock=STYLE_LOCK, character=CHARACTER,
+        sfx_vocabulary=sfx.vocabulary_block() or "- (aucun son disponible)",
     )
 
 
@@ -574,6 +581,8 @@ def main():
                               "pour isoler chaque job dans son propre dossier.")
     parser.add_argument("--no-subtitles", action="store_true",
                          help="Desactive les sous-titres animes incrustes (actifs par defaut).")
+    parser.add_argument("--no-sfx", action="store_true",
+                         help="Desactive les bruitages (actifs par defaut).")
     args = parser.parse_args()
 
     # Sortie non bufferisee : le backend lit la progression ligne par ligne en
@@ -698,9 +707,9 @@ def main():
     n_scenes = len(scenes)
     clip_paths = []
     audio_seg_paths = []
-    # (numero, texte parle, duree mesuree) - sert a construire les sous-titres.
-    # Alimente uniquement quand la scene aboutit : une scene ratee ne doit pas
-    # y figurer, sinon tous les sous-titres suivants sont decales.
+    # (numero, texte parle, duree mesuree, bruitage) - sert aux sous-titres et
+    # aux bruitages. Alimente uniquement quand la scene aboutit : une scene
+    # ratee ne doit pas y figurer, sinon tout ce qui suit est decale.
     sub_segments = []
     scenes_dir = OUT_DIR / f"scenes{suffix}"
     scenes_dir.mkdir(exist_ok=True)
@@ -717,7 +726,7 @@ def main():
             # La duree est relue sur le fichier : sur une reprise, la voix n'a
             # pas ete regeneree, donc seg_dur n'existe pas dans ce tour.
             sub_segments.append(
-                (n, s.get("spoken_text", ""), get_duration(seg_audio_path))
+                (n, s.get("spoken_text", ""), get_duration(seg_audio_path), s.get("sfx"))
             )
             continue
 
@@ -791,7 +800,7 @@ def main():
         print(f"  Video OK -> {clip_path} (calee sur {seg_dur:.2f}s)")
         clip_paths.append((n, clip_path))
         audio_seg_paths.append((n, seg_audio_path))
-        sub_segments.append((n, spoken_text, seg_dur))
+        sub_segments.append((n, spoken_text, seg_dur, s.get("sfx")))
 
     print("\n=== 5. Montage FFmpeg ===")
     clip_paths.sort(key=lambda x: x[0])
@@ -826,13 +835,13 @@ def main():
     # --- Sous-titres incrustes ------------------------------------------
     # A faire AVANT la fusion audio : sync_video_to_audio copie le flux video
     # tel quel (-c:v copy), il n'y aurait plus d'occasion de les incruster.
+    sub_segments.sort(key=lambda x: x[0])
+    timeline_segments = [(text, dur) for _, text, dur, _ in sub_segments]
+
     if not args.no_subtitles:
         print("  Sous-titres...")
-        sub_segments.sort(key=lambda x: x[0])
         ass_path = OUT_DIR / f"subs{suffix}.ass"
-        n_lines = subtitles.build_ass(
-            [(text, dur) for _, text, dur in sub_segments], ass_path
-        )
+        n_lines = subtitles.build_ass(timeline_segments, ass_path)
         if n_lines:
             burned = OUT_DIR / f"concat_subs{suffix}.mp4"
             result = subprocess.run(
@@ -851,6 +860,28 @@ def main():
                 print("  ATTENTION : incrustation des sous-titres echouee, on continue sans.")
         else:
             print("  (aucun texte a sous-titrer)")
+
+    # --- Bruitages -------------------------------------------------------
+    # Melanges dans l'AUDIO, avant la fusion : la video n'est pas touchee,
+    # donc sync_video_to_audio peut continuer a la copier sans reencoder.
+    if not args.no_sfx and audio_path.exists():
+        print("  Bruitages...")
+        placed, warnings = sfx.plan(
+            timeline_segments, [cue for _, _, _, cue in sub_segments]
+        )
+        for w in warnings:
+            print(f"    ATTENTION : {w}")
+        if placed:
+            mixed = OUT_DIR / f"voice_sfx{suffix}.wav"
+            if sfx.mix_into_audio(audio_path, placed, mixed):
+                audio_path = mixed
+                print(f"  Bruitages OK ({len(placed)} poses)")
+            else:
+                # Non bloquant, comme les sous-titres : une video sans
+                # bruitages reste utilisable, perdre la generation non.
+                print("  ATTENTION : mixage des bruitages echoue, on continue sans.")
+        else:
+            print("  (aucun bruitage retenu)")
 
     final_video = OUT_DIR / f"final{suffix}.mp4"
     if audio_path.exists():
