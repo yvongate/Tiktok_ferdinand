@@ -20,6 +20,11 @@ back/data/
 *.jpg
 *.jpeg
 
+# Exception : la bibliotheque de bruitages est un ASSET du produit, pas une
+# donnee generee. Sans cette ligne les 59 fichiers restent sur ma machine et
+# l'image Docker part sans aucun son.
+!back/python/sfx/*.wav
+
 # --- Logs ---
 *.log
 back_dev.log
