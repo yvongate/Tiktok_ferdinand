@@ -5,6 +5,7 @@ import {
   INCIDENT_LABELS,
   STEP_LABELS,
   type HealthReport,
+  type IdeasProgress,
   type Job,
   type JobIncident,
   type JobParams,
@@ -27,7 +28,7 @@ function since(iso: string, now: number): string {
 function App() {
   const [params, setParams] = useState<JobParams>({
     mode: '60s',
-    lang: 'fr',
+    lang: 'de',
     videoModel: 'runway',
   })
   const [jobs, setJobs] = useState<Job[]>([])
@@ -35,6 +36,7 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [launching, setLaunching] = useState(false)
   const [health, setHealth] = useState<HealthReport | null>(null)
+  const [ideas, setIdeas] = useState<IdeasProgress | null>(null)
   const unsubscribe = useRef<(() => void) | null>(null)
 
   const upsert = useCallback((job: Job) => {
@@ -58,6 +60,7 @@ function App() {
       })
       .catch((e: Error) => setError(e.message))
     api.health().then(setHealth).catch(() => setHealth(null))
+    api.ideas().then(setIdeas).catch(() => setIdeas(null))
   }, [])
 
   // Suivi live du job selectionne
@@ -72,6 +75,13 @@ function App() {
     }
   }, [selectedId, upsert])
 
+  // L'idee n'est consommee qu'a la reussite du job : on relit le compteur
+  // des qu'un job quitte l'etat actif, sinon la barre reste en retard.
+  const activeCount = jobs.filter((j) => ACTIVE.includes(j.status)).length
+  useEffect(() => {
+    api.ideas().then(setIdeas).catch(() => {})
+  }, [activeCount])
+
   const selected = jobs.find((j) => j.id === selectedId) ?? null
 
   const launch = async () => {
@@ -81,6 +91,7 @@ function App() {
       const job = await api.create(params)
       upsert(job)
       setSelectedId(job.id)
+      api.ideas().then(setIdeas).catch(() => {})
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -96,18 +107,23 @@ function App() {
     }
   }
 
-  const hasActive = jobs.some((j) => ACTIVE.includes(j.status))
+  const hasActive = activeCount > 0
+  const exhausted = ideas !== null && ideas.total > 0 && ideas.remaining === 0
 
   return (
     <div className="app">
       <header>
         <h1>Ferdinand Renard</h1>
-        <p className="subtitle">Generateur de shorts « Voici pourquoi »</p>
+        {/* Le format garde sa structure, seule l'accroche change selon la
+            langue : « Darum » (de), « Voici pourquoi » (fr), « Here's why » (en). */}
+        <p className="subtitle">Generateur de shorts explicatifs</p>
       </header>
 
       {error && <div className="error-banner">{error}</div>}
 
       <HealthBanner health={health} onRefresh={() => api.health().then(setHealth).catch(() => {})} />
+
+      <IdeasPanel ideas={ideas} />
 
       <section className="panel">
         <h2>Nouvelle video</h2>
@@ -129,6 +145,7 @@ function App() {
               value={params.lang}
               onChange={(e) => setParams({ ...params, lang: e.target.value as JobParams['lang'] })}
             >
+              <option value="de">Allemand</option>
               <option value="fr">Francais</option>
               <option value="en">Anglais</option>
             </select>
@@ -147,8 +164,14 @@ function App() {
             </select>
           </label>
 
-          <button onClick={launch} disabled={launching || hasActive}>
-            {launching ? 'Lancement...' : hasActive ? 'Generation en cours...' : 'Lancer la generation'}
+          <button onClick={launch} disabled={launching || hasActive || exhausted}>
+            {launching
+              ? 'Lancement...'
+              : hasActive
+                ? 'Generation en cours...'
+                : exhausted
+                  ? 'Liste d’idees epuisee'
+                  : 'Lancer la generation'}
           </button>
         </div>
         {hasActive && (
@@ -190,6 +213,56 @@ function App() {
         </ul>
       </section>
     </div>
+  )
+}
+
+/**
+ * Avancement dans la liste d'idees validees a la main.
+ *
+ * Affiche aussi le prochain titre : c'est lui qui partira au clic suivant,
+ * et le voir AVANT de lancer evite de decouvrir apres coup qu'on a produit
+ * une video dont le sujet ne convenait pas.
+ */
+function IdeasPanel({ ideas }: { ideas: IdeasProgress | null }) {
+  if (!ideas || ideas.total === 0) return null
+  const done = ideas.remaining === 0
+
+  return (
+    <section className="panel ideas-panel">
+      <h2>
+        Idees validees
+        <span className="ideas-count">
+          {ideas.used} / {ideas.total}
+        </span>
+      </h2>
+
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${ideas.percent}%` }} />
+        {/* Le pourcentage affichait "0%" des la premiere idee consommee
+            (1/300 arrondi a 0) : vrai, mais contredit le "1 / 300" juste
+            au-dessus. Le nombre restant ne ment jamais. */}
+        <span className="progress-label">{ideas.remaining} restantes</span>
+      </div>
+
+      {done ? (
+        <div className="failure-card">
+          <strong>Les {ideas.total} idees ont ete utilisees.</strong>
+          <p>
+            Regenere la liste (<code>ideas_de.json</code>), valide-la, puis
+            redeploie. Le bouton reste desactive d'ici la — plutot que de
+            reboucler en silence sur des sujets deja publies.
+          </p>
+        </div>
+      ) : (
+        ideas.next && (
+          <div className="next-idea">
+            <span className="next-label">Prochaine ({ideas.next.n})</span>
+            <p className="next-de">{ideas.next.de}</p>
+            <p className="next-fr">{ideas.next.fr}</p>
+          </div>
+        )
+      )}
+    </section>
   )
 }
 

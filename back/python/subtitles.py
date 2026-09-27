@@ -23,6 +23,40 @@ _TAG = re.compile(r"\[[^\]]*\]")
 _VOWELS = re.compile(r"[aeiouyàâäéèêëîïôöùûüÿ]+", re.IGNORECASE)
 
 WINDOW = 3
+FONT_SIZE = 62
+MIN_FONT_SIZE = 34
+
+# Largeur utile : 720px de cadre moins les marges laterales du style (70+70).
+USABLE_WIDTH = 580
+
+# Largeur moyenne d'un caractere, en fraction de la taille de police. Mesuree
+# sur le rendu reel de Montserrat ExtraBold en capitales a 62px : M = 0.60,
+# A = 0.51, I = 0.21. Sert a PREVOIR un debordement sans rendre l'image.
+_CHAR_WIDTH = {" ": 0.26, "I": 0.24, "J": 0.36, "L": 0.42, "T": 0.45, "F": 0.44,
+               "M": 0.61, "W": 0.66, "O": 0.58, "Q": 0.58, "G": 0.57, "D": 0.56}
+_DEFAULT_CHAR_WIDTH = 0.51
+
+
+def _estimated_width(text, size):
+    return size * sum(_CHAR_WIDTH.get(c, _DEFAULT_CHAR_WIDTH) for c in text)
+
+
+def _fit_size(text, scale=1.0):
+    """Taille de police pour que `text` tienne dans le cadre.
+
+    Indispensable en allemand : un mot compose comme
+    "Krankenversicherungsbeitraege" (29 lettres) mesure 720px a la taille
+    nominale et se retrouve coupe aux deux bords (debordement constate sur
+    rendu reel, pas estime). Francais et anglais n'atteignent quasiment jamais
+    ce seuil, donc la taille nominale y reste inchangee.
+
+    `scale` tient compte d'un agrandissement applique par ailleurs (le rebond
+    du mot actif a 110%).
+    """
+    width = _estimated_width(text, FONT_SIZE) * scale
+    if width <= USABLE_WIDTH:
+        return FONT_SIZE
+    return max(MIN_FONT_SIZE, int(FONT_SIZE * USABLE_WIDTH / width))
 
 
 def _weights(words):
@@ -66,11 +100,37 @@ YCbCr Matrix: TV.601
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Pop,{FONT_NAME},62,{COLOR_IDLE},&H000000FF,&H00101010,&H00000000,-1,0,0,0,100,100,0,0,1,7,3,2,70,70,300,1
+Style: Pop,{FONT_NAME},{FONT_SIZE},{COLOR_IDLE},&H000000FF,&H00101010,&H00000000,-1,0,0,0,100,100,0,0,1,7,3,2,70,70,300,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
+
+
+def _window_for(words, i):
+    """Fenetre de mots a afficher autour du mot actif, et taille de police.
+
+    On retrecit la FENETRE avant de retrecir la POLICE : reduire d'abord la
+    taille donnait un texte deux fois plus petit qui passait quand meme a la
+    ligne. Mieux vaut montrer moins de contexte en gros caracteres que trois
+    mots illisibles.
+
+    La police n'est reduite qu'en dernier recours, quand un mot seul deborde -
+    cas propre a l'allemand et a ses mots composes.
+    """
+    for width in range(WINDOW, 0, -1):
+        low = max(0, i - (width - 1) // 2)
+        high = min(len(words), low + width)
+        low = max(0, high - width)
+        shown = [_escape(w.upper()) for w in words[low:high]]
+        active = _escape(words[i].upper())
+        # Deux contraintes : la fenetre entiere doit tenir, et le mot actif
+        # aussi pendant son rebond a 110% - sinon il deborde en pleine
+        # animation alors que la ligne au repos tenait tout juste.
+        size = min(_fit_size(" ".join(shown)), _fit_size(active, scale=1.10))
+        if size == FONT_SIZE or width == 1:
+            return low, high, size
+    return i, i + 1, FONT_SIZE  # inatteignable, garde-fou
 
 
 def word_timeline(segments):
@@ -114,14 +174,12 @@ def build_ass(segments, out_path):
     lines = []
 
     for _scene, i, _word, start, end, words in word_timeline(segments):
-        # Fenetre centree sur le mot actif, recadree aux bords de la phrase.
-        low = max(0, i - 1)
-        high = min(len(words), low + WINDOW)
-        low = max(0, high - WINDOW)
+        low, high, size = _window_for(words, i)
+        shown_words = [_escape(words[j].upper()) for j in range(low, high)]
 
         parts = []
         for j in range(low, high):
-            shown = _escape(words[j].upper())
+            shown = shown_words[j - low]
             if j == i:
                 parts.append(
                     f"{{\\1c{COLOR_ACTIVE}\\fscx110\\fscy110"
@@ -130,9 +188,10 @@ def build_ass(segments, out_path):
             else:
                 parts.append(f"{{\\alpha&H60&}}{shown}{{\\r}}")
 
+        override = "" if size == FONT_SIZE else f"\\fs{size}"
         lines.append(
             f"Dialogue: 0,{_timestamp(start)},{_timestamp(end)},Pop,,0,0,0,,"
-            f"{{\\pos(360,980)}}{' '.join(parts)}"
+            f"{{\\pos(360,980){override}}}{' '.join(parts)}"
         )
 
     if not lines:

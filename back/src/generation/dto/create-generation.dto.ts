@@ -6,8 +6,9 @@ export class CreateGenerationDto {
   mode: 'short' | '60s' = 'short';
 
   @IsOptional()
-  @IsIn(['en', 'fr'])
-  lang: 'en' | 'fr' = 'fr';
+  @IsIn(['en', 'fr', 'de'])
+  // Allemand par defaut : la chaine cible le marche allemand.
+  lang: 'en' | 'fr' | 'de' = 'de';
 
   @IsOptional()
   @IsIn(['runway', 'seedance'])

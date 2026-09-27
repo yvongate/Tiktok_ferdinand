@@ -13,7 +13,7 @@ export type JobStep =
 
 export interface JobParams {
   mode: 'short' | '60s'
-  lang: 'en' | 'fr'
+  lang: 'en' | 'fr' | 'de'
   videoModel: 'runway' | 'seedance'
 }
 
@@ -78,6 +78,23 @@ export interface Job {
   errorCount?: number
 }
 
+export interface Idea {
+  n: number
+  cat: string
+  /** Titre francais : relecture humaine uniquement. */
+  fr: string
+  /** Titre allemand : c'est celui-ci qui part en production. */
+  de: string
+}
+
+export interface IdeasProgress {
+  total: number
+  used: number
+  remaining: number
+  percent: number
+  next: Idea | null
+}
+
 export interface CheckResult {
   name: string
   ok: boolean
@@ -135,6 +152,8 @@ export const api = {
   downloadUrl: (id: string) => `${BASE}/${id}/video?download=1`,
 
   health: () => handle<HealthReport>(fetch(`${ROOT}/api/health`)),
+
+  ideas: () => handle<IdeasProgress>(fetch(`${BASE}/ideas`)),
 
   /** Suivi live d'un job. Renvoie une fonction de nettoyage. */
   subscribe: (id: string, onJob: (job: Job) => void): (() => void) => {

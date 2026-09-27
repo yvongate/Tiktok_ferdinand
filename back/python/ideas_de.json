@@ -1,0 +1,1802 @@
+[
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton argent disparaît si vite",
+  "de": "Darum verschwindet dein Geld so schnell",
+  "n": 1
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu n'arrives jamais à économiser",
+  "de": "Darum schaffst du es einfach nicht, Geld zu sparen",
+  "n": 2
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton salaire ne suffit jamais à la fin du mois",
+  "de": "Darum reicht dein Gehalt am Monatsende nie aus",
+  "n": 3
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tout te semble plus cher qu'avant",
+  "de": "Darum fühlt sich alles teurer an als früher",
+  "n": 4
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi 100 euros ne valent plus ce qu'ils valaient",
+  "de": "Darum sind 100 Euro heute nicht mehr das wert wie früher",
+  "n": 5
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu es déjà fauché au milieu du mois",
+  "de": "Darum bist du Mitte des Monats schon pleite",
+  "n": 6
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu dépenses toujours plus que prévu",
+  "de": "Darum gibst du immer mehr aus als geplant",
+  "n": 7
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton salaire monte mais pas ton niveau de vie",
+  "de": "Darum steigt dein Gehalt, aber dein Lebensstandard nicht",
+  "n": 8
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi les petites dépenses quotidiennes te ruinent",
+  "de": "Darum ruinieren dich die kleinen Alltagsausgaben",
+  "n": 9
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi regarder seulement ton salaire est une erreur",
+  "de": "Darum solltest du aufhören, nur auf dein Gehalt zu schauen",
+  "n": 10
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu te sens pauvre même avec un bon salaire",
+  "de": "Darum fühlst du dich arm, obwohl du gut verdienst",
+  "n": 11
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton compte est vide trois jours après la paye",
+  "de": "Darum ist dein Konto drei Tage nach dem Zahltag leer",
+  "n": 12
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu ne sais jamais où part ton argent",
+  "de": "Darum weißt du nie, wo dein Geld eigentlich hingeht",
+  "n": 13
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton loyer mange plus que tu ne crois",
+  "de": "Darum frisst deine Miete mehr, als du denkst",
+  "n": 14
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi épargner à la fin du mois ne marche jamais",
+  "de": "Darum funktioniert Sparen am Monatsende nie",
+  "n": 15
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu retardes toujours tes gros achats",
+  "de": "Darum schiebst du große Anschaffungen immer wieder auf",
+  "n": 16
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton budget ne tient jamais plus d'un mois",
+  "de": "Darum hält dein Budget nie länger als einen Monat",
+  "n": 17
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu paies sans t'en rendre compte chaque jour",
+  "de": "Darum zahlst du jeden Tag, ohne es zu merken",
+  "n": 18
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi une augmentation ne change rien à ta situation",
+  "de": "Darum ändert eine Gehaltserhöhung nichts an deiner Lage",
+  "n": 19
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu as l'impression de travailler pour rien",
+  "de": "Darum hast du das Gefühl, umsonst zu arbeiten",
+  "n": 20
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi les factures arrivent toujours en même temps",
+  "de": "Darum kommen alle Rechnungen immer gleichzeitig",
+  "n": 21
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton argent liquide file plus vite que ta carte",
+  "de": "Darum ist Bargeld schneller weg als Kartenzahlung",
+  "n": 22
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu sous-estimes toujours tes dépenses mensuelles",
+  "de": "Darum unterschätzt du deine monatlichen Ausgaben immer",
+  "n": 23
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi la fin du mois arrive toujours trop tôt",
+  "de": "Darum kommt das Monatsende immer zu früh",
+  "n": 24
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu travailles plus sans gagner plus",
+  "de": "Darum arbeitest du mehr, ohne mehr zu verdienen",
+  "n": 25
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton compte épargne ne grandit jamais",
+  "de": "Darum wächst dein Sparkonto einfach nicht",
+  "n": 26
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu paies plus cher en payant en plusieurs fois",
+  "de": "Darum zahlst du bei Ratenzahlung am Ende mehr",
+  "n": 27
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu n'oses pas regarder ton solde bancaire",
+  "de": "Darum traust du dich nicht, auf deinen Kontostand zu schauen",
+  "n": 28
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi les gens autour de toi semblent plus riches",
+  "de": "Darum wirken alle um dich herum reicher als du",
+  "n": 29
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu recommences à zéro chaque mois",
+  "de": "Darum fängst du jeden Monat wieder bei null an",
+  "n": 30
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton argent te glisse entre les doigts",
+  "de": "Darum rinnt dir dein Geld durch die Finger",
+  "n": 31
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu paies un abonnement que tu as oublié",
+  "de": "Darum zahlst du für ein Abo, das du längst vergessen hast",
+  "n": 32
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tes courses coûtent plus cher chaque mois",
+  "de": "Darum wird dein Wocheneinkauf jeden Monat teurer",
+  "n": 33
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi un imprévu suffit à tout faire basculer",
+  "de": "Darum reicht eine unerwartete Rechnung, um alles zu kippen",
+  "n": 34
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu ne ressens pas l'inflation tout de suite",
+  "de": "Darum spürst du die Inflation erst viel später",
+  "n": 35
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton salaire net est si loin de ton brut",
+  "de": "Darum liegt zwischen brutto und netto so viel Geld",
+  "n": 36
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi tu dépenses plus le week-end sans le voir",
+  "de": "Darum gibst du am Wochenende unbemerkt am meisten aus",
+  "n": 37
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi deux personnes au même salaire vivent différemment",
+  "de": "Darum leben zwei Menschen mit gleichem Gehalt völlig anders",
+  "n": 38
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi acheter du neuf te coûte deux fois",
+  "de": "Darum kostet dich Neukauf am Ende doppelt",
+  "n": 39
+ },
+ {
+  "cat": "alltag",
+  "fr": "Voici pourquoi ton argent travaille pour quelqu'un d'autre",
+  "de": "Darum arbeitet dein Geld gerade für jemand anderen",
+  "n": 40
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu achètes des choses dont tu n'as pas besoin",
+  "de": "Darum kaufst du Dinge, die du nicht brauchst",
+  "n": 41
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les prix finissent toujours par 99 centimes",
+  "de": "Darum enden Preise fast immer auf 99 Cent",
+  "n": 42
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les promotions te font dépenser plus",
+  "de": "Darum bringen dich Angebote dazu, mehr auszugeben",
+  "n": 43
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu perds de l'argent quand c'est à moins 50",
+  "de": "Darum verlierst du Geld, wenn du bei minus 50 Prozent zuschlägst",
+  "n": 44
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les produits chers sont à hauteur des yeux",
+  "de": "Darum stehen die teuersten Produkte auf Augenhöhe",
+  "n": 45
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi 99 euros te paraissent bien moins que 100",
+  "de": "Darum wirken 99 Euro viel billiger als 100",
+  "n": 46
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les caddies deviennent de plus en plus grands",
+  "de": "Darum werden Einkaufswagen immer größer",
+  "n": 47
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu ne dois jamais faire tes courses en ayant faim",
+  "de": "Darum solltest du niemals hungrig einkaufen gehen",
+  "n": 48
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi acheter pas cher revient souvent plus cher",
+  "de": "Darum ist billig kaufen oft das teuerste Geschäft",
+  "n": 49
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les abonnements te vident les poches en silence",
+  "de": "Darum ziehen dir Abos unbemerkt das Geld aus der Tasche",
+  "n": 50
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi la musique du magasin change ta façon d'acheter",
+  "de": "Darum verändert die Musik im Laden dein Kaufverhalten",
+  "n": 51
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le pain est toujours au fond du magasin",
+  "de": "Darum liegt das Brot immer ganz hinten im Laden",
+  "n": 52
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi il n'y a pas d'horloge dans les magasins",
+  "de": "Darum hängt in keinem Supermarkt eine Uhr",
+  "n": 53
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le format familial n'est pas toujours moins cher",
+  "de": "Darum ist die Großpackung oft gar nicht günstiger",
+  "n": 54
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu repars toujours avec plus que prévu",
+  "de": "Darum gehst du immer mit mehr raus, als du wolltest",
+  "n": 55
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les caisses sont entourées de petits produits",
+  "de": "Darum stehen an der Kasse lauter Kleinigkeiten",
+  "n": 56
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi un produit a trois prix différents la même semaine",
+  "de": "Darum hat ein Produkt in einer Woche drei verschiedene Preise",
+  "n": 57
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi la livraison gratuite te fait dépenser plus",
+  "de": "Darum bringt dich Gratisversand dazu, mehr zu bestellen",
+  "n": 58
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu commandes plus quand c'est en un clic",
+  "de": "Darum bestellst du mehr, wenn es nur ein Klick ist",
+  "n": 59
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les marques changent la taille et pas le prix",
+  "de": "Darum schrumpft die Packung, aber nicht der Preis",
+  "n": 60
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le premier prix affiché décide de tout",
+  "de": "Darum entscheidet der erste Preis, den du siehst, über alles",
+  "n": 61
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi il y a toujours un produit trop cher dans le rayon",
+  "de": "Darum steht im Regal immer ein viel zu teures Produkt",
+  "n": 62
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu achètes plus le soir que le matin",
+  "de": "Darum kaufst du abends mehr als morgens",
+  "n": 63
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les magasins veulent que tu touches les produits",
+  "de": "Darum sollst du die Ware unbedingt anfassen",
+  "n": 64
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le rayon frais est toujours à l'entrée",
+  "de": "Darum liegt Obst und Gemüse immer gleich am Eingang",
+  "n": 65
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi la période d'essai gratuite n'est jamais gratuite",
+  "de": "Darum ist die kostenlose Testphase nie wirklich kostenlos",
+  "n": 66
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi un panier abandonné revient te chercher",
+  "de": "Darum verfolgt dich dein abgebrochener Warenkorb",
+  "n": 67
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu ne vois jamais le prix au kilo",
+  "de": "Darum übersiehst du den Grundpreis pro Kilo",
+  "n": 68
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les vitrines te font ralentir",
+  "de": "Darum bleibst du vor Schaufenstern unbewusst stehen",
+  "n": 69
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi une offre limitée dans le temps te fait craquer",
+  "de": "Darum kaufst du bei nur noch heute sofort",
+  "n": 70
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu gardes ce que tu voulais rendre",
+  "de": "Darum behältst du, was du eigentlich zurückschicken wolltest",
+  "n": 71
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le prix barré n'a souvent jamais existé",
+  "de": "Darum hat es den durchgestrichenen Preis oft nie gegeben",
+  "n": 72
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu achètes la marque et pas le produit",
+  "de": "Darum kaufst du die Marke und nicht das Produkt",
+  "n": 73
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi une file d'attente te rend plus pressé d'acheter",
+  "de": "Darum macht dich eine Schlange kaufbereiter",
+  "n": 74
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le troisième article est toujours offert",
+  "de": "Darum ist immer der dritte Artikel gratis",
+  "n": 75
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les produits en promo sont parfois plus chers",
+  "de": "Darum ist die Aktionsware manchmal teurer als vorher",
+  "n": 76
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu te souviens du prix mais pas de la qualité",
+  "de": "Darum erinnerst du dich an den Preis, nicht an die Qualität",
+  "n": 77
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi le paiement sans contact te fait dépenser plus",
+  "de": "Darum gibst du mit kontaktlosem Zahlen mehr aus",
+  "n": 78
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi les couleurs rouges dominent les soldes",
+  "de": "Darum ist bei Rabatten immer alles rot",
+  "n": 79
+ },
+ {
+  "cat": "konsum",
+  "fr": "Voici pourquoi tu reviens toujours dans le même magasin",
+  "de": "Darum gehst du immer wieder in denselben Laden",
+  "n": 80
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi ton cerveau te pousse à consommer",
+  "de": "Darum bringt dich dein eigenes Gehirn zum Konsumieren",
+  "n": 81
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu veux acheter ce que les autres ont",
+  "de": "Darum willst du kaufen, was andere schon haben",
+  "n": 82
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi le mot gratuit te fait gaspiller",
+  "de": "Darum bringt dich das Wort gratis zum Verschwenden",
+  "n": 83
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi perdre 50 euros fait plus mal que d'en gagner 50",
+  "de": "Darum schmerzt der Verlust von 50 Euro mehr als die Freude darüber",
+  "n": 84
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu préfères 100 euros maintenant que 200 plus tard",
+  "de": "Darum willst du lieber 100 Euro sofort als 200 im nächsten Monat",
+  "n": 85
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu gardes des abonnements inutilisés",
+  "de": "Darum kündigst du Abos nicht, die du gar nicht nutzt",
+  "n": 86
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu dépenses le plus juste après la paye",
+  "de": "Darum gibst du direkt nach dem Zahltag am meisten aus",
+  "n": 87
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu achètes plus quand tu es stressé",
+  "de": "Darum kaufst du mehr ein, wenn du gestresst bist",
+  "n": 88
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi une réduction peut t'appauvrir",
+  "de": "Darum macht dich ein Rabatt oft ärmer",
+  "n": 89
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi ton cerveau adore le paiement en plusieurs fois",
+  "de": "Darum liebt dein Gehirn die Ratenzahlung",
+  "n": 90
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu finis un plat que tu n'aimes pas",
+  "de": "Darum isst du auf, was dir gar nicht schmeckt",
+  "n": 91
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu ne vends jamais au bon moment",
+  "de": "Darum verkaufst du immer zum falschen Zeitpunkt",
+  "n": 92
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu crois toujours avoir raison sur l'argent",
+  "de": "Darum glaubst du beim Geld immer, recht zu haben",
+  "n": 93
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu dépenses plus quand tu es fatigué",
+  "de": "Darum gibst du mehr aus, wenn du müde bist",
+  "n": 94
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu te compares toujours à plus riche que toi",
+  "de": "Darum vergleichst du dich immer nach oben",
+  "n": 95
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi une somme ronde te paraît plus grosse",
+  "de": "Darum wirkt eine runde Summe größer auf dich",
+  "n": 96
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu n'agis que quand il est trop tard",
+  "de": "Darum handelst du erst, wenn es zu spät ist",
+  "n": 97
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu protèges ce que tu possèdes déjà",
+  "de": "Darum hältst du an allem fest, was du schon besitzt",
+  "n": 98
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu justifies chaque achat après coup",
+  "de": "Darum rechtfertigst du jeden Kauf im Nachhinein",
+  "n": 99
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu as peur de regarder tes comptes",
+  "de": "Darum hast du Angst, in deine Finanzen zu schauen",
+  "n": 100
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi acheter te calme quelques minutes seulement",
+  "de": "Darum beruhigt dich ein Kauf nur für ein paar Minuten",
+  "n": 101
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu crois que tu commenceras le mois prochain",
+  "de": "Darum glaubst du, nächsten Monat fängst du wirklich an",
+  "n": 102
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi une petite somme régulière te semble invisible",
+  "de": "Darum siehst du kleine regelmäßige Beträge gar nicht",
+  "n": 103
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu suis la foule même en sachant qu'elle a tort",
+  "de": "Darum folgst du der Masse, obwohl du es besser weißt",
+  "n": 104
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu te souviens des gains et oublies les pertes",
+  "de": "Darum erinnerst du dich an Gewinne und vergisst Verluste",
+  "n": 105
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi ton humeur décide de tes dépenses",
+  "de": "Darum entscheidet deine Stimmung über deine Ausgaben",
+  "n": 106
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu paies pour ne pas avoir à choisir",
+  "de": "Darum zahlst du dafür, nicht entscheiden zu müssen",
+  "n": 107
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi le premier chiffre change tout",
+  "de": "Darum entscheidet die erste Ziffer über deinen Eindruck",
+  "n": 108
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu veux ce que tu ne peux pas avoir",
+  "de": "Darum willst du genau das, was du nicht haben kannst",
+  "n": 109
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi ton cerveau confond prix et valeur",
+  "de": "Darum verwechselt dein Gehirn Preis mit Wert",
+  "n": 110
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu dépenses plus avec de l'argent reçu",
+  "de": "Darum gibst du geschenktes Geld schneller aus",
+  "n": 111
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi remettre à demain te coûte de l'argent",
+  "de": "Darum kostet dich Aufschieben bares Geld",
+  "n": 112
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu crois toujours que tu as le temps",
+  "de": "Darum glaubst du immer, du hättest noch Zeit",
+  "n": 113
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi un cadeau t'engage plus que tu ne crois",
+  "de": "Darum verpflichtet dich ein Geschenk mehr, als du denkst",
+  "n": 114
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu n'aimes pas entendre parler d'argent",
+  "de": "Darum redest du nicht gern über Geld",
+  "n": 115
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu défends tes mauvaises décisions financières",
+  "de": "Darum verteidigst du deine schlechtesten Geldentscheidungen",
+  "n": 116
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu crois que tu gères mieux que les autres",
+  "de": "Darum hältst du dich für besser mit Geld als andere",
+  "n": 117
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi la peur te coûte plus cher que le risque",
+  "de": "Darum kostet dich die Angst mehr als das Risiko",
+  "n": 118
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu te sens obligé de dépenser pour les autres",
+  "de": "Darum fühlst du dich verpflichtet, für andere zu zahlen",
+  "n": 119
+ },
+ {
+  "cat": "psychologie",
+  "fr": "Voici pourquoi tu oublies ce que tu as payé la semaine passée",
+  "de": "Darum weißt du nicht mehr, was du letzte Woche bezahlt hast",
+  "n": 120
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les banques veulent absolument ton argent",
+  "de": "Darum wollen Banken unbedingt dein Geld",
+  "n": 121
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi la banque te prête de l'argent",
+  "de": "Darum leiht dir die Bank wirklich Geld",
+  "n": 122
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi un crédit te coûte le double à la fin",
+  "de": "Darum kostet dich ein Kredit am Ende doppelt so viel",
+  "n": 123
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi acheter maintenant et payer plus tard est dangereux",
+  "de": "Darum ist jetzt kaufen, später zahlen so gefährlich",
+  "n": 124
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton découvert te ruine en silence",
+  "de": "Darum ruinieren dich die Dispozinsen deiner Bank",
+  "n": 125
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les banques adorent les clients endettés",
+  "de": "Darum lieben Banken Kunden, die Schulden machen",
+  "n": 126
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi tu paies deux fois le prix sans le voir",
+  "de": "Darum zahlst du unbemerkt den doppelten Preis",
+  "n": 127
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton argent ne dort pas sur ton compte",
+  "de": "Darum liegt dein Geld nicht einfach auf dem Konto",
+  "n": 128
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les intérêts existent",
+  "de": "Darum gibt es überhaupt Zinsen",
+  "n": 129
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi un prêt immobilier coûte bien plus que le montant",
+  "de": "Darum kostet ein Immobilienkredit viel mehr als die Kreditsumme",
+  "n": 130
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton livret d'épargne te fait perdre de l'argent",
+  "de": "Darum verlierst du Geld auf dem Sparbuch",
+  "n": 131
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les frais de compte reviennent toujours",
+  "de": "Darum kommen Kontogebühren immer zurück",
+  "n": 132
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi la banque connaît tes habitudes mieux que toi",
+  "de": "Darum kennt deine Bank deine Gewohnheiten besser als du",
+  "n": 133
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi un taux bas ne veut pas dire pas cher",
+  "de": "Darum heißt ein niedriger Zins nicht günstig",
+  "n": 134
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi rembourser lentement coûte une fortune",
+  "de": "Darum kostet dich langsames Abbezahlen ein Vermögen",
+  "n": 135
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ta carte de crédit gratuite ne l'est pas",
+  "de": "Darum ist deine kostenlose Kreditkarte nicht kostenlos",
+  "n": 136
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi la banque te propose un crédit quand tu vas bien",
+  "de": "Darum bietet dir die Bank Kredit an, wenn es dir gut geht",
+  "n": 137
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi une mensualité faible cache un coût énorme",
+  "de": "Darum versteckt eine kleine Rate riesige Kosten",
+  "n": 138
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les banques gagnent même quand tu ne fais rien",
+  "de": "Darum verdient die Bank, auch wenn du nichts tust",
+  "n": 139
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton crédit dure plus longtemps que ton achat",
+  "de": "Darum läuft dein Kredit länger als das Gekaufte hält",
+  "n": 140
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi personne ne t'explique les frais cachés",
+  "de": "Darum erklärt dir niemand die versteckten Gebühren",
+  "n": 141
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi emprunter est parfois plus malin qu'épargner",
+  "de": "Darum kann ein Kredit klüger sein als Sparen",
+  "n": 142
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi la banque préfère que tu ne lises pas le contrat",
+  "de": "Darum hofft die Bank, dass du den Vertrag nicht liest",
+  "n": 143
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton assurance coûte plus qu'elle ne rapporte",
+  "de": "Darum kostet dich deine Versicherung mehr, als sie bringt",
+  "n": 144
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les intérêts composés jouent contre toi aussi",
+  "de": "Darum arbeitet der Zinseszins auch gegen dich",
+  "n": 145
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi rembourser une dette rapporte plus qu'épargner",
+  "de": "Darum bringt Schulden tilgen mehr als Sparen",
+  "n": 146
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi le crédit à la consommation est le plus cher",
+  "de": "Darum ist der Konsumkredit der teuerste von allen",
+  "n": 147
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ta banque te rappelle juste avant l'échéance",
+  "de": "Darum meldet sich deine Bank kurz vor der Fälligkeit",
+  "n": 148
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi changer de banque te rapporte plus que négocier",
+  "de": "Darum bringt ein Bankwechsel mehr als jedes Verhandeln",
+  "n": 149
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi une dette peut être un outil",
+  "de": "Darum nutzen reiche Menschen Schulden als Werkzeug",
+  "n": 150
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi TikTok est totalement gratuit",
+  "de": "Darum ist TikTok komplett kostenlos",
+  "n": 151
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les réseaux font tout pour te garder accro",
+  "de": "Darum tut Social Media alles, damit du süchtig bleibst",
+  "n": 152
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi Google sait ce que tu veux acheter demain",
+  "de": "Darum weiß Google, was du morgen kaufen willst",
+  "n": 153
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les applications gratuites sont les plus chères",
+  "de": "Darum sind Gratis-Apps in Wahrheit die teuersten",
+  "n": 154
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi Netflix ne vend plus de films à l'unité",
+  "de": "Darum setzt Netflix nur noch auf Abos",
+  "n": 155
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les applications veulent tes données",
+  "de": "Darum sind deine Daten für Apps so wertvoll",
+  "n": 156
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi tu vois une pub juste après une recherche",
+  "de": "Darum siehst du Werbung für das, was du gerade gesucht hast",
+  "n": 157
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les prix changent toutes les minutes en ligne",
+  "de": "Darum ändern sich Online-Preise im Minutentakt",
+  "n": 158
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les applications veulent ta connexion quotidienne",
+  "de": "Darum wollen Apps, dass du dich jeden Tag einloggst",
+  "n": 159
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi gratuit ne veut jamais dire gratuit sur internet",
+  "de": "Darum bedeutet gratis im Internet nie kostenlos",
+  "n": 160
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi le défilement infini n'a pas de fin",
+  "de": "Darum hat endloses Scrollen kein Ende",
+  "n": 161
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi ton téléphone te montre ce qui t'énerve",
+  "de": "Darum zeigt dir dein Handy, was dich aufregt",
+  "n": 162
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi une notification te rapporte de l'argent à eux",
+  "de": "Darum ist jede Benachrichtigung bares Geld wert",
+  "n": 163
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les jeux gratuits gagnent le plus d'argent",
+  "de": "Darum verdienen Gratis-Spiele am meisten Geld",
+  "n": 164
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi ton attention vaut plus que ton argent",
+  "de": "Darum ist deine Aufmerksamkeit wertvoller als dein Geld",
+  "n": 165
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi supprimer une application ne supprime pas tes données",
+  "de": "Darum verschwinden deine Daten nicht, wenn du die App löschst",
+  "n": 166
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi l'abonnement a remplacé l'achat",
+  "de": "Darum hat das Abo den Kauf ersetzt",
+  "n": 167
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi le premier mois est toujours à un euro",
+  "de": "Darum kostet der erste Monat immer nur einen Euro",
+  "n": 168
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi résilier est toujours plus dur que s'inscrire",
+  "de": "Darum ist Kündigen immer schwerer als Anmelden",
+  "n": 169
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi ton téléphone ralentit au bon moment",
+  "de": "Darum wird dein Handy genau zur richtigen Zeit langsam",
+  "n": 170
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les avis en ligne ne sont pas fiables",
+  "de": "Darum kannst du Online-Bewertungen nicht vertrauen",
+  "n": 171
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi le compte à rebours sur un site est faux",
+  "de": "Darum ist der Countdown auf der Webseite erfunden",
+  "n": 172
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi il reste toujours deux articles en stock",
+  "de": "Darum sind immer nur noch zwei Stück verfügbar",
+  "n": 173
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi une application connaît ton humeur",
+  "de": "Darum kennt eine App deine Stimmung",
+  "n": 174
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi la publicité te suit d'un appareil à l'autre",
+  "de": "Darum folgt dir Werbung von Gerät zu Gerät",
+  "n": 175
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi tu payes plus cher sur ton téléphone que sur ordinateur",
+  "de": "Darum zahlst du am Handy mehr als am Computer",
+  "n": 176
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les conditions d'utilisation sont si longues",
+  "de": "Darum sind die AGB absichtlich so lang",
+  "n": 177
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi le bouton accepter est toujours plus visible",
+  "de": "Darum ist der Akzeptieren-Button immer der auffälligste",
+  "n": 178
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi l'intelligence artificielle sait ce qui te retient",
+  "de": "Darum weiß der Algorithmus, was dich festhält",
+  "n": 179
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi une application te propose exactement ton budget",
+  "de": "Darum trifft eine App genau dein Budget",
+  "n": 180
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi tu passes plus de temps que prévu sur ton téléphone",
+  "de": "Darum bleibst du länger am Handy, als du wolltest",
+  "n": 181
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi les applications sont conçues comme des machines à sous",
+  "de": "Darum funktionieren Apps wie Spielautomaten",
+  "n": 182
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi ta série se lance toute seule",
+  "de": "Darum startet die nächste Folge von allein",
+  "n": 183
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi personne ne lit ce qu'il accepte",
+  "de": "Darum liest niemand, was er da akzeptiert",
+  "n": 184
+ },
+ {
+  "cat": "tech",
+  "fr": "Voici pourquoi une entreprise gratuite vaut des milliards",
+  "de": "Darum ist eine Gratis-Firma Milliarden wert",
+  "n": 185
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi un gros salaire ne suffit pas à devenir riche",
+  "de": "Darum reicht ein hohes Gehalt nicht, um reich zu werden",
+  "n": 186
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi certaines compétences sont payées en or",
+  "de": "Darum werden manche Fähigkeiten extrem hoch bezahlt",
+  "n": 187
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi changer d'entreprise rapporte plus qu'une augmentation",
+  "de": "Darum bringt ein Jobwechsel mehr als eine Gehaltserhöhung",
+  "n": 188
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi travailler plus ne veut pas dire gagner plus",
+  "de": "Darum bedeutet mehr Arbeit nicht mehr Geld",
+  "n": 189
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi ton salaire ne dit rien de ta richesse",
+  "de": "Darum sagt dein Gehalt nichts über deinen Wohlstand",
+  "n": 190
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi les riches achètent des actifs et pas des choses",
+  "de": "Darum kaufen reiche Menschen Vermögenswerte statt Dinge",
+  "n": 191
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi épargner seul ne rendra jamais riche",
+  "de": "Darum wirst du durch reines Sparen nie wohlhabend",
+  "n": 192
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi échanger son temps contre de l'argent a une limite",
+  "de": "Darum hat Zeit gegen Geld eine harte Grenze",
+  "n": 193
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi ton premier salaire est le plus important",
+  "de": "Darum ist dein erstes Gehalt das wichtigste deines Lebens",
+  "n": 194
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi on te paie pour le problème que tu résous",
+  "de": "Darum wirst du für das Problem bezahlt, das du löst",
+  "n": 195
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi personne ne te propose spontanément plus",
+  "de": "Darum bietet dir niemand von allein mehr Gehalt an",
+  "n": 196
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi les heures supplémentaires te coûtent cher",
+  "de": "Darum kosten dich Überstunden mehr, als sie bringen",
+  "n": 197
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi un métier stable peut être un piège",
+  "de": "Darum kann ein sicherer Job eine Falle sein",
+  "n": 198
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi ta valeur ne se mesure pas en heures",
+  "de": "Darum misst sich dein Wert nicht in Stunden",
+  "n": 199
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi on paie plus ce qui est rare que ce qui est dur",
+  "de": "Darum wird Seltenes besser bezahlt als Schweres",
+  "n": 200
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi tu gagnes moins que ce que tu rapportes",
+  "de": "Darum verdienst du weniger, als du einbringst",
+  "n": 201
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi le salaire se décide avant l'entretien",
+  "de": "Darum entscheidet sich dein Gehalt vor dem Gespräch",
+  "n": 202
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi une promotion peut te faire perdre de l'argent",
+  "de": "Darum kann dich eine Beförderung ärmer machen",
+  "n": 203
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi le patrimoine compte plus que le revenu",
+  "de": "Darum zählt Vermögen mehr als Einkommen",
+  "n": 204
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi les riches paient moins d'impôts en pourcentage",
+  "de": "Darum zahlen Reiche prozentual weniger Steuern",
+  "n": 205
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi ton travail ne détermine pas ta richesse future",
+  "de": "Darum bestimmt dein Job nicht, ob du reich wirst",
+  "n": 206
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi certains gagnent de l'argent en dormant",
+  "de": "Darum verdienen manche Geld, während sie schlafen",
+  "n": 207
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi apprendre rapporte plus que travailler plus",
+  "de": "Darum bringt Lernen mehr als Mehrarbeit",
+  "n": 208
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi la sécurité de l'emploi coûte de l'argent",
+  "de": "Darum kostet dich Jobsicherheit bares Geld",
+  "n": 209
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi ton employeur connaît ta valeur mieux que toi",
+  "de": "Darum kennt dein Arbeitgeber deinen Wert besser als du",
+  "n": 210
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi un revenu unique est le plus grand risque",
+  "de": "Darum ist eine einzige Einkommensquelle dein größtes Risiko",
+  "n": 211
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi tu es payé en fin de mois et pas avant",
+  "de": "Darum bekommst du dein Gehalt erst am Monatsende",
+  "n": 212
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi les augmentations suivent rarement l'inflation",
+  "de": "Darum halten Gehaltserhöhungen selten mit der Inflation mit",
+  "n": 213
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi posséder rapporte plus que produire",
+  "de": "Darum bringt Besitzen mehr als Arbeiten",
+  "n": 214
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi personne ne devient riche avec un seul salaire",
+  "de": "Darum wird niemand allein mit Gehalt reich",
+  "n": 215
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi ton diplôme ne garantit rien financièrement",
+  "de": "Darum garantiert dir dein Abschluss finanziell gar nichts",
+  "n": 216
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi la retraite se joue à vingt ans",
+  "de": "Darum entscheidet sich deine Rente mit zwanzig",
+  "n": 217
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi travailler dur ne suffit pas",
+  "de": "Darum reicht harte Arbeit allein nicht aus",
+  "n": 218
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi la richesse est une question de temps",
+  "de": "Darum ist Reichtum vor allem eine Frage der Zeit",
+  "n": 219
+ },
+ {
+  "cat": "arbeit",
+  "fr": "Voici pourquoi tu sous-estimes la valeur de ton expérience",
+  "de": "Darum unterschätzt du den Wert deiner Erfahrung",
+  "n": 220
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi tu n'es jamais trop pauvre pour investir",
+  "de": "Darum bist du nie zu arm, um zu investieren",
+  "n": 221
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi ton argent rétrécit sans que le chiffre bouge",
+  "de": "Darum schrumpft dein Vermögen, obwohl die Zahl gleich bleibt",
+  "n": 222
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi une augmentation ne te rend pas plus riche",
+  "de": "Darum macht dich eine Gehaltserhöhung selten reicher",
+  "n": 223
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les millionnaires n'ont presque pas de liquide",
+  "de": "Darum haben Millionäre kaum Bargeld auf der Bank",
+  "n": 224
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi certaines entreprises valent des milliards sans profit",
+  "de": "Darum sind Firmen Milliarden wert, obwohl sie keinen Gewinn machen",
+  "n": 225
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les prix ne redescendent jamais vraiment",
+  "de": "Darum sinken Preise fast nie wieder",
+  "n": 226
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi un euro aujourd'hui vaut plus qu'un euro demain",
+  "de": "Darum ist ein Euro heute mehr wert als morgen",
+  "n": 227
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi l'argent n'a de valeur que parce qu'on y croit",
+  "de": "Darum hat Geld nur Wert, weil wir daran glauben",
+  "n": 228
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi imprimer plus d'argent appauvrit tout le monde",
+  "de": "Darum macht mehr gedrucktes Geld alle ärmer",
+  "n": 229
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi une dette peut disparaître toute seule",
+  "de": "Darum kann sich eine Schuld von selbst auflösen",
+  "n": 230
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les banques créent l'argent qu'elles te prêtent",
+  "de": "Darum erschaffen Banken das Geld, das sie dir leihen",
+  "n": 231
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi personne ne possède vraiment son logement",
+  "de": "Darum gehört dir dein Zuhause nie ganz",
+  "n": 232
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi la bourse monte sur le long terme",
+  "de": "Darum steigt die Börse langfristig fast immer",
+  "n": 233
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi attendre le bon moment te coûte plus cher",
+  "de": "Darum kostet dich Warten auf den richtigen Moment am meisten",
+  "n": 234
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi dix ans changent tout et un an presque rien",
+  "de": "Darum verändern zehn Jahre alles und ein Jahr fast nichts",
+  "n": 235
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi un petit montant régulier bat une grosse somme",
+  "de": "Darum schlägt ein kleiner Betrag regelmäßig die große Summe",
+  "n": 236
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi le temps rapporte plus que le montant",
+  "de": "Darum zählt Zeit mehr als die Höhe des Betrags",
+  "n": 237
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi la plupart des gens vendent au pire moment",
+  "de": "Darum verkaufen die meisten genau im falschen Moment",
+  "n": 238
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les crises créent les plus grandes fortunes",
+  "de": "Darum entstehen in Krisen die größten Vermögen",
+  "n": 239
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi ton argent perd de la valeur pendant que tu dors",
+  "de": "Darum verliert dein Geld an Wert, während du schläfst",
+  "n": 240
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi un billet ne vaut rien en lui-même",
+  "de": "Darum ist ein Geldschein an sich wertlos",
+  "n": 241
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi l'or fascine depuis des milliers d'années",
+  "de": "Darum fasziniert Gold seit Jahrtausenden",
+  "n": 242
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les riches empruntent au lieu de vendre",
+  "de": "Darum leihen sich Reiche Geld, statt zu verkaufen",
+  "n": 243
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi une bonne dette existe vraiment",
+  "de": "Darum gibt es wirklich gute Schulden",
+  "n": 244
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi la carte gratuite finit par coûter le plus cher",
+  "de": "Darum kostet die kostenlose Karte am Ende am meisten",
+  "n": 245
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les intérêts composés semblent magiques",
+  "de": "Darum wirkt der Zinseszins wie Magie",
+  "n": 246
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi doubler son argent prend moins longtemps qu'on croit",
+  "de": "Darum dauert es kürzer, dein Geld zu verdoppeln, als du denkst",
+  "n": 247
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les frais minuscules coûtent des dizaines de milliers",
+  "de": "Darum kosten dich winzige Gebühren Zehntausende",
+  "n": 248
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi la diversification n'est pas de la prudence",
+  "de": "Darum ist Streuen keine Feigheit",
+  "n": 249
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi l'économie fonctionne sur la confiance seule",
+  "de": "Darum läuft die ganze Wirtschaft nur auf Vertrauen",
+  "n": 250
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi les gens riches parlent peu d'argent",
+  "de": "Darum reden wirklich reiche Menschen selten über Geld",
+  "n": 251
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi comprendre l'argent change ta façon de dépenser",
+  "de": "Darum verändert Finanzwissen, wie du jeden Euro siehst",
+  "n": 252
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi l'école ne t'apprend rien sur l'argent",
+  "de": "Darum bringt dir die Schule nichts über Geld bei",
+  "n": 253
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi ton cerveau est ton pire conseiller financier",
+  "de": "Darum ist dein Gehirn dein schlechtester Finanzberater",
+  "n": 254
+ },
+ {
+  "cat": "neugier",
+  "fr": "Voici pourquoi ton solde bancaire ne dit rien de ton avenir",
+  "de": "Darum sagt dein Kontostand nichts über deine Zukunft",
+  "n": 255
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le kebab devient de plus en plus cher en Allemagne",
+  "de": "Darum wird der Döner in Deutschland immer teurer",
+  "n": 256
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le prix de l'essence explose aux stations",
+  "de": "Darum explodieren die Spritpreise an den Tankstellen",
+  "n": 257
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les marques coûtent plus cher que la marque distributeur",
+  "de": "Darum sind Markenprodukte teurer als Eigenmarken",
+  "n": 258
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le gérant du magasin ne fixe pas les prix",
+  "de": "Darum bestimmt nicht der Ladenbesitzer die Preise",
+  "n": 259
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi l'euro perd de sa valeur",
+  "de": "Darum verliert der Euro an Wert",
+  "n": 260
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le pain et les aliments augmentent en Allemagne",
+  "de": "Darum steigen die Brot- und Lebensmittelpreise in Deutschland",
+  "n": 261
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi se loger à Munich ou Berlin est devenu impayable",
+  "de": "Darum ist Wohnen in München oder Berlin unbezahlbar",
+  "n": 262
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi acheter en grande quantité te fait économiser",
+  "de": "Darum sparst du beim Kauf in Großmengen",
+  "n": 263
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le même produit coûte moins cher en ligne",
+  "de": "Darum kostet dasselbe Produkt online weniger als im Laden",
+  "n": 264
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi tu paies près de la moitié en impôts et charges",
+  "de": "Darum zahlst du fast die Hälfte an Steuern und Abgaben",
+  "n": 265
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi ton augmentation disparaît dans la progression fiscale",
+  "de": "Darum frisst die kalte Progression deine Gehaltserhöhung",
+  "n": 266
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le paiement fractionné est un piège",
+  "de": "Darum ist die Ratenzahlung beim Onlineshopping eine Falle",
+  "n": 267
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi ton découvert autorisé coûte si cher en Allemagne",
+  "de": "Darum sind Dispozinsen in Deutschland so brutal",
+  "n": 268
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les Allemands gardent leur argent sur un livret",
+  "de": "Darum lassen so viele Deutsche ihr Geld auf dem Sparbuch",
+  "n": 269
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi ne jamais aller chez Lidl ou Aldi en ayant faim",
+  "de": "Darum solltest du nie hungrig zu Lidl oder Aldi gehen",
+  "n": 270
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi la consigne sur les bouteilles existe",
+  "de": "Darum gibt es überhaupt Pfand auf Flaschen",
+  "n": 271
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi ton assurance santé coûte plus chaque année",
+  "de": "Darum steigt dein Krankenkassenbeitrag jedes Jahr",
+  "n": 272
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les loyers montent alors que rien ne change",
+  "de": "Darum steigen Mieten, obwohl sich nichts verändert",
+  "n": 273
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi l'électricité coûte si cher en Allemagne",
+  "de": "Darum ist Strom in Deutschland so teuer",
+  "n": 274
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi ta fiche de paie est si compliquée",
+  "de": "Darum ist deine Lohnabrechnung so unverständlich",
+  "n": 275
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi acheter un logement reste hors de portée",
+  "de": "Darum bleibt eine eigene Wohnung für viele unerreichbar",
+  "n": 276
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les Allemands paient encore beaucoup en liquide",
+  "de": "Darum zahlen Deutsche immer noch so oft bar",
+  "n": 277
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi ta retraite sera plus faible que prévu",
+  "de": "Darum wird deine Rente kleiner ausfallen als gedacht",
+  "n": 278
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le café à emporter coûte le prix d'un repas",
+  "de": "Darum kostet Coffee to go so viel wie eine Mahlzeit",
+  "n": 279
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les transports augmentent alors qu'ils sont subventionnés",
+  "de": "Darum werden Bus und Bahn teurer, obwohl sie subventioniert sind",
+  "n": 280
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi une voiture te coûte le double de son prix",
+  "de": "Darum kostet dich ein Auto doppelt so viel wie der Kaufpreis",
+  "n": 281
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi la TVA se cache dans chaque achat",
+  "de": "Darum versteckt sich die Mehrwertsteuer in jedem Einkauf",
+  "n": 282
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les discounters ont changé les habitudes allemandes",
+  "de": "Darum haben Discounter das Einkaufen in Deutschland verändert",
+  "n": 283
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les soldes d'hiver ne sont plus une bonne affaire",
+  "de": "Darum lohnt sich der Winterschlussverkauf nicht mehr",
+  "n": 284
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi tu paies une redevance même sans télévision",
+  "de": "Darum zahlst du Rundfunkbeitrag auch ohne Fernseher",
+  "n": 285
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le chauffage coûte plus cher que le loyer parfois",
+  "de": "Darum kann Heizen teurer werden als die Miete",
+  "n": 286
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi changer de fournisseur d'énergie rapporte vraiment",
+  "de": "Darum lohnt sich ein Wechsel des Stromanbieters wirklich",
+  "n": 287
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi le supermarché du coin est plus cher que le discounter",
+  "de": "Darum ist der Supermarkt um die Ecke teurer als der Discounter",
+  "n": 288
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi les prix montent avant les fêtes",
+  "de": "Darum steigen die Preise kurz vor Weihnachten",
+  "n": 289
+ },
+ {
+  "cat": "deutschland",
+  "fr": "Voici pourquoi épargner en Allemagne te fait perdre de l'argent",
+  "de": "Darum verlierst du in Deutschland Geld, wenn du nur sparst",
+  "n": 290
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton score de crédit décide du prix que tu paies",
+  "de": "Darum entscheidet dein Schufa-Score über deinen Zinssatz",
+  "n": 291
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi la banque te pose autant de questions avant de prêter",
+  "de": "Darum stellt dir die Bank vor einem Kredit so viele Fragen",
+  "n": 292
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi se porter garant coûte plus cher qu'on croit",
+  "de": "Darum ist eine Bürgschaft gefährlicher, als du denkst",
+  "n": 293
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les banques préfèrent les crédits longs",
+  "de": "Darum bevorzugen Banken möglichst lange Laufzeiten",
+  "n": 294
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi rembourser en avance peut te coûter une pénalité",
+  "de": "Darum kostet dich vorzeitiges Zurückzahlen eine Strafe",
+  "n": 295
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton conseiller bancaire n'est pas neutre",
+  "de": "Darum ist dein Bankberater niemals neutral",
+  "n": 296
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi deux personnes obtiennent des taux différents",
+  "de": "Darum bekommen zwei Menschen völlig unterschiedliche Zinsen",
+  "n": 297
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi un compte joint peut devenir un piège",
+  "de": "Darum kann ein Gemeinschaftskonto zur Falle werden",
+  "n": 298
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi les banques ferment des agences et facturent plus",
+  "de": "Darum schließen Banken Filialen und verlangen trotzdem mehr",
+  "n": 299
+ },
+ {
+  "cat": "banken",
+  "fr": "Voici pourquoi ton argent à la banque ne t'appartient pas vraiment",
+  "de": "Darum gehört dir dein Geld auf der Bank rechtlich nicht ganz",
+  "n": 300
+ }
+]

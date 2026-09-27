@@ -17,6 +17,7 @@ import * as fs from 'fs';
 import { filter, map, merge, Observable, of } from 'rxjs';
 import { CreateGenerationDto } from './dto/create-generation.dto';
 import type { Job } from './job.types';
+import { IdeasService, type IdeasProgress } from './ideas.service';
 import { JobsService } from './jobs.service';
 
 interface SseMessage {
@@ -25,13 +26,29 @@ interface SseMessage {
 
 @Controller('generation')
 export class GenerationController {
-  constructor(private readonly jobs: JobsService) {}
+  constructor(
+    private readonly jobs: JobsService,
+    private readonly ideas: IdeasService,
+  ) {}
+
+  /** Avancement dans la liste d'idees validees (barre de progression). */
+  @Get('ideas')
+  ideasProgress(): IdeasProgress {
+    return this.ideas.progress();
+  }
 
   @Post()
   create(@Body() dto: CreateGenerationDto): Job {
+    // Liste chargee mais entierement consommee : on refuse explicitement
+    // plutot que de laisser le modele improviser un titre non relu.
+    if (!this.ideas.isEmpty && !this.ideas.peek()) {
+      throw new BadRequestException(
+        'Toutes les idees validees ont ete utilisees. Regenere la liste avant de relancer.',
+      );
+    }
     return this.jobs.create({
       mode: dto.mode ?? 'short',
-      lang: dto.lang ?? 'fr',
+      lang: dto.lang ?? 'de',
       videoModel: dto.videoModel ?? 'runway',
     });
   }

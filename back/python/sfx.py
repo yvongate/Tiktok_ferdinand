@@ -39,9 +39,11 @@ DEFAULT_GAIN = 0.25
 # fait tomber leur pic sur la syllabe, pas apres.
 LEAD = 0.08
 
-# Garde-fou de densite. Le modele recoit la meme consigne, mais une consigne
-# n'est pas une garantie : on tronque si elle est ignoree.
-MAX_PER_10S = 3
+# Garde-fou de densite : filet contre l'emballement, pas regle editoriale.
+# Une scene dure 3,5 a 8,5s, donc un bruitage par scene represente au plus
+# ~3 par tranche de 10s - le plafond est a 4 pour ne jamais ecarter un choix
+# legitime, tout en bloquant un vrai deraillement.
+MAX_PER_10S = 4
 
 
 def _normalize(word):

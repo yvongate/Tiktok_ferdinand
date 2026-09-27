@@ -560,3 +560,52 @@ button.danger {
     font-size: 1rem;
   }
 }
+
+/* --- File d'idees validees ------------------------------------------ */
+
+.ideas-panel h2 {
+  justify-content: space-between;
+}
+
+.ideas-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.next-idea {
+  margin-top: 14px;
+  border-left: 3px solid var(--accent-light);
+  padding: 8px 0 8px 12px;
+}
+
+.next-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+/* Le titre allemand est mis en avant : c'est lui qui part en production,
+   le francais n'est qu'une aide a la relecture. */
+.next-de {
+  margin: 4px 0 2px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.next-fr {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.ideas-panel code {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}

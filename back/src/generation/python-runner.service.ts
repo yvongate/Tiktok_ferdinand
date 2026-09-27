@@ -51,7 +51,7 @@ export class PythonRunnerService {
     return process.env.PYTHON_BIN ?? 'python';
   }
 
-  run(params: JobParams, outDir: string, cb: RunCallbacks): RunHandle {
+  run(params: JobParams, outDir: string, cb: RunCallbacks, idea?: string): RunHandle {
     const script = this.scriptPath;
     const args = [
       '-u', // sortie non bufferisee : indispensable pour la progression live
@@ -65,6 +65,10 @@ export class PythonRunnerService {
       '--out-dir',
       outDir,
     ];
+    // Sans idee imposee, le script retombe sur son ancien comportement : il
+    // en genere dix et en tire une. C'est le repli si la liste validee est
+    // absente ou epuisee.
+    if (idea) args.push('--idea', idea);
 
     this.logger.log(`Lancement : ${this.pythonBin} ${args.join(' ')}`);
 

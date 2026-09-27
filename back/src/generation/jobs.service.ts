@@ -5,6 +5,7 @@ import * as path from 'path';
 import { Subject } from 'rxjs';
 import { diagnose } from './diagnose';
 import type { Job, JobIncident, JobParams, JobProgress } from './job.types';
+import { IdeasService } from './ideas.service';
 import { PythonRunnerService, type ParsedIncident } from './python-runner.service';
 
 const MAX_LOG_LINES = 300;
@@ -43,7 +44,10 @@ export class JobsService implements OnModuleInit {
   /** Flux d'evenements pour le SSE (un evenement par mise a jour de job). */
   readonly events = new Subject<Job>();
 
-  constructor(private readonly runner: PythonRunnerService) {}
+  constructor(
+    private readonly runner: PythonRunnerService,
+    private readonly ideas: IdeasService,
+  ) {}
 
   private get dataDir(): string {
     return process.env.DATA_DIR ?? path.resolve(__dirname, '..', '..', 'data');
@@ -134,6 +138,14 @@ export class JobsService implements OnModuleInit {
 
     const watchdog = this.startWatchdog(job);
 
+    // L'idee est RESERVEE ici mais consommee seulement a la reussite : un
+    // job echoue ou annule doit pouvoir etre relance sur le meme titre.
+    const idea = this.ideas.peek();
+    if (idea) {
+      job.ideaNumber = idea.n;
+      job.progress = { ...job.progress, idea: idea.de };
+    }
+
     const handle = this.runner.run(job.params, job.outDir, {
       onProgress: (patch: Partial<JobProgress>) => {
         // Une etape qui avance annule une attente en cours : sinon le compteur
@@ -165,7 +177,7 @@ export class JobsService implements OnModuleInit {
       onIncident: (incident: ParsedIncident) => {
         this.addIncident(job, incident);
       },
-    });
+    }, idea?.de);
 
     this.running.set(job.id, handle);
     const { ok, code } = await handle.done;
@@ -180,6 +192,7 @@ export class JobsService implements OnModuleInit {
     } else if (ok && job.videoPath && fs.existsSync(job.videoPath)) {
       job.status = 'done';
       job.progress = { ...job.progress, step: 'done', percent: 100, message: 'Video prete' };
+      if (job.ideaNumber !== undefined) this.ideas.markUsed(job.ideaNumber);
     } else {
       const producedVideo = Boolean(job.videoPath && fs.existsSync(job.videoPath));
       job.failure = diagnose(job.logTail, job.incidents, producedVideo, ok);

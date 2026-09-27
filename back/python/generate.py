@@ -27,6 +27,7 @@ Usage:
 import argparse
 import json
 import os
+import random
 import re
 import subprocess
 import sys
@@ -38,6 +39,7 @@ from pathlib import Path
 
 import sfx
 import subtitles
+import watermark
 
 
 def _load_api_key():
@@ -113,13 +115,103 @@ CHARACTER = (
 # derriere. Ce n'est PLUS le format "Tom accumule des chiffres" d'avant -
 # beaucoup de ces sujets sont des mecanismes psychologiques/commerciaux qui
 # n'ont pas besoin d'une histoire chiffree pour etre clairs.
+
+# Tout ce qui depend de la langue, en un seul endroit. C'etait auparavant un
+# binaire fr/en dissemine dans six fonctions : ajouter une langue obligeait a
+# retrouver chaque `if lang == "fr"`, et en oublier un passait inapercu.
+LANGUAGES = {
+    "en": {
+        "trigger": "Here's why",
+        "name": "English",
+        "audio_profile": "dramatic narrator",
+        "suffix": "",
+    },
+    "fr": {
+        "trigger": "Voici pourquoi",
+        "name": "French",
+        "audio_profile": "dramatic French narrator",
+        # Suffixe historique : distingue du doublage manuel d'avant la voix
+        # generee scene par scene (voice_60s_fr.wav).
+        "suffix": "_fr_direct",
+    },
+    "de": {
+        "trigger": "Darum",
+        "name": "German",
+        "audio_profile": "dramatic German narrator",
+        "suffix": "_de",
+        # Le marche compte pour CHAQUE video, pas seulement celles dont le
+        # sujet est explicitement local : un mecanisme universel raconte avec
+        # des dollars et un decor americain ne parle a personne en Allemagne.
+        "script_context": (
+            "AUDIENCE: German viewers in Germany. Every amount is in euros and realistic "
+            "for Germany (a typical net salary around 2000-2800 EUR, rent as the biggest "
+            "monthly item, overdraft interest above 10 percent). When an institution or a "
+            "shop makes the point concrete, use one Germans actually deal with - Sparkasse "
+            "or Hausbank, Krankenkasse, Finanzamt, Schufa, Rundfunkbeitrag, Aldi, Lidl, "
+            "Rewe, dm - rather than a generic or American one. Everyday references should "
+            "feel German: Pfand on bottles, Doener prices, Kleingeld, Nebenkosten. "
+            "Address the viewer informally as 'du', never 'Sie'. Never mention dollars, "
+            "American institutions, or US-specific habits."
+        ),
+        "visual_context": (
+            "SETTING: every scene takes place in Germany or continental Europe. Money on "
+            "screen is euro notes and coins, never dollars. Streets, shops, flats and "
+            "offices look German: older apartment buildings with tall windows, tiled "
+            "supermarket floors with narrow aisles, grey overcast northern light, bicycles, "
+            "regional trains. Never American suburbs, strip malls, yellow school buses or "
+            "dollar bills. Keep signage unreadable or absent - no brand logos anywhere."
+        ),
+    },
+}
+
+
+def lang_cfg(lang):
+    return LANGUAGES.get(lang, LANGUAGES["en"])
+
+
+def _used_ideas_file():
+    """Memoire des titres deja produits, PARTAGEE entre les jobs.
+
+    OUT_DIR est propre a chaque job (DATA_DIR/jobs/<id>) : y ranger cet
+    historique ne servirait a rien. Le dossier parent, lui, est commun.
+    """
+    return OUT_DIR.parent / "_used_ideas.txt"
+
+
+def load_used_ideas():
+    try:
+        path = _used_ideas_file()
+        if not path.exists():
+            return set()
+        return {l.strip().lower() for l in path.read_text(encoding="utf-8").splitlines() if l.strip()}
+    except OSError:
+        return set()  # jamais bloquant : au pire on risque un doublon
+
+
+def remember_idea(idea):
+    try:
+        with _used_ideas_file().open("a", encoding="utf-8") as f:
+            f.write(idea.strip() + "\n")
+    except OSError:
+        pass
+
+
 def build_idea_system(lang="en"):
-    trigger_phrase = "Voici pourquoi" if lang == "fr" else "Here's why"
+    cfg = lang_cfg(lang)
+    trigger_phrase = cfg["trigger"]
+    # Seule la phrase d'accroche etait traduite : le modele enchainait donc en
+    # anglais apres l'accroche, produisant des titres bilingues.
+    lang_rule = (
+        f"LANGUAGE: write the ENTIRE title in natural spoken {cfg['name']} - the whole "
+        "sentence, not only the opening phrase. Never mix English words in."
+    )
     return f"""You are a YouTube Shorts idea strategist for a French-style finance/money-psychology channel with one strong, recognizable format: every single title starts with the exact phrase "{trigger_phrase}", followed by a short, ultra-relatable everyday feeling or observation about money that almost everyone has personally had - the video then reveals the hidden reason behind it.
 
 TASK: Generate 10 video titles, each starting with "{trigger_phrase}".
 
-THE PATTERN (critical): the title itself must be the literal relatable trigger sentence a normal person would say or think (e.g. "{trigger_phrase} your paycheck never feels like enough", "{trigger_phrase} you buy things you don't need") - not an abstract topic name. It must describe a mundane, universally-felt experience, addressed directly to the viewer ("you"/"your"). The video's job is to reveal the hidden mechanism (psychological, business-strategy, banking, or economic) behind that everyday feeling.
+{lang_rule}
+
+THE PATTERN (critical): the title itself must be the literal relatable trigger sentence a normal person would say or think - not an abstract topic name. Shape only: "{trigger_phrase} <everyday feeling about money>", "{trigger_phrase} <mundane money habit>". Fill those placeholders yourself - any literal example written in this prompt is a FORBIDDEN output, never a suggestion to copy. It must describe a mundane, universally-felt experience, addressed directly to the viewer ("you"/"your"). The video's job is to reveal the hidden mechanism (psychological, business-strategy, banking, or economic) behind that everyday feeling.
 
 Rotate across these angles (do not use the same angle for all 10 - spread across at least 5 of them):
 1. Everyday money & life - common money frustrations (spending, saving, feeling broke, prices feeling higher)
@@ -143,11 +235,19 @@ def build_script_system(mode_cfg, lang="en"):
     # chiffree a la "Tom accumule des gains". Les chiffres restent utiles
     # comme illustration ponctuelle, mais ne sont plus le moteur du script -
     # feedback explicite : l'ancienne version etait "trop dans les nombres".
-    trigger_phrase = "Voici pourquoi" if lang == "fr" else "Here's why"
+    cfg = lang_cfg(lang)
+    trigger_phrase = cfg["trigger"]
     lang_instruction = ""
-    if lang == "fr":
-        lang_instruction = """
-LANGUAGE (critical): the video idea given to you may be phrased in English - that's fine, translate the concept naturally. But write your ENTIRE output script in FRENCH, not English. Natural, spoken, everyday French - not a literal word-for-word translation style. The SIMPLE VOCABULARY RULE below still applies in French (simple everyday French words a teenager understands, technical terms explained in plain French).
+    if lang != "en":
+        name = cfg["name"]
+        lang_instruction = f"""
+LANGUAGE (critical): the video idea given to you may be phrased in English - that's fine, translate the concept naturally. But write your ENTIRE output script in {name.upper()}, not English. Natural, spoken, everyday {name} - not a literal word-for-word translation style. The SIMPLE VOCABULARY RULE below still applies in {name} (simple everyday {name} words a teenager understands, technical terms explained in plain {name}).
+"""
+    if cfg.get("script_context"):
+        lang_instruction += "\n" + cfg["script_context"] + "\n"
+    if lang == "de":
+        lang_instruction += """
+GERMAN COMPOUND RULE: prefer short everyday words over long compound nouns. Say "die Kosten fuer Wohnen" rather than "Lebenshaltungskosten", "die Beitraege zur Krankenkasse" rather than "Krankenversicherungsbeitraege". Very long compounds are hard to read as burned-in subtitles and slow the viewer down. Never build a compound longer than about 20 letters when a simple phrase says the same thing.
 """
     return f"""You are a YouTube Shorts scriptwriter for a French-style finance/money-psychology channel built around one recognizable format: "{trigger_phrase} [relatable everyday feeling about money]", then a clear explanation of the hidden reason behind it.
 {lang_instruction}
@@ -157,7 +257,7 @@ CORE TECHNIQUE - this is what makes these videos easy to understand, follow it p
 This is an EXPLANATION of a relatable everyday phenomenon, NOT a story about a named character accumulating numbers. Address the viewer directly ("you"/"your", or "tu"/"ton" in French). Only bring in an illustrative example (a generic person, a real company like a bank or an app, or a simple "imagine you...") if it genuinely makes the mechanism clearer - never force a named character or a chain of numbers into a topic that doesn't need one.
 
 Follow this structure:
-1. HOOK (1 sentence, mandatory, opens the script almost verbatim as the video's title): starts with "{trigger_phrase}" followed by the exact relatable everyday feeling/observation (e.g. "{trigger_phrase} your paycheck never feels like enough").
+1. HOOK (1 sentence, mandatory, opens the script almost verbatim as the video's title): starts with "{trigger_phrase}" followed by the exact relatable everyday feeling/observation taken from the chosen title - reuse that title, never an example written in this prompt.
 2. THE RELATABLE FEELING (1-2 sentences): describe the everyday experience so the viewer instantly recognizes themselves in it - concrete and specific, but no character or invented numbers needed here, just a vivid, familiar situation.
 3. THE HIDDEN REASON (2-4 sentences): reveal the real underlying mechanism - a psychological bias, a business/pricing strategy, a banking mechanism, or an economic principle - explained in the simplest possible terms. Use a number ONLY if one genuinely helps illustrate the mechanism (e.g. a typical price, rate, or percentage) - never invent a chain of numbers for their own sake.
 4. OPTIONAL SHORT EXAMPLE (0-2 sentences, only if it truly clarifies): a brief concrete illustration - can reference a real-world type of actor (a bank, a store, an app) or a generic "imagine someone who..." - not a mandatory named character, and not a running numeric story.
@@ -194,7 +294,7 @@ Style rules:
 Output: return ONLY the spoken script text, ending with the call-to-action sentence from step 6. Nothing else, no preamble, no title, no quotes around it. Never wrap the output in any document/canvas/artifact markup such as ":::writing{{...}}" or code fences - plain spoken text only, nothing before the first word or after the last word."""
 
 
-def build_scenes_system(n_scenes_hint):
+def build_scenes_system(n_scenes_hint, lang="en"):
     # Micro-details visuels/animation extraits d'une analyse frame-by-frame
     # (1 frame/seconde, pas juste 1 frame par beat) de 2 vraies videos finance
     # - voir video-vision/library_finance/REVIEW.md, section "Micro-details
@@ -244,17 +344,20 @@ Each image_prompt: character (if any) + specific action or held pose + at least 
 
 Each animation_prompt (max 50 words): camera motion and subject motion described separately, ONE dominant motion, camera essentially STATIC/LOCKED for almost every scene - real shots in this genre hold perfectly still and let hard cuts carry the energy, not movement within the shot. Only allow subtle micro-motion (breathing, a slight blink, hair or paper stirring, a light flicker) unless the scene is the tense/reveal/final beat, where a slow push-in or slight handheld shake is allowed. Never describe camera movement as the default.
 
+{visual_context}
+
 Never use: "simple background", "clean background", "smooth skin", "vibrant colors", "cartoon", "Pixar", "octane render", "stylized", brand logos, "infographic", "flat design", "2D".
 
 SOUND DESIGN RULE: each scene may carry at most ONE sound effect, chosen ONLY from this closed list:
 {sfx_vocabulary}
 Set "sfx" to {{{{"cue": "<key from the list>", "word": "<one word copied EXACTLY from this scene's spoken_text>"}}}} - the effect will be played on that word. Use the key exactly as written; any other value is discarded.
-Leave "sfx" as null for AT LEAST HALF the scenes. A sound on every scene sounds cheap and buries the narration - restraint is what reads as a human edit. Only add one when the word genuinely evokes the sound (money, paper, a phone, a heartbeat, a revelation). Never pick a cue just to fill the field.
+Aim to give EVERY scene a sound effect when one genuinely fits - a word that evokes money, paper, a phone, a heartbeat, a door, a revelation. Set "sfx" to null only when no key in the list honestly matches anything said in that scene; an absent sound is far better than a forced one. Never stretch a key to fill the field, and never repeat the same key in two consecutive scenes.
 
 Output ONLY valid JSON (no markdown fences, no preamble), matching exactly:
 {{{{"scenes": [{{{{"scene_no": 1, "spoken_text": "...", "medium": "real|3d_anatomical|3d_game", "camera_angle": "...", "image_prompt": "...", "animation_prompt": "...", "sfx": null}}}}]}}}}""".format(
         n_scenes_hint=n_scenes_hint, style_lock=STYLE_LOCK, character=CHARACTER,
         sfx_vocabulary=sfx.vocabulary_block() or "- (aucun son disponible)",
+        visual_context=lang_cfg(lang).get("visual_context", ""),
     )
 
 
@@ -452,7 +555,7 @@ def get_duration(path):
 
 
 def generate_voice(text, out_path, lang="en"):
-    audio_profile = "dramatic French narrator" if lang == "fr" else "dramatic narrator"
+    audio_profile = lang_cfg(lang)["audio_profile"]
     task = create_task(
         "google/gemini-3-1-flash-tts",
         {
@@ -572,8 +675,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=list(MODES.keys()), default="short",
                          help="short = histoire resserree (defaut) ; 60s = histoire complete, duree >=60s garantie")
-    parser.add_argument("--lang", choices=["en", "fr"], default="en",
-                         help="en = script+voix en anglais (defaut) ; fr = script+voix generes directement en francais")
+    parser.add_argument("--lang", choices=sorted(LANGUAGES), default="en",
+                         help="Langue du script et de la voix : en (defaut), fr, de.")
     parser.add_argument("--video-model", choices=["seedance", "runway"], default="runway",
                          help="runway = runway (defaut, ~31%% moins cher a 720p, valide sur plusieurs runs) ; seedance = bytedance/seedance-1.5-pro (repli)")
     parser.add_argument("--out-dir", default=None,
@@ -581,6 +684,13 @@ def main():
                               "pour isoler chaque job dans son propre dossier.")
     parser.add_argument("--no-subtitles", action="store_true",
                          help="Desactive les sous-titres animes incrustes (actifs par defaut).")
+    parser.add_argument("--idea", default=None,
+                         help="Titre impose, pioche par le backend dans la liste validee "
+                              "(ideas_de.json). Sans lui, le script genere 10 idees et en "
+                              "tire une au hasard.")
+    parser.add_argument("--watermark", default=None,
+                         help="Pseudo incruste en filigrane mobile. Par defaut, lit la "
+                              "variable d'environnement WATERMARK ; vide = aucun filigrane.")
     parser.add_argument("--no-sfx", action="store_true",
                          help="Desactive les bruitages (actifs par defaut).")
     args = parser.parse_args()
@@ -600,14 +710,13 @@ def main():
 
     mode_cfg = MODES[args.mode]
     suffix = "" if args.mode == "short" else f"_{args.mode}"
-    if args.lang == "fr":
-        suffix += "_fr_direct"  # suffixe distinct du doublage manuel precedent (voice_60s_fr.wav etc.)
+    suffix += lang_cfg(args.lang)["suffix"]
     if args.video_model == "seedance":
         suffix += "_seedance"  # runway est desormais le defaut (pas de suffixe)
     print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_model} ===\n")
 
     script_system = build_script_system(mode_cfg, lang=args.lang)
-    trigger_phrase = "Voici pourquoi" if args.lang == "fr" else "Here's why"
+    trigger_phrase = lang_cfg(args.lang)["trigger"]
 
     idea_file = OUT_DIR / f"idea{suffix}.txt"
     script_file = OUT_DIR / f"script{suffix}.txt"
@@ -624,21 +733,41 @@ def main():
         print(f"{len(scenes)} scenes.")
     else:
         print("=== 1. Generation de l'idee ===")
-        ideas_text = claude(build_idea_system(args.lang), "Give me 10 ideas.", max_tokens=500)
-        if not ideas_text:
-            print("ECHEC total sur la generation d'idees. Arret.")
-            return
-        print(ideas_text)
-        first_idea = None
-        for line in ideas_text.splitlines():
-            m = re.match(r"^\s*\d+[\.\)]\s*(.+)", line)
-            if m:
-                first_idea = m.group(1).strip()
-                break
-        if not first_idea:
-            first_idea = ideas_text.splitlines()[0].strip()
-        print(f"\n-> Idee choisie : {first_idea}")
-        idea_file.write_text(first_idea, encoding="utf-8")
+        if args.idea:
+            # Idee imposee par le backend, piochee dans la liste validee. Aucun
+            # appel API ici : le titre a deja ete ecrit et relu a l'avance.
+            first_idea = args.idea.strip()
+            remember_idea(first_idea)
+            print(f"-> Idee imposee : {first_idea}")
+            idea_file.write_text(first_idea, encoding="utf-8")
+            ideas_text = None
+        else:
+            ideas_text = claude(build_idea_system(args.lang), "Give me 10 ideas.", max_tokens=500)
+        if not args.idea:
+            if not ideas_text:
+                print("ECHEC total sur la generation d'idees. Arret.")
+                return
+            print(ideas_text)
+            # On prenait systematiquement la ligne 1, donc toujours la meme
+            # idee d'une generation a l'autre : le modele proposait bien 10
+            # titres varies, le code n'en regardait qu'un.
+            candidates = [
+                m.group(1).strip()
+                for m in (re.match(r"^\s*\d+[\.\)]\s*(.+)", l) for l in ideas_text.splitlines())
+                if m
+            ]
+            if not candidates:
+                candidates = [ideas_text.splitlines()[0].strip()]
+
+            used = load_used_ideas()
+            fresh = [c for c in candidates if c.lower() not in used]
+            if not fresh:
+                print(f"  (les {len(candidates)} idees ont deja ete utilisees, on repioche)")
+                fresh = candidates
+            first_idea = random.choice(fresh)
+            remember_idea(first_idea)
+            print(f"\n-> Idee choisie : {first_idea}  ({len(fresh)}/{len(candidates)} inedites)")
+            idea_file.write_text(first_idea, encoding="utf-8")
 
         print("\n=== 2. Generation du script ===")
         script = generate_valid_script(script_system, f"Video idea: {first_idea}", trigger_phrase)
@@ -692,7 +821,7 @@ def main():
         print(f"  -> ~{n_scenes_hint} scenes visees (indicatif ; la duree de chaque scene sera mesuree individuellement a l'etape 4)")
 
         print("\n=== 3. Decoupage en scenes (avec texte parle par scene) ===")
-        scenes_system = build_scenes_system(n_scenes_hint)
+        scenes_system = build_scenes_system(n_scenes_hint, lang=args.lang)
         scenes_raw = claude(scenes_system, f"Script:\n{script}", max_tokens=6000)
         if not scenes_raw:
             print("ECHEC total sur le decoupage en scenes. Arret.")
@@ -838,28 +967,46 @@ def main():
     sub_segments.sort(key=lambda x: x[0])
     timeline_segments = [(text, dur) for _, text, dur, _ in sub_segments]
 
+    # Sous-titres et filigrane sont incrustes dans la MEME passe : chacun
+    # dans la sienne doublerait le temps d'encodage, ce qui pese lourd sur les
+    # 0,5 CPU de Render.
+    overlays, described = [], []
+
     if not args.no_subtitles:
-        print("  Sous-titres...")
         ass_path = OUT_DIR / f"subs{suffix}.ass"
         n_lines = subtitles.build_ass(timeline_segments, ass_path)
         if n_lines:
-            burned = OUT_DIR / f"concat_subs{suffix}.mp4"
-            result = subprocess.run(
-                ["ffmpeg", "-y", "-v", "error", "-i", str(concat_video),
-                 "-vf", subtitles.ass_filter(ass_path),
-                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
-                 "-pix_fmt", "yuv420p", "-an", str(burned)],
-                check=False,
-            )
-            if result.returncode == 0 and burned.exists():
-                concat_video = burned
-                print(f"  Sous-titres OK ({n_lines} mots) -> {burned}")
-            else:
-                # Non bloquant : une video sans sous-titres reste utilisable,
-                # perdre 30 minutes de generation pour ca ne le serait pas.
-                print("  ATTENTION : incrustation des sous-titres echouee, on continue sans.")
+            overlays.append(subtitles.ass_filter(ass_path))
+            described.append(f"sous-titres ({n_lines} mots)")
         else:
             print("  (aucun texte a sous-titrer)")
+
+    wm_text = watermark.configured(args.watermark)
+    if wm_text:
+        wm_path = OUT_DIR / f"watermark{suffix}.ass"
+        # La frise de la voix donne la duree exacte sans relire le fichier.
+        total = sum(dur for _, dur in timeline_segments)
+        if watermark.build_ass(total, wm_path, override=args.watermark):
+            overlays.append(subtitles.ass_filter(wm_path))
+            described.append(f"filigrane {wm_text!r}")
+
+    if overlays:
+        print(f"  Incrustation : {', '.join(described)}...")
+        burned = OUT_DIR / f"concat_subs{suffix}.mp4"
+        result = subprocess.run(
+            ["ffmpeg", "-y", "-v", "error", "-i", str(concat_video),
+             "-vf", ",".join(overlays),
+             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
+             "-pix_fmt", "yuv420p", "-an", str(burned)],
+            check=False,
+        )
+        if result.returncode == 0 and burned.exists():
+            concat_video = burned
+            print(f"  Incrustation OK -> {burned}")
+        else:
+            # Non bloquant : une video sans sous-titres reste utilisable,
+            # perdre 30 minutes de generation pour ca ne le serait pas.
+            print("  ATTENTION : incrustation echouee, on continue sans.")
 
     # --- Bruitages -------------------------------------------------------
     # Melanges dans l'AUDIO, avant la fusion : la video n'est pas touchee,

@@ -14,7 +14,7 @@ export type JobStep =
 
 export interface JobParams {
   mode: 'short' | '60s';
-  lang: 'en' | 'fr';
+  lang: 'en' | 'fr' | 'de';
   videoModel: 'runway' | 'seedance';
 }
 
@@ -100,6 +100,9 @@ export interface Job {
   videoPath?: string;
   /** Dossier de travail isole de ce job. */
   outDir: string;
+  /** Numero de l'idee reservee dans la liste validee, quand il y en a une.
+   *  Elle n'est marquee consommee qu'a la reussite du job. */
+  ideaNumber?: number;
   error?: string;
   /** Diagnostic exploitable de l'echec (absent si le job n'a pas echoue). */
   failure?: JobFailure;

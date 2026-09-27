@@ -26,7 +26,14 @@ p.add_argument("--mode", default="short")
 p.add_argument("--lang", default="fr")
 p.add_argument("--video-model", default="runway")
 p.add_argument("--out-dir", default=".")
-args = p.parse_args()
+p.add_argument("--idea", default=None)
+
+# parse_known_args et non parse_args : toute option ajoutee au vrai script
+# sans l'etre ici faisait echouer TOUS les jobs sur un "unrecognized
+# arguments" invisible depuis l'interface. C'est arrive trois fois
+# (--no-subtitles, --no-sfx, --watermark) ; on ignore desormais ce qu'on ne
+# connait pas plutot que de le repeter.
+args, ignores = p.parse_known_args()
 
 FAULTS = {f.strip() for f in os.environ.get("MOCK_FAULTS", "").split(",") if f.strip()}
 
@@ -46,8 +53,11 @@ print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_mode
 
 print("=== 1. Generation de l'idee ===")
 time.sleep(STEP)
-print("1. Voici pourquoi ton salaire disparait si vite")
-print("-> Idee choisie : Voici pourquoi ton salaire disparait si vite")
+if args.idea:
+    print(f"-> Idee imposee : {args.idea}")
+else:
+    print("1. Voici pourquoi ton salaire disparait si vite")
+    print("-> Idee choisie : Voici pourquoi ton salaire disparait si vite")
 time.sleep(STEP)
 
 if "quota" in FAULTS:
