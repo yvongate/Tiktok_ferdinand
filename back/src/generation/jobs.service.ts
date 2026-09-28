@@ -251,7 +251,7 @@ export class JobsService implements OnModuleInit {
       onIncident: (incident: ParsedIncident) => {
         this.addIncident(job, incident);
       },
-    }, charge);
+    }, charge, job.ideaNumber);
 
     this.running.set(job.id, handle);
     const { ok, code } = await handle.done;

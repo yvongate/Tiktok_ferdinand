@@ -61,6 +61,7 @@ export class PythonRunnerService {
     cacheDir: string | undefined,
     cb: RunCallbacks,
     idea?: string,
+    ideaNumber?: number,
   ): RunHandle {
     const script = this.scriptPour(params.format);
     const args = [
@@ -78,6 +79,13 @@ export class PythonRunnerService {
     // Cache commun a toutes les tentatives d'un meme sujet : c'est ce qui rend
     // vraie la "reprise sans nouveaux credits" affichee apres un echec.
     if (cacheDir) args.push('--cache-dir', cacheDir);
+    // Rang du sujet : le script s'en sert pour tirer charpente, ambiance et
+    // voix dans un paquet battu plutot qu'au hasard a chaque fois. Sans lui,
+    // deux videos publiees a la suite retombent une fois sur quatre sur la
+    // meme charpente. Le format graphique le lit dans son JSON de sujet.
+    if (ideaNumber !== undefined && params.format !== 'graphique') {
+      args.push('--variation-index', String(ideaNumber));
+    }
     // Le format graphique recoit le sujet complet en JSON (symbole, duree) ;
     // Ferdinand ne recoit qu'un titre. Sans rien, generate.py retombe sur son
     // ancien comportement : il genere dix idees et en tire une.

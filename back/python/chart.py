@@ -159,6 +159,65 @@ def medaillon(source, taille=120, debut=16.2, secondes=3.0, fps=24):
     return images
 
 
+LOGOS = ICI / "logos"
+
+
+def logo(symbole):
+    """Logo de l'entreprise, ou None.
+
+    Lu dans python/logos/<SYMBOLE>.png, les points du symbole remplacés par
+    des tirets bas (BAYN.DE -> BAYN_DE.png). Rien n'est téléchargé : un logo
+    est une marque déposée, il n'a pas à arriver dans la vidéo par une source
+    que personne n'a regardée. Absent, le graphique se dessine comme avant.
+    """
+    # Le nom vient du fichier de sujets ; un symbole contenant « / » ou « .. »
+    # sortirait du dossier. Il est relu a la main et versionne, donc le risque
+    # est theorique - mais la garde coute une ligne.
+    nom = symbole.replace(".", "_")
+    if "/" in nom or "\\" in nom or nom.startswith("."):
+        return None
+    chemin = LOGOS / (nom + ".png")
+    if not chemin.exists():
+        return None
+    try:
+        return Image.open(chemin).convert("RGBA")
+    except OSError:
+        return None
+
+
+def prepare_filigrane(source, largeur=180, alpha=38):
+    """Voile estompé du logo, et sa position. Calculé UNE fois.
+
+    Dessiné sous la courbe et très transparent : il situe l'entreprise sans
+    disputer la lisibilité au graphique, qui reste le sujet de la vidéo.
+
+    180 px et non 370 : la source fait 128 px de côté chez la plupart des
+    fournisseurs de logos, et l'agrandir presque trois fois donnait un bord
+    crénelé, visible à l'image.
+
+    Le redimensionnement et la couche alpha étaient refaits à CHAQUE image,
+    alors que le résultat ne change jamais : 3,4 ms par image mesurées, soit
+    une quinzaine de secondes par vidéo sur le demi-CPU de Render. Le
+    médaillon de Ferdinand, lui, était déjà pré-calculé.
+    """
+    ratio = largeur / source.width
+    petit = source.resize((largeur, max(1, int(source.height * ratio))), Image.LANCZOS)
+    voile = petit.copy()
+    voile.putalpha(petit.getchannel("A").point(lambda a: int(a * alpha / 255)))
+    return voile, ((GX0 + GX1) // 2 - voile.width // 2,
+                   (GY0 + GY1) // 2 - voile.height // 2)
+
+
+def prepare_pastille(source, diametre=30):
+    """Logo en pastille ronde, pour la pointe de la courbe. Calculé une fois."""
+    petit = source.resize((diametre, diametre), Image.LANCZOS)
+    masque = Image.new("L", (diametre, diametre), 0)
+    ImageDraw.Draw(masque).ellipse((0, 0, diametre - 1, diametre - 1), fill=255)
+    rond = Image.new("RGBA", (diametre, diametre))
+    rond.paste(petit, (0, 0), masque)
+    return rond
+
+
 def _euro(v, centimes=False):
     s = f"{v:,.2f}" if centimes else f"{v:,.0f}"
     return s.replace(",", " ").replace(".", ",") + " €"
@@ -179,9 +238,9 @@ def _incline(txt, police, couleur, angle=35):
     return _ROTATIONS[cle]
 
 
-def _halo(d, pts, couleur, largeur=4):
+def _halo(d, pts, couleur, largeur=4, fond=FOND):
     for w, melange in ((largeur + 7, 0.14), (largeur + 3, 0.3), (largeur, 1.0)):
-        c = tuple(int(FOND[i] + (couleur[i] - FOND[i]) * melange) for i in range(3))
+        c = tuple(int(fond[i] + (couleur[i] - fond[i]) * melange) for i in range(3))
         d.line(pts, fill=c, width=w, joint="curve")
 
 
@@ -189,22 +248,69 @@ class Rendu:
     """Dessine une image de l'animation. Les polices et le médaillon sont
     chargés une fois pour toutes, pas à chaque image."""
 
-    def __init__(self, donnees, titre, annee_debut, mise=100, badges=None):
+    def __init__(self, donnees, titre, annee_debut, mise=100, badges=None,
+                 palette=None, titre_lignes=None, logo_img=None):
         self.donnees = donnees
         self.titre = titre
         self.annee_debut = annee_debut
         self.mise = mise
+        # Carte-titre : deux lignes, formulees en dur jusqu'ici, donc
+        # identiques au mot pres sur les 95 sujets. Le marqueur « POV: » est
+        # le format et ne bouge pas ; la formulation qui suit, oui.
+        self.titre_lignes = titre_lignes or [
+            f"POV: Du hast {annee_debut}",
+            f"{mise} € in {titre} investiert",
+        ]
         self.badges = badges or []
+        # Palette : les couleurs etaient des constantes de module, donc
+        # identiques sur les 95 sujets. `palette` les remplace ; sans elle on
+        # retombe exactement sur le rendu d'origine.
+        p = palette or {}
+        self.fond = p.get("fond", FOND)
+        self.grille = p.get("grille", GRILLE)
+        self.gain = p.get("gain", VERT)
+        self.perte = p.get("perte", ROUGE)
+        self.accent = p.get("accent", BLEU)
+        # Couleur de la ligne « Investi ». Distincte de gain ET de perte : la
+        # mise de depart est un repere, pas un resultat.
+        self.repere = p.get("repere", GRIS)
+        # Voile et pastille prets a coller : ils ne dependent que du logo,
+        # pas de l'image en cours.
+        self.voile, self.voile_xy = (prepare_filigrane(logo_img) if logo_img
+                                     else (None, (0, 0)))
+        self.pastille = prepare_pastille(logo_img) if logo_img else None
+        self._polices = {}
         self.f_titre = ImageFont.truetype(str(POLICE), 30)
         self.f_axe = ImageFont.truetype(str(POLICE), 19)
         self.f_lab = ImageFont.truetype(str(POLICE), 21)
         self.f_val = ImageFont.truetype(str(POLICE), 19)
         self.f_bas = ImageFont.truetype(str(POLICE), 34)
 
+    # Largeur utile de la carte-titre : sa boite moins une marge de chaque
+    # cote, pour que le texte ne touche pas le bord arrondi.
+    LARGEUR_TITRE = (L - 78) - 78 - 2 * 18
+
+    def _police_titre(self, d, ligne):
+        """Police reduite juste ce qu'il faut pour que la ligne tienne.
+
+        Les tailles sont mises en cache : sans ca, on mesurerait et
+        rechargerait la police a chaque image, soit 1 500 fois par video.
+        """
+        if ligne not in self._polices:
+            taille = 30
+            while taille > 19 and d.textlength(
+                    ligne, font=ImageFont.truetype(str(POLICE), taille)) > self.LARGEUR_TITRE:
+                taille -= 1
+            self._polices[ligne] = ImageFont.truetype(str(POLICE), taille)
+        return self._polices[ligne]
+
     def image(self, avancement, frame=0):
         n = max(2, int(len(self.donnees) * avancement))
         vus = self.donnees[:n]
-        img = Image.new("RGB", (L, H), FOND)
+        img = Image.new("RGB", (L, H), self.fond)
+        # Avant la grille et la courbe : le logo est un fond, pas un calque.
+        if self.voile is not None:
+            img.paste(self.voile, self.voile_xy, self.voile)
         d = ImageDraw.Draw(img)
 
         vals = [v for _, v, _ in vus] + [self.mise]
@@ -229,7 +335,7 @@ class Rendu:
             if v < vmin:
                 continue
             y = ypix(v)
-            d.line([(GX0, y), (GX1 + 6, y)], fill=GRILLE, width=1)
+            d.line([(GX0, y), (GX1 + 6, y)], fill=self.grille, width=1)
             lab = (f"{v:,.0f}" if pas >= 1 else f"{v:,.1f}").replace(",", " ")
             d.text((GX0 - 12 - d.textlength(lab, font=self.f_axe), y - 10), lab,
                    font=self.f_axe, fill=GRIS)
@@ -254,30 +360,47 @@ class Rendu:
             courbe.append(entier[-1])
 
         actuel = vus[-1][2]
-        couleur = VERT if actuel >= self.mise else ROUGE
-        _halo(d, courbe, couleur)
+        couleur = self.gain if actuel >= self.mise else self.perte
+        _halo(d, courbe, couleur, fond=self.fond)
         y0 = ypix(self.mise)
-        _halo(d, [(GX0, y0), (xpix(n - 1), y0)], ROUGE, largeur=3)
+        _halo(d, [(GX0, y0), (xpix(n - 1), y0)], self.repere, largeur=3, fond=self.fond)
 
         for (px, py), nom, val, c in (
-            ((xpix(n - 1), y0), "Investi", self.mise, ROUGE),
+            ((xpix(n - 1), y0), "Investi", self.mise, self.repere),
             (courbe[-1], self.titre, actuel, couleur),
         ):
             d.ellipse((px - 11, py - 11, px + 11, py + 11), fill=c,
                       outline=BLANC, width=2)
-            d.text((px + 20, py - 24), nom, font=self.f_lab, fill=c)
-            d.text((px + 20, py + 2), _euro(val, True), font=self.f_val, fill=BLANC)
+            # « Commerzbank » debordait de 70px a droite et sortait coupe en
+            # plein milieu du mot : la marge de GX1 a ete calculee pour
+            # « Investi », pas pour les noms longs. On bascule alors
+            # l'etiquette A GAUCHE du point - la simple rentrer dans le cadre
+            # la ferait chevaucher le marqueur.
+            montant = _euro(val, True)
+            large = max(d.textlength(nom, font=self.f_lab),
+                        d.textlength(montant, font=self.f_val))
+            x = px + 20 if px + 20 + large <= L - 12 else max(8, px - 20 - large)
+            d.text((x, py - 24), nom, font=self.f_lab, fill=c)
+            d.text((x, py + 2), montant, font=self.f_val, fill=BLANC)
+            # Le point de l'entreprise porte son logo ; celui de la mise reste
+            # une pastille de couleur, il ne represente aucune societe.
+            if self.pastille is not None and nom == self.titre:
+                r = self.pastille.width // 2
+                img.paste(self.pastille, (int(px) - r, int(py) - r), self.pastille)
 
-        d.rounded_rectangle((78, 150, L - 78, 262), radius=18, fill=BLEU)
-        for i, ligne in enumerate([f"POV: Du hast {self.annee_debut}",
-                                   f"{self.mise} € in {self.titre} investiert"]):
-            d.text(((L - d.textlength(ligne, font=self.f_titre)) / 2, 166 + i * 42),
-                   ligne, font=self.f_titre, fill=BLANC)
+        d.rounded_rectangle((78, 150, L - 78, 262), radius=18, fill=self.accent)
+        for i, ligne in enumerate(self.titre_lignes):
+            # La carte-titre etait dessinee sans jamais verifier que le texte y
+            # tenait : « 100 € in Commerzbank investiert » debordait jusqu'au
+            # bord de l'image. On reduit la police plutot que de couper le mot.
+            police = self._police_titre(d, ligne)
+            d.text(((L - d.textlength(ligne, font=police)) / 2, 166 + i * 42),
+                   ligne, font=police, fill=BLANC)
 
         ecart = actuel - self.mise
         txt = ("Gewinn : " if ecart >= 0 else "Verlust : ") + _euro(abs(ecart), True)
         d.text(((L - d.textlength(txt, font=self.f_bas)) / 2, 1175), txt,
-               font=self.f_bas, fill=VERT if ecart >= 0 else ROUGE)
+               font=self.f_bas, fill=self.gain if ecart >= 0 else self.perte)
 
         if self.badges:
             # Lecture en aller-retour : sans ça, la boucle saute visiblement

@@ -39,6 +39,7 @@ from pathlib import Path
 
 import sfx
 import subtitles
+import variation
 import watermark
 
 
@@ -175,7 +176,7 @@ LANGUAGES = {
             "SETTING: every scene takes place in Germany or continental Europe. Money on "
             "screen is euro notes and coins, never dollars. Streets, shops, flats and "
             "offices look German: older apartment buildings with tall windows, tiled "
-            "supermarket floors with narrow aisles, grey overcast northern light, bicycles, "
+            "supermarket floors with narrow aisles, bicycles, "
             "regional trains. Never American suburbs, strip malls, yellow school buses or "
             "dollar bills. Keep signage unreadable or absent - no brand logos anywhere."
         ),
@@ -247,13 +248,16 @@ Title rules: the full title (trigger phrase + observation) stays under 12 words,
 
 Output: return ONLY the 10 titles, one per line, numbered 1 to 10, spanning at least 5 different angles above. Nothing else, no preamble."""
 
-def build_script_system(mode_cfg, lang="en"):
+def build_script_system(mode_cfg, lang="en", charpente=None):
     # Format "VOICI POURQUOI" (voir build_idea_system) - explication d'une
     # sensation/observation quotidienne sur l'argent, PAS une histoire
     # chiffree a la "Tom accumule des gains". Les chiffres restent utiles
     # comme illustration ponctuelle, mais ne sont plus le moteur du script -
     # feedback explicite : l'ancienne version etait "trop dans les nombres".
     cfg = lang_cfg(lang)
+    # Chemin entre l'accroche et la chute. Une seule forme existait, donc
+    # chaque script de la chaine suivait rigoureusement le meme trajet.
+    charpente = charpente or variation.CHARPENTES[0][1]
     trigger_phrase = cfg["trigger"]
     lang_instruction = ""
     if lang != "en":
@@ -276,8 +280,7 @@ This is an EXPLANATION of a relatable everyday phenomenon, NOT a story about a n
 
 Follow this structure:
 1. HOOK (1 sentence, mandatory, opens the script almost verbatim as the video's title): starts with "{trigger_phrase}" followed by the exact relatable everyday feeling/observation taken from the chosen title - reuse that title, never an example written in this prompt.
-2. THE RELATABLE FEELING (1-2 sentences): describe the everyday experience so the viewer instantly recognizes themselves in it - concrete and specific, but no character or invented numbers needed here, just a vivid, familiar situation.
-3. THE HIDDEN REASON (2-4 sentences): reveal the real underlying mechanism - a psychological bias, a business/pricing strategy, a banking mechanism, or an economic principle - explained in the simplest possible terms. Use a number ONLY if one genuinely helps illustrate the mechanism (e.g. a typical price, rate, or percentage) - never invent a chain of numbers for their own sake.
+{charpente}
 4. OPTIONAL SHORT EXAMPLE (0-2 sentences, only if it truly clarifies): a brief concrete illustration - can reference a real-world type of actor (a bank, a store, an app) or a generic "imagine someone who..." - not a mandatory named character, and not a running numeric story.
 5. PAYOFF / REFRAME (1 sentence): a punchy closing insight that changes how the viewer will see this everyday moment from now on.
 6. CALL TO ACTION (mandatory, exactly 1 short sentence, always last): unlike generic Shorts, this niche's viewers respond to a warm, personal, low-hype ask to follow/subscribe - never a generic "smash that subscribe button" line. Always start with a short "if you enjoyed/liked this" conditional clause, then the effort/behind-the-scenes ask: mention the real work behind making the video and ask for a follow in return (e.g. "If you enjoyed this, following means a lot - these videos take hours to make."). Vary the exact wording each time (never reuse the same sentence twice) but always keep both parts: the "if you liked it" clause AND the effort ask - never switch to a "more content" pitch or any other angle. Keep it under 15 words, warm and humble in tone, not salesy or hyped.
@@ -312,7 +315,7 @@ Style rules:
 Output: return ONLY the spoken script text, ending with the call-to-action sentence from step 6. Nothing else, no preamble, no title, no quotes around it. Never wrap the output in any document/canvas/artifact markup such as ":::writing{{...}}" or code fences - plain spoken text only, nothing before the first word or after the last word."""
 
 
-def build_scenes_system(n_scenes_hint, lang="en"):
+def build_scenes_system(n_scenes_hint, lang="en", ambiance=None):
     # Micro-details visuels/animation extraits d'une analyse frame-by-frame
     # (1 frame/seconde, pas juste 1 frame par beat) de 2 vraies videos finance
     # - voir video-vision/library_finance/REVIEW.md, section "Micro-details
@@ -373,7 +376,11 @@ Aim to give EVERY scene a sound effect when one genuinely fits - a word that evo
 
 Output ONLY valid JSON (no markdown fences, no preamble), matching exactly:
 {{{{"scenes": [{{{{"scene_no": 1, "spoken_text": "...", "medium": "real|3d_anatomical|3d_game", "camera_angle": "...", "image_prompt": "...", "animation_prompt": "...", "sfx": null}}}}]}}}}""".format(
-        n_scenes_hint=n_scenes_hint, style_lock=STYLE_LOCK, character=CHARACTER,
+        n_scenes_hint=n_scenes_hint,
+        # L'ambiance s'ajoute au medium sans le remplacer : le rendu 3D et
+        # le personnage restent identiques, seule la lumiere change.
+        style_lock=STYLE_LOCK + (f", {ambiance}" if ambiance else ""),
+        character=CHARACTER,
         sfx_vocabulary=sfx.vocabulary_block() or "- (aucun son disponible)",
         visual_context=lang_cfg(lang).get("visual_context", ""),
     )
@@ -572,13 +579,22 @@ def get_duration(path):
         return 0.0
 
 
-def generate_voice(text, out_path, lang="en"):
-    audio_profile = lang_cfg(lang)["audio_profile"]
+def generate_voice(text, out_path, lang="en", profil=None, timbre=None):
+    """Voix d'une scene.
+
+    `profil` remplace l'intention de jeu (dramatique, calme, proche du
+    micro...) : sans lui, toutes les videos de la chaine sont lues exactement
+    de la meme maniere. `timbre` choisit la voix elle-meme - sa valeur doit
+    etre un nom accepte par le fournisseur, d'ou le repli sur celui qui a ete
+    valide en production.
+    """
+    audio_profile = profil or lang_cfg(lang)["audio_profile"]
     task = create_task(
         "google/gemini-3-1-flash-tts",
         {
             "speakers": [
-                {"speaker_id": "Speaker 1", "voice_name": "Zephyr", "audio_profile": audio_profile,
+                {"speaker_id": "Speaker 1", "voice_name": timbre or "Zephyr",
+                 "audio_profile": audio_profile,
                  "style": "Newscaster", "pace": "Natural", "accent": "Neutral"}
             ],
             "dialogue_turns": [{"speaker_id": "Speaker 1", "text": text}],
@@ -711,6 +727,11 @@ def main():
                               "variable d'environnement WATERMARK ; vide = aucun filigrane.")
     parser.add_argument("--no-sfx", action="store_true",
                          help="Desactive les bruitages (actifs par defaut).")
+    parser.add_argument("--variation-index", type=int, default=None,
+                         help="Rang du sujet dans sa liste validee. Sert a tirer la "
+                              "charpente, l'ambiance et la voix dans un paquet battu, "
+                              "pour que deux videos publiees a la suite ne se "
+                              "ressemblent pas.")
     parser.add_argument("--cache-dir", default=None,
                          help="Dossier ou sont conservees les scenes deja produites, PARTAGE "
                               "entre toutes les tentatives d'un meme sujet. Sans lui, le cache "
@@ -737,14 +758,23 @@ def main():
     CACHE_DIR = Path(args.cache_dir) if args.cache_dir else OUT_DIR
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Tout ce qui distingue cette video des autres, tire une fois ici. La
+    # graine vient du titre impose : une relance du meme sujet redonne la meme
+    # ambiance, sinon une reprise depuis le cache melangerait dans une seule
+    # video des scenes de plein jour et des scenes de nuit.
+    index = args.variation_index if args.variation_index is not None else 0
+    var = variation.pour(args.idea or "sans-titre", index, args.lang)
+
     mode_cfg = MODES[args.mode]
     suffix = "" if args.mode == "short" else f"_{args.mode}"
     suffix += lang_cfg(args.lang)["suffix"]
     if args.video_model == "seedance":
         suffix += "_seedance"  # runway est desormais le defaut (pas de suffixe)
     print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_model} ===\n")
+    print(f"  Variation : {var.resume()}")
 
-    script_system = build_script_system(mode_cfg, lang=args.lang)
+    script_system = build_script_system(mode_cfg, lang=args.lang,
+                                        charpente=var.charpente)
     trigger_phrase = lang_cfg(args.lang)["trigger"]
 
     idea_file = OUT_DIR / f"idea{suffix}.txt"
@@ -814,7 +844,8 @@ def main():
         n_scenes_hint = 8
         if args.mode == "60s":
             precheck_audio = OUT_DIR / f"_precheck{suffix}.wav"
-            if not generate_voice(script, precheck_audio, lang=args.lang):
+            if not generate_voice(script, precheck_audio, lang=args.lang,
+                              profil=var.profil_voix, timbre=var.timbre):
                 print("ECHEC generation voix de controle. Arret.")
                 return
             audio_dur = get_duration(precheck_audio)
@@ -839,7 +870,8 @@ def main():
                 script = candidate
                 print(script)
                 script_file.write_text(script, encoding="utf-8")
-                if not generate_voice(script, precheck_audio, lang=args.lang):
+                if not generate_voice(script, precheck_audio, lang=args.lang,
+                              profil=var.profil_voix, timbre=var.timbre):
                     print("  (echec voix de controle sur la version etoffee, on garde la precedente)")
                     break
                 audio_dur = get_duration(precheck_audio)
@@ -850,7 +882,8 @@ def main():
         print(f"  -> ~{n_scenes_hint} scenes visees (indicatif ; la duree de chaque scene sera mesuree individuellement a l'etape 4)")
 
         print("\n=== 3. Decoupage en scenes (avec texte parle par scene) ===")
-        scenes_system = build_scenes_system(n_scenes_hint, lang=args.lang)
+        scenes_system = build_scenes_system(n_scenes_hint, lang=args.lang,
+                                            ambiance=var.ambiance)
         scenes_raw = claude(scenes_system, f"Script:\n{script}", max_tokens=6000)
         if not scenes_raw:
             print("ECHEC total sur le decoupage en scenes. Arret.")
@@ -896,7 +929,8 @@ def main():
             continue
 
         print(f"\n=== Scene {n}/{n_scenes} : voix ===")
-        if not generate_voice(spoken_text, seg_audio_path, lang=args.lang):
+        if not generate_voice(spoken_text, seg_audio_path, lang=args.lang,
+                                 profil=var.profil_voix, timbre=var.timbre):
             print("  Echec voix de la scene.")
             continue
         seg_dur = get_duration(seg_audio_path)
@@ -1005,7 +1039,10 @@ def main():
 
     if not args.no_subtitles:
         ass_path = OUT_DIR / f"subs{suffix}.ass"
-        n_lines = subtitles.build_ass(timeline_segments, ass_path)
+        n_lines = subtitles.build_ass(timeline_segments, ass_path,
+                                      y=var.y_ferdinand,
+                                      actif=var.couleur_active,
+                                      inactif=var.couleur_inactive)
         if n_lines:
             overlays.append(subtitles.ass_filter(ass_path))
             described.append(f"sous-titres ({n_lines} mots)")
@@ -1017,7 +1054,8 @@ def main():
         wm_path = OUT_DIR / f"watermark{suffix}.ass"
         # La frise de la voix donne la duree exacte sans relire le fichier.
         total = sum(dur for _, dur in timeline_segments)
-        if watermark.build_ass(total, wm_path, override=args.watermark):
+        if watermark.build_ass(total, wm_path, override=args.watermark,
+                               waypoints=var.waypoints):
             overlays.append(subtitles.ass_filter(wm_path))
             described.append(f"filigrane {wm_text!r}")
 
@@ -1045,7 +1083,8 @@ def main():
     if not args.no_sfx and audio_path.exists():
         print("  Bruitages...")
         placed, warnings = sfx.plan(
-            timeline_segments, [cue for _, _, _, cue in sub_segments]
+            timeline_segments, [cue for _, _, _, cue in sub_segments],
+            seed=var.graine_sfx,
         )
         for w in warnings:
             print(f"    ATTENTION : {w}")

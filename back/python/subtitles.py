@@ -90,6 +90,15 @@ def _escape(text):
     return text.replace("\\", "").replace("{", "(").replace("}", ")")
 
 
+def _header(inactif):
+    """En-tete ASS, avec la couleur de repos passee en parametre.
+
+    Elle etait figee dans une constante : toutes les videos de la chaine
+    partageaient donc exactement le meme jaune et le meme blanc.
+    """
+    return HEADER.replace(COLOR_IDLE, inactif, 1) if inactif else HEADER
+
+
 HEADER = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: 720
@@ -166,14 +175,19 @@ def word_timeline(segments):
     return out
 
 
-def build_ass(segments, out_path, y=980):
+def build_ass(segments, out_path, y=980, actif=None, inactif=None):
     """Ecrit un fichier .ass pour la suite de scenes donnee.
 
     `y` positionne la ligne : 980 convient aux plans filmes (tiers bas), mais
     un format graphique a besoin de degager la zone de trace.
 
+    `actif` et `inactif` sont les couleurs ASS (&HBBGGRR&) du mot lu et des
+    mots voisins. Sans elles, on retombe sur le jaune et le blanc d'origine -
+    l'appel reste donc compatible avec l'ancien code.
+
     Renvoie le nombre de mots sous-titres (0 = rien a incruster).
     """
+    actif = actif or COLOR_ACTIVE
     lines = []
 
     for _scene, i, _word, start, end, words in word_timeline(segments):
@@ -185,7 +199,7 @@ def build_ass(segments, out_path, y=980):
             shown = shown_words[j - low]
             if j == i:
                 parts.append(
-                    f"{{\\1c{COLOR_ACTIVE}\\fscx110\\fscy110"
+                    f"{{\\1c{actif}\\fscx110\\fscy110"
                     f"\\t(0,90,0.5,\\fscx100\\fscy100)}}{shown}{{\\r}}"
                 )
             else:
@@ -200,7 +214,7 @@ def build_ass(segments, out_path, y=980):
     if not lines:
         return 0
 
-    Path(out_path).write_text(HEADER + "\n".join(lines) + "\n", encoding="utf-8")
+    Path(out_path).write_text(_header(inactif) + "\n".join(lines) + "\n", encoding="utf-8")
     return len(lines)
 
 

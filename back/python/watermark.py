@@ -50,12 +50,17 @@ def _escape(text):
     return text.replace("\\", "").replace("{", "(").replace("}", ")")
 
 
-def build_ass(duration, out_path, override=None):
+def build_ass(duration, out_path, override=None, waypoints=None):
     """Ecrit le fichier ASS du filigrane pour une video de `duration`.
+
+    `waypoints` remplace le parcours par defaut. Il etait fige, donc le
+    filigrane suivait exactement le meme chemin sur toutes les videos de la
+    chaine - un motif repere bien plus vite qu'une couleur.
 
     Renvoie le nombre de segments ecrits, 0 si aucun filigrane n'est configure
     ou si la duree est inexploitable.
     """
+    points = waypoints or WAYPOINTS
     text = _escape(configured(override))
     if not text or duration <= 0:
         return 0
@@ -76,12 +81,12 @@ def build_ass(duration, out_path, override=None):
 
     # Une balise \move est relative au debut de SA ligne : le parcours se
     # decoupe donc en autant de lignes que de segments.
-    segments = len(WAYPOINTS) - 1
+    segments = len(points) - 1
     span = duration / segments
     lines = []
     for i in range(segments):
-        x1, y1 = WAYPOINTS[i]
-        x2, y2 = WAYPOINTS[i + 1]
+        x1, y1 = points[i]
+        x2, y2 = points[i + 1]
         start, end = i * span, min(duration, (i + 1) * span)
         ms = int(span * 1000)
         lines.append(

@@ -30,6 +30,15 @@ back/data/
 # l'image Docker et le format graphique partirait sans son medaillon.
 !back/python/_medaillon/*.png
 
+# Logos des entreprises : meme logique d'asset. Voir back/python/logos/ pour
+# le nommage et la provenance - ce sont des marques deposees, deposees ici a
+# la main et jamais telechargees par le code.
+!back/python/logos/*.png
+# Sauf la planche de contact et les rebuts : outils de relecture, pas des
+# assets. Ils n'ont rien a faire dans l'image Docker.
+back/python/logos/_planche.png
+back/python/logos/_rejetes/
+
 # --- Logs ---
 *.log
 back_dev.log

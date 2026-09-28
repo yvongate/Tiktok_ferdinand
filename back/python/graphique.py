@@ -12,6 +12,7 @@ Usage :
 """
 import argparse
 import json
+import re
 import subprocess
 import sys
 import time
@@ -19,13 +20,16 @@ from pathlib import Path
 
 import chart
 import sfx as sfx_lib
+import variation as variation_lib
 import subtitles
 import watermark
 
 FPS = 24
-REVELATION = 60.0        # montée de la courbe
-MAINTIEN = 5.0           # image finale tenue, pour l'appel à l'abonnement
 MISE = 100
+# La montée de la courbe et le maintien de l'image finale sont désormais
+# tirés par vidéo (voir variation.REVELATION / variation.MAINTIEN) : un
+# rythme identique à la seconde près sur 95 vidéos se remarque plus vite
+# qu'une couleur.
 
 # Bruitages posés sur les moments de la courbe, pas à intervalle régulier.
 # Le riser démarre AVANT le sommet : un son de tension qui arrive après
@@ -39,22 +43,144 @@ SONS = [
 ]
 
 
-def phrases(sujet, reperes):
+# Repli : jeux de cinq phrases ecrits a l'avance, utilises quand l'appel a
+# GPT echoue (reseau, quota, credits). Sans eux, une panne d'API ferait perdre
+# la video entiere pour cinq phrases. Le vivier est volontairement fini et
+# relu : mieux vaut une tournure deja vue qu'un allemand approximatif.
+#
+# Les umlauts sont ecrits normalement (Hoechststand -> Höchststand) : ces
+# textes servent AUSSI de sous-titres, et un spectateur allemand lit
+# immediatement « Hoechststand » comme une faute d'etranger. La
+# translitteration datait d'un probleme d'encodage corrige depuis.
+VIVIER = [
+    ("Hundert Euro. {annee}.",
+     "Der Höchststand: {sommet} Euro.",
+     "Dann fällt {nom} auf {creux} Euro.",
+     "{final} Euro heute.",
+     "Und? Hättest du durchgehalten?"),
+    ("{annee}. Du legst hundert Euro an.",
+     "Ganz oben: {sommet} Euro.",
+     "Danach geht es runter. Bis auf {creux} Euro.",
+     "Heute sind es {final} Euro.",
+     "Und du? Wärst du dabeigeblieben?"),
+    ("Hundert Euro, {annee} investiert.",
+     "Zwischendurch: {sommet} Euro.",
+     "Dann verliert {nom}. {creux} Euro bleiben übrig.",
+     "Stand heute: {final} Euro.",
+     "Hättest du so lange gewartet?"),
+    ("Stell dir vor, es ist {annee}.",
+     "Dein bester Moment: {sommet} Euro.",
+     "Und dann? Runter auf {creux} Euro.",
+     "Am Ende: {final} Euro.",
+     "Ehrlich: Hättest du verkauft?"),
+]
+
+# Meme logique pour la carte-titre. « POV: » reste, la formulation change.
+TITRES = [
+    ("POV: Du hast {annee}", "{mise} € in {nom} investiert"),
+    ("POV: {annee}. Du legst", "{mise} € in {nom} an."),
+    ("POV: Deine {mise} €", "liegen seit {annee} in {nom}"),
+    ("POV: Du kaufst {annee}", "für {mise} € {nom}-Aktien"),
+]
+
+
+def _valeurs(sujet, reperes):
+    return {
+        "annee": reperes["annee_debut"],
+        "nom": sujet["nom"],
+        "sommet": round(reperes["sommet"]),
+        "creux": round(reperes["creux"]),
+        "final": round(reperes["final"]),
+        "mise": MISE,
+    }
+
+
+def _minutage(textes, reperes, revelation):
+    """Associe chaque phrase au moment de la courbe qu'elle commente.
+
+    L'ordre est fixe (départ, sommet, creux, résultat, question finale) :
+    c'est le minutage qui porte le sens, pas la formulation.
+    """
+    return [
+        (0.4, textes[0]),
+        (max(2.0, reperes["t_sommet"] - 1.6), textes[1]),
+        (max(4.0, reperes["t_creux"] - 1.6), textes[2]),
+        (revelation - 0.5, textes[3]),
+        (revelation + 1.2, textes[4]),
+    ]
+
+
+def phrases(sujet, reperes, index, revelation):
     """Cinq phrases allemandes, calées sur les événements de la courbe.
 
     Volontairement courtes : ~25 mots sur 65 secondes. Le silence entre deux
     phrases pendant que la courbe s'effondre en dit plus qu'un commentaire.
+
+    Écrites par GPT à partir des chiffres réels de CETTE vidéo, avec repli sur
+    le vivier si l'appel échoue. Les cinq phrases étaient jusqu'ici figées
+    dans le code : 95 vidéos au même texte près, le gabarit le plus
+    reconnaissable de toute la chaîne.
     """
-    nom = sujet["nom"]
-    return [
-        (0.4, f"Hundert Euro. {reperes['annee_debut']}."),
-        (max(2.0, reperes["t_sommet"] - 1.6),
-         f"Der Hoechststand: {round(reperes['sommet'])} Euro."),
-        (max(4.0, reperes["t_creux"] - 1.6),
-         f"Dann faellt {nom} auf {round(reperes['creux'])} Euro."),
-        (REVELATION - 0.5, f"{round(reperes['final'])} Euro heute."),
-        (REVELATION + 1.2, "Und? Haettest du durchgehalten?"),
-    ]
+    v = _valeurs(sujet, reperes)
+    ecrites = _par_modele(v)
+    if ecrites:
+        print("  Phrases ecrites par le modele.")
+        return _minutage(ecrites, reperes, revelation)
+    modele = _paquet_vivier(index)
+    print("  (repli sur le vivier de phrases)")
+    return _minutage([p.format(**v) for p in modele], reperes, revelation)
+
+
+def _paquet_vivier(index):
+    return variation_lib._paquet(VIVIER, index, "vivier")
+
+
+def _par_modele(v):
+    """Demande cinq phrases au modele. Renvoie None a la moindre anomalie.
+
+    Controles volontairement stricts : ces phrases partent en synthese vocale
+    ET en sous-titres, sans relecture humaine. Mieux vaut le vivier qu'une
+    sortie de modele bancale.
+    """
+    consigne = (
+        "You write the voice-over for a short German finance video showing what 100 EUR "
+        "invested in one company became over time. Write EXACTLY 5 lines, one per line, "
+        "no numbering, no quotes, no markdown.\n"
+        "Line 1: the start - the year and the 100 euros.\n"
+        "Line 2: the peak value.\n"
+        "Line 3: the fall, naming the company.\n"
+        "Line 4: the value today.\n"
+        "Line 5: a short direct question to the viewer, asking whether they would have held on.\n"
+        "RULES: German only, informal 'du', never 'Sie'. Each line at most 9 words. "
+        "Spoken German, not written German. Use the exact numbers given, never invent others. "
+        "Write umlauts normally (ä, ö, ü, ß). No emoji, no hashtags, no English."
+    )
+    donnees = (f"year={v['annee']} company={v['nom']} stake={v['mise']} EUR "
+               f"peak={v['sommet']} EUR trough={v['creux']} EUR today={v['final']} EUR")
+    import generate
+    sortie = generate.claude(consigne, donnees, max_tokens=300, retries=2)
+    if not sortie:
+        return None
+    lignes = [l.strip(" -•\t") for l in sortie.strip().splitlines() if l.strip()]
+    if len(lignes) != 5:
+        print(f"  ATTENTION : {len(lignes)} phrase(s) au lieu de 5, vivier utilise.")
+        return None
+    if any(len(l.split()) > 12 or len(l) > 90 for l in lignes):
+        print("  ATTENTION : phrase trop longue pour un sous-titre, vivier utilise.")
+        return None
+    # Les chiffres doivent etre ceux de la serie, pas ceux du modele.
+    attendus = {str(v["sommet"]), str(v["creux"]), str(v["final"])}
+    presents = {n for n in re.findall(r"\d+", " ".join(lignes))}
+    if not attendus <= presents:
+        print("  ATTENTION : chiffres inexacts dans la sortie du modele, vivier utilise.")
+        return None
+    return lignes
+
+
+def titre_lignes(sujet, reperes, index):
+    """Les deux lignes de la carte-titre, formulation variable."""
+    v = _valeurs(sujet, reperes)
+    return [l.format(**v) for l in variation_lib._paquet(TITRES, index, "titre")]
 
 
 def main():
@@ -91,7 +217,15 @@ def main():
     import generate
     generate.api_key()
 
+    # Tout ce qui distingue cette video des 94 autres, tire une fois ici.
+    # L'index est le rang du sujet dans la liste validee : il donne la
+    # position dans le paquet battu, donc deux videos publiees a la suite
+    # n'ont ni la meme palette, ni le meme rythme, ni la meme voix.
+    index = int(sujet.get("n", 0))
+    var = variation_lib.pour(sujet["symbole"], index, args.lang)
+
     print(f"=== Mode : graphique / Langue : {args.lang} ===\n")
+    print(f"  Variation : {var.resume_graphique()}")
 
     # --- 1. Donnees -----------------------------------------------------
     print("=== 1. Generation de l'idee ===")
@@ -115,22 +249,22 @@ def main():
     reperes = {
         "annee_debut": horo(donnees[0][0]).year,
         "sommet": vals[i_hi], "creux": vals[i_lo], "final": vals[-1],
-        "t_sommet": i_hi / (len(vals) - 1) * REVELATION,
-        "t_creux": i_lo / (len(vals) - 1) * REVELATION,
+        "t_sommet": i_hi / (len(vals) - 1) * var.revelation,
+        "t_creux": i_lo / (len(vals) - 1) * var.revelation,
     }
     print(f"  {len(donnees)} seances | {MISE:.0f} -> {vals[-1]:.2f} EUR "
           f"| sommet {reperes['sommet']:.2f}")
 
     # --- 2. Voix --------------------------------------------------------
     print("\n=== 2. Generation du script ===")
-    textes = phrases(sujet, reperes)
+    textes = phrases(sujet, reperes, index, var.revelation)
 
     # Une seule echelle d'avancement pour les deux phases. Les voix etaient
     # numerotees sur 5 et l'animation sur 1560 : le backend interpole sur
     # courant/total, si bien que la barre passait de 74 % a 18 % en changeant
     # de phase. Verifie : « Scene 5/5 » -> 74 %, « Scene 120/1560 » -> 18 %.
-    n_rev = int(REVELATION * FPS)
-    n_tot = n_rev + int(MAINTIEN * FPS)
+    n_rev = int(var.revelation * FPS)
+    n_tot = n_rev + int(var.maintien * FPS)
     JALON = 120                                   # une ligne toutes les 5 s
     etapes_anim = (n_tot + JALON - 1) // JALON
     etapes = len(textes) + etapes_anim
@@ -141,7 +275,8 @@ def main():
         # Dans le cache : une relance ne doit pas repayer les voix deja
         # produites pour ce meme sujet.
         wav = cache / f"voix_{i:02d}.wav"
-        if not wav.exists() and not generate.generate_voice(texte, wav, lang=args.lang):
+        if not wav.exists() and not generate.generate_voice(texte, wav, lang=args.lang,
+                                                profil=var.profil_voix, timbre=var.timbre):
             print("  Echec voix de la scene.")
             continue
         duree = generate.get_duration(wav)
@@ -158,12 +293,24 @@ def main():
     source = Path(__file__).parent / "_ferdinand_source.mp4"
     images = Path(__file__).parent / "_medaillon"
     if any(images.glob("f_*.png")) or source.exists():
-        badges = chart.medaillon(source)
+        badges = chart.medaillon(source, taille=var.medaillon)
         print(f"  Medaillon Ferdinand : {len(badges)} images")
     else:
         badges = []
         print("  ATTENTION : aucune image de medaillon, Ferdinand sera absent.")
-    rendu = chart.Rendu(donnees, sujet["nom"], reperes["annee_debut"], MISE, badges)
+
+    # Logo de l'entreprise : filigrane derriere le trace, et pastille a la
+    # pointe de la courbe. Facultatif - sans fichier, le rendu est celui
+    # d'avant, sans aucune degradation.
+    embleme = chart.logo(sujet["symbole"])
+    print(f"  Logo {sujet['symbole']} : "
+          + ("trouve" if embleme is not None else "absent, graphique sans logo"))
+    rendu = chart.Rendu(
+        donnees, sujet["nom"], reperes["annee_debut"], MISE, badges,
+        palette={"fond": var.fond, "grille": var.grille, "gain": var.gain,
+                 "perte": var.perte, "accent": var.accent, "repere": var.repere},
+        titre_lignes=titre_lignes(sujet, reperes, index),
+        logo_img=embleme)
     muet = out / f"anim{suffixe}.mp4"
     ff = subprocess.Popen(
         ["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
@@ -210,12 +357,15 @@ def main():
         ass = out / f"subs{suffixe}.ass"
         # y=350 : sous la carte-titre. La valeur par defaut (980) tomberait
         # dans le trace et chevaucherait l'etiquette « Investi ».
-        if subtitles.build_ass(segments, ass, y=350):
+        if subtitles.build_ass(segments, ass, y=var.y_graphique,
+                               actif=var.couleur_active,
+                               inactif=var.couleur_inactive):
             incrustations.append(subtitles.ass_filter(ass))
 
     if watermark.configured(args.watermark):
         wm = out / f"wm{suffixe}.ass"
-        if watermark.build_ass(total, wm, override=args.watermark):
+        if watermark.build_ass(total, wm, override=args.watermark,
+                               waypoints=var.waypoints):
             incrustations.append(subtitles.ass_filter(wm))
 
     entrees, filtres, etiquettes = ["-i", str(muet)], [], []
@@ -230,7 +380,7 @@ def main():
         dossier = sfx_lib.SFX_DIR
         ancres = {"debut": 0.0, "avant_sommet": reperes["t_sommet"],
                   "sommet": reperes["t_sommet"], "creux": reperes["t_creux"],
-                  "fin": REVELATION}
+                  "fin": var.revelation}
         for ancre, decalage, fichier, gain in SONS:
             chemin = dossier / fichier
             if not chemin.exists():

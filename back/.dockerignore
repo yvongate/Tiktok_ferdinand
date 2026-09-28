@@ -9,3 +9,11 @@ python/api.txt
 python/__pycache__
 *.log
 .git
+
+# Outils de relecture des logos : la planche de contact et les rebuts (des
+# photos de sieges sociaux ecartees automatiquement) pesent 11 Mo et ne
+# servent qu'a la mise au point. outils_logos.py est un outil manuel, lance a
+# la main, jamais pendant une generation.
+python/logos/_planche.png
+python/logos/_rejetes
+python/outils_logos.py
