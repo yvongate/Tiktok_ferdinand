@@ -11,7 +11,15 @@ export type JobStep =
   | 'done'
   | 'failed'
 
+export type Format = 'ferdinand' | 'graphique'
+
+export const FORMAT_LABELS: Record<Format, string> = {
+  ferdinand: 'Ferdinand (video narree)',
+  graphique: 'Graphique boursier',
+}
+
 export interface JobParams {
+  format: Format
   mode: 'short' | '60s'
   lang: 'en' | 'fr' | 'de'
   videoModel: 'runway' | 'seedance'
@@ -28,6 +36,9 @@ export interface JobProgress {
   durationCheck?: number
   waitingSeconds?: number
   waitingMax?: number
+  /** Bilan de fin : scenes reellement produites / prevues. */
+  scenesDone?: number
+  scenesPlanned?: number
 }
 
 export type IncidentKind =
@@ -71,6 +82,8 @@ export interface Job {
   incidents: JobIncident[]
   lastOutputAt?: string
   stalled?: boolean
+  /** Video livree, mais amputee : des scenes ont echoue en chemin. */
+  degraded?: boolean
   logTail: string[]
   /** Presents uniquement dans l'historique allege (logTail/incidents y sont
    *  vides pour ne pas transporter des megaoctets de logs inutiles). */
@@ -80,14 +93,25 @@ export interface Job {
 
 export interface Idea {
   n: number
-  cat: string
+  // format ferdinand
+  cat?: string
   /** Titre francais : relecture humaine uniquement. */
-  fr: string
+  fr?: string
   /** Titre allemand : c'est celui-ci qui part en production. */
-  de: string
+  de?: string
+  // format graphique
+  nom?: string
+  symbole?: string
+  annees?: number
+  histoire?: string
+  final?: number
 }
 
+/** Libelle affichable, quel que soit le format. */
+export const titreIdee = (i: Idea) => i.de ?? `${i.nom} — ${i.annees} ans`
+
 export interface IdeasProgress {
+  format: Format
   total: number
   used: number
   remaining: number
@@ -120,13 +144,45 @@ const ROOT = (import.meta.env.VITE_API_BASE ?? '').replace(/\/+$/, '')
 
 const BASE = `${ROOT}/api/generation`
 
+/**
+ * Jeton d'ecriture, fige a la compilation comme VITE_API_BASE.
+ *
+ * Il n'ouvre aucun droit supplementaire : il empeche seulement un inconnu de
+ * declencher des generations facturees sur ce compte. Il voyage en en-tete et
+ * jamais dans l'URL — une URL finit dans les journaux de tous les
+ * intermediaires.
+ */
+const TOKEN = (import.meta.env.VITE_API_TOKEN ?? '').trim()
+
+const enTetes = (base: Record<string, string> = {}): Record<string, string> =>
+  TOKEN ? { ...base, 'x-ferdinand-token': TOKEN } : base
+
 async function handle<T>(request: Promise<Response>): Promise<T> {
   const res = await request
   if (!res.ok) {
-    const body = await res.text()
-    throw new Error(body || `HTTP ${res.status}`)
+    throw new Error(await messageErreur(res))
   }
   return res.json() as Promise<T>
+}
+
+/**
+ * Nest repond une erreur en JSON ({statusCode, error, message}). Le corps brut
+ * etait affiche tel quel dans le bandeau rouge : l'utilisateur lisait
+ * `{"message":"Toutes les entrees...","error":"Bad Request","statusCode":400}`
+ * au lieu de la phrase ecrite pour lui.
+ */
+async function messageErreur(res: Response): Promise<string> {
+  const brut = await res.text()
+  if (!brut) return `Erreur ${res.status}`
+  try {
+    const json = JSON.parse(brut) as { message?: string | string[] }
+    const m = json.message
+    if (Array.isArray(m) && m.length) return m.join(' · ')
+    if (typeof m === 'string' && m) return m
+  } catch {
+    /* pas du JSON : le texte brut fait deja l'affaire */
+  }
+  return brut
 }
 
 export const api = {
@@ -134,7 +190,7 @@ export const api = {
     handle<Job>(
       fetch(BASE, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: enTetes({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(params),
       }),
     ),
@@ -143,7 +199,11 @@ export const api = {
 
   get: (id: string) => handle<Job>(fetch(`${BASE}/${id}`)),
 
-  cancel: (id: string) => handle<Job>(fetch(`${BASE}/${id}`, { method: 'DELETE' })),
+  /** Annule si le job tourne, le SUPPRIME (fichiers compris) s'il est termine. */
+  cancelOrDelete: (id: string) =>
+    handle<Job | { id: string; freed: number }>(
+      fetch(`${BASE}/${id}`, { method: 'DELETE', headers: enTetes() }),
+    ),
 
   videoUrl: (id: string) => `${BASE}/${id}/video`,
 
@@ -153,7 +213,7 @@ export const api = {
 
   health: () => handle<HealthReport>(fetch(`${ROOT}/api/health`)),
 
-  ideas: () => handle<IdeasProgress>(fetch(`${BASE}/ideas`)),
+  ideas: () => handle<IdeasProgress[]>(fetch(`${BASE}/ideas`)),
 
   /** Suivi live d'un job. Renvoie une fonction de nettoyage. */
   subscribe: (id: string, onJob: (job: Job) => void): (() => void) => {

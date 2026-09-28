@@ -11,18 +11,23 @@ import {
   Query,
   Res,
   Sse,
+  UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import * as fs from 'fs';
 import { filter, map, merge, Observable, of } from 'rxjs';
 import { CreateGenerationDto } from './dto/create-generation.dto';
+import { EcritureGuard } from './ecriture.guard';
 import type { Job } from './job.types';
-import { IdeasService, type IdeasProgress } from './ideas.service';
+import { FORMATS, IdeasService, type Format, type IdeasProgress } from './ideas.service';
 import { JobsService } from './jobs.service';
 
 interface SseMessage {
   data: Job;
 }
+
+/** Lignes de journal transportees par le flux live (l'interface en affiche 60). */
+const FLUX_LOG_LINES = 60;
 
 @Controller('generation')
 export class GenerationController {
@@ -31,22 +36,28 @@ export class GenerationController {
     private readonly ideas: IdeasService,
   ) {}
 
-  /** Avancement dans la liste d'idees validees (barre de progression). */
+  /** Avancement dans CHAQUE liste validee (une barre par format). */
   @Get('ideas')
-  ideasProgress(): IdeasProgress {
-    return this.ideas.progress();
+  ideasProgress(): IdeasProgress[] {
+    return this.ideas.tousLesProgres();
   }
 
   @Post()
+  @UseGuards(EcritureGuard)
   create(@Body() dto: CreateGenerationDto): Job {
     // Liste chargee mais entierement consommee : on refuse explicitement
     // plutot que de laisser le modele improviser un titre non relu.
-    if (!this.ideas.isEmpty && !this.ideas.peek()) {
+    const format: Format = dto.format ?? 'ferdinand';
+    if (!FORMATS.includes(format)) {
+      throw new BadRequestException(`Format inconnu : ${format}`);
+    }
+    if (!this.ideas.isEmpty(format) && !this.ideas.peek(format)) {
       throw new BadRequestException(
-        'Toutes les idees validees ont ete utilisees. Regenere la liste avant de relancer.',
+        `Toutes les entrees du format ${format} ont ete utilisees. Regenere la liste avant de relancer.`,
       );
     }
     return this.jobs.create({
+      format,
       mode: dto.mode ?? 'short',
       lang: dto.lang ?? 'de',
       videoModel: dto.videoModel ?? 'runway',
@@ -75,9 +86,21 @@ export class GenerationController {
     return this.jobs.get(id);
   }
 
+  /**
+   * Annule un job en cours, SUPPRIME un job termine.
+   *
+   * Un seul bouton pour un seul geste : se debarrasser de ce job. La route
+   * ne faisait qu'annuler, si bien qu'aucun fichier ne pouvait etre efface -
+   * le disque ne pouvait que se remplir.
+   */
   @Delete(':id')
-  cancel(@Param('id') id: string): Job {
-    return this.jobs.cancel(id);
+  @UseGuards(EcritureGuard)
+  cancelOrDelete(@Param('id') id: string): Job | { id: string; freed: number } {
+    const job = this.jobs.get(id);   // leve 404 si l'id est inconnu
+    if (job.status === 'running' || job.status === 'queued') {
+      return this.jobs.cancel(id);
+    }
+    return this.jobs.remove(id);
   }
 
   /**
@@ -91,7 +114,19 @@ export class GenerationController {
     return merge(
       of(current),
       this.jobs.events.pipe(filter((job) => job.id === id)),
-    ).pipe(map((job) => ({ data: job })));
+    ).pipe(map((job) => ({ data: this.allegerPourFlux(job) })));
+  }
+
+  /**
+   * Le journal complet (300 lignes) partait A CHAQUE mise a jour de
+   * progression : sur une generation Ferdinand, ~150 mises a jour x ~24 Ko,
+   * soit plusieurs megaoctets pousses vers le navigateur pour afficher un
+   * pourcentage. L'interface n'en affiche de toute facon que les 60 dernieres ;
+   * le journal entier reste disponible sur GET /:id.
+   */
+  private allegerPourFlux(job: Job): Job {
+    if (job.logTail.length <= FLUX_LOG_LINES) return job;
+    return { ...job, logTail: job.logTail.slice(-FLUX_LOG_LINES) };
   }
 
   /**

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
+import { StringDecoder } from 'string_decoder';
 import * as path from 'path';
 import type { JobIncident, JobParams, JobProgress } from './job.types';
 
@@ -40,19 +41,28 @@ export class PythonRunnerService {
     done: 100,
   };
 
-  private get scriptPath(): string {
-    return (
-      process.env.PYTHON_SCRIPT_PATH ??
-      path.resolve(__dirname, '..', '..', 'python', 'generate.py')
-    );
+  /**
+   * Chaque format a son script. PYTHON_SCRIPT_PATH reste prioritaire : c'est
+   * lui qui permet de tester tout le backend contre le mock, sans API.
+   */
+  private scriptPour(format: JobParams['format']): string {
+    if (process.env.PYTHON_SCRIPT_PATH) return process.env.PYTHON_SCRIPT_PATH;
+    const fichier = format === 'graphique' ? 'graphique.py' : 'generate.py';
+    return path.resolve(__dirname, '..', '..', 'python', fichier);
   }
 
   private get pythonBin(): string {
     return process.env.PYTHON_BIN ?? 'python';
   }
 
-  run(params: JobParams, outDir: string, cb: RunCallbacks, idea?: string): RunHandle {
-    const script = this.scriptPath;
+  run(
+    params: JobParams,
+    outDir: string,
+    cacheDir: string | undefined,
+    cb: RunCallbacks,
+    idea?: string,
+  ): RunHandle {
+    const script = this.scriptPour(params.format);
     const args = [
       '-u', // sortie non bufferisee : indispensable pour la progression live
       script,
@@ -65,16 +75,30 @@ export class PythonRunnerService {
       '--out-dir',
       outDir,
     ];
-    // Sans idee imposee, le script retombe sur son ancien comportement : il
-    // en genere dix et en tire une. C'est le repli si la liste validee est
-    // absente ou epuisee.
-    if (idea) args.push('--idea', idea);
+    // Cache commun a toutes les tentatives d'un meme sujet : c'est ce qui rend
+    // vraie la "reprise sans nouveaux credits" affichee apres un echec.
+    if (cacheDir) args.push('--cache-dir', cacheDir);
+    // Le format graphique recoit le sujet complet en JSON (symbole, duree) ;
+    // Ferdinand ne recoit qu'un titre. Sans rien, generate.py retombe sur son
+    // ancien comportement : il genere dix idees et en tire une.
+    if (idea) args.push(params.format === 'graphique' ? '--subject' : '--idea', idea);
 
     this.logger.log(`Lancement : ${this.pythonBin} ${args.join(' ')}`);
 
     const child: ChildProcessWithoutNullStreams = spawn(this.pythonBin, args, {
       cwd: path.dirname(script),
-      env: { ...process.env },
+      // detached : le script passe l'essentiel de son temps a attendre des
+      // FFmpeg lances en sous-process. Tuer Python seul les laissait tourner -
+      // ils continuaient d'encoder, de tenir le fichier ouvert et de manger le
+      // demi-CPU de Render apres une annulation. Un groupe permet de tuer tout
+      // l'arbre d'un coup (voir tuerArbre).
+      detached: process.platform !== 'win32',
+      // PYTHONIOENCODING : sans elle, Python ecrit sur Windows dans la page de
+      // code ANSI (cp1252) alors qu'on relit en UTF-8 juste en dessous. Tout
+      // caractere non-ASCII revenait casse : "Commerzbank <?> 20 ans", et les
+      // umlauts allemands (Vermogen, Gebuhren) auraient subi le meme sort dans
+      // les titres affiches ET dans le nom du fichier telecharge.
+      env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
     });
 
     // La scene courante sert a rattacher un incident a l'endroit ou il s'est
@@ -82,27 +106,49 @@ export class PythonRunnerService {
     // ligne d'erreur, mais c'est l'information la plus utile a l'ecran.
     let currentScene: number | undefined;
 
-    const handleChunk = (chunk: Buffer) => {
-      for (const rawLine of chunk.toString('utf8').split(/\r?\n/)) {
-        const line = rawLine.trimEnd();
-        if (!line.trim()) continue;
-        cb.onLogLine(line);
+    const traiter = (line: string) => {
+      if (!line.trim()) return;
+      cb.onLogLine(line);
 
-        const patch = this.parseLine(line);
-        if (patch) {
-          if (patch.sceneCurrent) currentScene = patch.sceneCurrent;
-          cb.onProgress(patch);
-        }
+      const patch = this.parseLine(line);
+      if (patch) {
+        if (patch.sceneCurrent) currentScene = patch.sceneCurrent;
+        cb.onProgress(patch);
+      }
 
-        const incident = this.parseIncident(line);
-        if (incident) {
-          cb.onIncident({ scene: currentScene, ...incident });
-        }
+      const incident = this.parseIncident(line);
+      if (incident) {
+        cb.onIncident({ scene: currentScene, ...incident });
       }
     };
 
-    child.stdout.on('data', handleChunk);
-    child.stderr.on('data', handleChunk);
+    /**
+     * Un flux n'arrive pas ligne par ligne : une coupure de paquet peut tomber
+     * au milieu d'une ligne, et meme au milieu d'un caractere UTF-8. Decoder
+     * chaque morceau isolement coupait donc les lignes en deux et remplacait
+     * les octets orphelins par des "?". StringDecoder garde l'octet en attente,
+     * et le reste de ligne attend le morceau suivant.
+     *
+     * Un tampon par flux : stdout et stderr arrivent entremeles, un tampon
+     * commun recollerait des moities de lignes venues des deux.
+     */
+    const brancher = (flux: NodeJS.ReadableStream) => {
+      const decodeur = new StringDecoder('utf8');
+      let reste = '';
+      flux.on('data', (chunk: Buffer) => {
+        const morceaux = (reste + decodeur.write(chunk)).split(/\r?\n/);
+        reste = morceaux.pop() ?? '';
+        for (const l of morceaux) traiter(l.trimEnd());
+      });
+      flux.on('end', () => {
+        const fin = reste + decodeur.end();
+        reste = '';
+        if (fin) traiter(fin.trimEnd());
+      });
+    };
+
+    brancher(child.stdout);
+    brancher(child.stderr);
 
     const done = new Promise<{ ok: boolean; code: number | null }>((resolve) => {
       child.on('close', (code) => resolve({ ok: code === 0, code }));
@@ -112,7 +158,40 @@ export class PythonRunnerService {
       });
     });
 
-    return { kill: () => child.kill(), done };
+    return { kill: () => this.tuerArbre(child), done };
+  }
+
+  /**
+   * Tue le script ET ses sous-process (FFmpeg surtout).
+   *
+   * `child.kill()` n'envoie le signal qu'a Python : pendant un montage, Python
+   * attend dans subprocess.run et FFmpeg survit a l'annulation.
+   *  - Linux/Docker : le process est chef de groupe (detached), on signale tout
+   *    le groupe avec un PID negatif.
+   *  - Windows : pas de groupe de signaux, taskkill /T fait le meme travail.
+   */
+  private tuerArbre(child: ChildProcessWithoutNullStreams): void {
+    const pid = child.pid;
+    if (pid === undefined) return;
+    try {
+      if (process.platform === 'win32') {
+        spawn('taskkill', ['/pid', String(pid), '/T', '/F']);
+      } else {
+        process.kill(-pid, 'SIGTERM');
+        // Filet : ce qui ignore SIGTERM est acheve 5s plus tard.
+        const coup = setTimeout(() => {
+          try {
+            process.kill(-pid, 'SIGKILL');
+          } catch {
+            /* groupe deja disparu */
+          }
+        }, 5000);
+        coup.unref?.();
+      }
+    } catch (err) {
+      this.logger.warn(`Arret force impossible (pid ${pid}) : ${(err as Error).message}`);
+      child.kill();
+    }
   }
 
   /**
@@ -121,6 +200,23 @@ export class PythonRunnerService {
    */
   private parseLine(line: string): Partial<JobProgress> | null {
     const P = PythonRunnerService.STEP_PERCENT;
+
+    // --- Bilan des scenes, juste avant la fin ---
+    // Une scene qui echoue n'arrete pas le pipeline : la video sort plus
+    // courte et, sans ce bilan, rigoureusement identique a une reussite.
+    const bilan = /^=== BILAN\s*:\s*(\d+)\/(\d+) scenes produites/.exec(line);
+    if (bilan) {
+      const done = Number(bilan[1]);
+      const planned = Number(bilan[2]);
+      return {
+        scenesDone: done,
+        scenesPlanned: planned,
+        message:
+          done < planned
+            ? `ATTENTION : ${done}/${planned} scenes seulement`
+            : `${done}/${planned} scenes produites`,
+      };
+    }
 
     // --- Fin ---
     const termine = /^=== TERMINE\s*:\s*(.+?)\s*===$/.exec(line);
@@ -139,10 +235,19 @@ export class PythonRunnerService {
       const current = Number(scene[1]);
       const total = Number(scene[2]);
       const stageRaw = scene[3].toLowerCase();
-      const sceneStage: JobProgress['sceneStage'] =
-        stageRaw.startsWith('voix') ? 'voix' : stageRaw.startsWith('image') ? 'image' : 'video';
+      // Seuls les trois mots connus sont reconnus : tout classer en "video"
+      // par defaut faisait passer une ligne inattendue pour la derniere
+      // sous-etape, et donc avancer la barre a tort.
+      const sceneStage: JobProgress['sceneStage'] = stageRaw.startsWith('voix')
+        ? 'voix'
+        : stageRaw.startsWith('image')
+          ? 'image'
+          : stageRaw.startsWith('video')
+            ? 'video'
+            : undefined;
       // 12% -> 90% reparti sur les scenes, avec un tiers par sous-etape
-      const stageOffset = sceneStage === 'voix' ? 0 : sceneStage === 'image' ? 0.34 : 0.67;
+      const stageOffset =
+        sceneStage === 'image' ? 0.34 : sceneStage === 'video' ? 0.67 : 0;
       const sceneFraction = total > 0 ? (current - 1 + stageOffset) / total : 0;
       return {
         step: 'generating',
@@ -189,7 +294,7 @@ export class PythonRunnerService {
     }
 
     // --- Details utiles ---
-    const idea = /^->\s*Idee choisie\s*:\s*(.+)$/.exec(line);
+    const idea = /^->\s*Idee (?:choisie|imposee)\s*:\s*(.+)$/.exec(line);
     if (idea) {
       return { idea: idea[1].trim(), message: `Idee : ${idea[1].trim()}` };
     }

@@ -2,6 +2,10 @@ import { IsIn, IsOptional } from 'class-validator';
 
 export class CreateGenerationDto {
   @IsOptional()
+  @IsIn(['ferdinand', 'graphique'])
+  format: 'ferdinand' | 'graphique' = 'ferdinand';
+
+  @IsOptional()
   @IsIn(['short', '60s'])
   mode: 'short' | '60s' = 'short';
 

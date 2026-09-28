@@ -42,29 +42,47 @@ import subtitles
 import watermark
 
 
-def _load_api_key():
+_API_KEY = None
+
+
+def api_key():
     """Cle API KIE.AI. Priorite a la variable d'environnement (indispensable
     pour l'hebergement : pas de chemin absolu Windows en dur), avec repli sur
-    un fichier local pour l'usage en developpement."""
+    un fichier local pour l'usage en developpement.
+
+    Lue A LA DEMANDE, pas a l'import : au niveau module, l'absence de cle
+    tuait le script avant meme argparse (`--help` inclus) et, pour
+    graphique.py qui importe ce module en cours de route, l'erreur ne
+    survenait qu'apres le chargement des donnees.
+    """
+    global _API_KEY
+    if _API_KEY:
+        return _API_KEY
     env_key = os.environ.get("KIE_API_KEY")
     if env_key:
-        return env_key.strip().split(":")[-1].strip()
+        _API_KEY = env_key.strip().split(":")[-1].strip()
+        return _API_KEY
     for candidate in (
         Path(__file__).parent / "api.txt",
         Path(r"F:\Tiktok\api.txt"),
     ):
         if candidate.exists():
-            return candidate.read_text(encoding="utf-8").strip().split(":")[-1].strip()
+            _API_KEY = candidate.read_text(encoding="utf-8").strip().split(":")[-1].strip()
+            return _API_KEY
     raise SystemExit(
         "Cle API introuvable : definis la variable d'environnement KIE_API_KEY "
         "ou place un fichier api.txt a cote de ce script."
     )
 
 
-API_KEY = _load_api_key()
 # OUT_DIR est fixe par --out-dir (chaque job du backend ecrit dans son propre
 # dossier) ; par defaut, a cote du script comme avant en usage CLI direct.
 OUT_DIR = Path(__file__).parent
+
+# Dossier de cache des scenes, commun a toutes les tentatives d'UN MEME sujet
+# (--cache-dir). Confondu avec OUT_DIR, il etait recree vierge a chaque
+# lancement : la reprise annoncee apres un echec ne pouvait pas avoir lieu.
+CACHE_DIR = None
 
 SCENE_CLIP_SECONDS = 5  # duree fixe par scene (Seedance/Runway)
 
@@ -387,7 +405,7 @@ def claude(system, user_text, max_tokens=2000, retries=4):
     for attempt in range(1, retries + 1):
         result = http_json(
             "https://api.kie.ai/gpt-5-2/v1/chat/completions",
-            {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
+            {"Authorization": f"Bearer {api_key()}", "Content-Type": "application/json"},
             {
                 "model": "gpt-5.2",
                 "messages": [
@@ -410,7 +428,7 @@ def create_task(model, input_body, retries=3):
     for attempt in range(1, retries + 1):
         result = http_json(
             "https://api.kie.ai/api/v1/jobs/createTask",
-            {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
+            {"Authorization": f"Bearer {api_key()}", "Content-Type": "application/json"},
             {"model": model, "input": input_body},
             method="POST",
         )
@@ -435,7 +453,7 @@ def wait_for_result(task_id, max_wait=600, interval=8):
     while elapsed < max_wait:
         result = http_json(
             f"https://api.kie.ai/api/v1/jobs/recordInfo?taskId={task_id}",
-            {"Authorization": f"Bearer {API_KEY}"},
+            {"Authorization": f"Bearer {api_key()}"},
         )
         if result:
             data = result.get("data", {})
@@ -693,7 +711,16 @@ def main():
                               "variable d'environnement WATERMARK ; vide = aucun filigrane.")
     parser.add_argument("--no-sfx", action="store_true",
                          help="Desactive les bruitages (actifs par defaut).")
-    args = parser.parse_args()
+    parser.add_argument("--cache-dir", default=None,
+                         help="Dossier ou sont conservees les scenes deja produites, PARTAGE "
+                              "entre toutes les tentatives d'un meme sujet. Sans lui, le cache "
+                              "vit dans --out-dir, propre a chaque lancement, et une relance "
+                              "repaie toutes les scenes.")
+    # parse_known_args : le backend lance les deux scripts avec la meme base
+    # d'arguments. Une option ajoutee a graphique.py seul ne doit pas faire
+    # echouer celui-ci sur un "unrecognized arguments" invisible depuis
+    # l'interface (c'est arrive trois fois dans l'autre sens).
+    args, _ignores = parser.parse_known_args()
 
     # Sortie non bufferisee : le backend lit la progression ligne par ligne en
     # temps reel (sans ca, Python bufferise quand stdout n'est pas un terminal
@@ -703,10 +730,12 @@ def main():
     except AttributeError:
         pass
 
-    global OUT_DIR
+    global OUT_DIR, CACHE_DIR
     if args.out_dir:
         OUT_DIR = Path(args.out_dir)
         OUT_DIR.mkdir(parents=True, exist_ok=True)
+    CACHE_DIR = Path(args.cache_dir) if args.cache_dir else OUT_DIR
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     mode_cfg = MODES[args.mode]
     suffix = "" if args.mode == "short" else f"_{args.mode}"
@@ -840,8 +869,10 @@ def main():
     # aux bruitages. Alimente uniquement quand la scene aboutit : une scene
     # ratee ne doit pas y figurer, sinon tout ce qui suit est decale.
     sub_segments = []
-    scenes_dir = OUT_DIR / f"scenes{suffix}"
-    scenes_dir.mkdir(exist_ok=True)
+    # Dans le CACHE, pas dans le dossier du job : c'est ce qui permet a une
+    # relance de reprendre les scenes deja payees au lieu de tout refaire.
+    scenes_dir = CACHE_DIR / f"scenes{suffix}"
+    scenes_dir.mkdir(parents=True, exist_ok=True)
 
     print("\n=== 4. Generation scene par scene (voix individuelle + image + video calee sur sa duree) ===")
     for s in scenes:
@@ -1040,6 +1071,15 @@ def main():
     else:
         final_video = concat_video
         print("  Pas d'audio, video finale = concat seule.")
+
+    # Bilan AVANT la ligne de fin : une scene ratee n'arrete pas le pipeline,
+    # la video sort simplement plus courte. Sans ce compte, une video amputee
+    # (credits epuises a la scene 12, le 27/09) est indiscernable d'une
+    # reussite complete - ni dans le journal, ni a l'ecran.
+    print(f"\n=== BILAN : {len(clip_paths)}/{n_scenes} scenes produites ===")
+    if len(clip_paths) < n_scenes:
+        print(f"ATTENTION : {n_scenes - len(clip_paths)} scene(s) manquante(s), "
+              f"la video est plus courte que prevu.")
 
     print(f"\n=== TERMINE : {final_video} ===")
 

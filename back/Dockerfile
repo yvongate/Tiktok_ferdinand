@@ -19,8 +19,11 @@ ENV NODE_ENV=production
 
 # python3 : le pipeline. ffmpeg : montage + ffprobe pour mesurer les durees.
 # ca-certificates : indispensable pour les appels HTTPS vers KIE.AI.
+# python3-pil : le format graphique dessine ses courbes avec Pillow. Le paquet
+# Debian evite un pip install (et donc une chaine de compilation) dans l'image.
 RUN apt-get update \
- && apt-get install -y --no-install-recommends python3 ffmpeg ca-certificates \
+ && apt-get install -y --no-install-recommends \
+      python3 python3-pil ffmpeg ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -31,11 +34,12 @@ RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
 COPY python ./python
 
-# Le script Python n'a aucune dependance externe (stdlib uniquement) : pas de
-# pip install, donc rien a maintenir de ce cote.
-
+# Pas de PYTHON_SCRIPT_PATH ici : cette variable force UN script pour tous les
+# jobs. Elle existe pour le mock de test, et la laisser en production ferait
+# tourner generate.py meme sur un job "graphique" - une video Ferdinand a 0,80 $
+# au lieu du graphique demande, en ignorant le sujet. Le backend choisit
+# generate.py ou graphique.py d'apres le format du job.
 ENV PYTHON_BIN=python3 \
-    PYTHON_SCRIPT_PATH=/app/python/generate.py \
     DATA_DIR=/var/data \
     PORT=3000
 

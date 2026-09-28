@@ -13,6 +13,8 @@ export type JobStep =
   | 'failed';
 
 export interface JobParams {
+  /** Quel pipeline lancer : la video narree ou le graphique boursier. */
+  format: 'ferdinand' | 'graphique';
   mode: 'short' | '60s';
   lang: 'en' | 'fr' | 'de';
   videoModel: 'runway' | 'seedance';
@@ -36,6 +38,9 @@ export interface JobProgress {
   waitingSeconds?: number;
   /** Plafond d'attente avant abandon de cette tache. */
   waitingMax?: number;
+  /** Bilan de fin : scenes reellement produites / scenes prevues. */
+  scenesDone?: number;
+  scenesPlanned?: number;
 }
 
 /** Nature d'un incident, pour colorer/filtrer l'affichage. */
@@ -81,6 +86,8 @@ export interface JobFailure {
     | 'python-missing'
     | 'cancelled-by-restart'
     | 'no-video'
+    | 'data-source'
+    | 'killed-stalled'
     | 'unknown';
   /** Phrase affichable telle quelle. */
   summary: string;
@@ -112,6 +119,13 @@ export interface Job {
   lastOutputAt?: string;
   /** Vrai quand le process n'a plus rien emis depuis trop longtemps. */
   stalled?: boolean;
+  /**
+   * Job termine AVEC une video, mais amputee : des scenes ont echoue en cours
+   * de route et le pipeline a continue sans elles. Sans ce drapeau, une video
+   * de 58s au lieu de 75s se presente exactement comme une reussite complete -
+   * c'est precisement ce qui est arrive le 27/09 (credits epuises a la scene 12).
+   */
+  degraded?: boolean;
   /** Dernieres lignes de log, pour debug depuis l'UI. */
   logTail: string[];
   /**

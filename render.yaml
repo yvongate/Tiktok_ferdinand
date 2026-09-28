@@ -30,8 +30,16 @@ services:
     envVars:
       - key: KIE_API_KEY
         sync: false
+      # Jeton partage avec le front (VITE_API_TOKEN cote Vercel). SANS LUI,
+      # toutes les generations sont refusees en production : l'API est
+      # publique, et le CORS n'arrete qu'un navigateur, pas un curl.
+      - key: API_TOKEN
+        generateValue: true
       - key: FRONT_ORIGIN
         # URL(s) du front Vercel, separees par des virgules.
+        sync: false
+      # Pseudo incruste en filigrane. Vide = aucun filigrane.
+      - key: WATERMARK
         sync: false
       - key: DATA_DIR
         value: /var/data

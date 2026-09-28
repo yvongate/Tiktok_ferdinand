@@ -1,11 +1,17 @@
-import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Subject } from 'rxjs';
 import { diagnose } from './diagnose';
 import type { Job, JobIncident, JobParams, JobProgress } from './job.types';
-import { IdeasService } from './ideas.service';
+import { IdeasService, titreIdee } from './ideas.service';
 import { PythonRunnerService, type ParsedIncident } from './python-runner.service';
 
 const MAX_LOG_LINES = 300;
@@ -19,6 +25,26 @@ const MAX_INCIDENTS = 100;
  */
 const STALL_MS = 3 * 60 * 1000;
 const STALL_CHECK_MS = 30 * 1000;
+
+/**
+ * Silence au-dela duquel on ne signale plus, on TUE.
+ *
+ * Le watchdog se contentait de lever un drapeau : un process reellement fige
+ * restait "en cours" indefiniment et, comme la file est sequentielle, bloquait
+ * TOUTES les generations suivantes jusqu'a un redemarrage manuel du serveur.
+ *
+ * 20 minutes : la plus longue attente legitime est une tache video (plafond
+ * 600s), et le script emet un battement toutes les ~24s pendant cette attente.
+ * Vingt minutes sans la moindre ligne ne correspond a aucun fonctionnement
+ * normal.
+ */
+const KILL_AFTER_MS = 20 * 60 * 1000;
+
+/** Duree totale au-dela de laquelle un job est abandonne, meme bavard. */
+const MAX_JOB_MS = 3 * 60 * 60 * 1000;
+
+/** Jobs conserves dans l'historique (les plus anciens sont oublies). */
+const MAX_JOBS = 200;
 
 /**
  * Registre des jobs + file d'attente SEQUENTIELLE (une generation a la fois -
@@ -40,6 +66,9 @@ export class JobsService implements OnModuleInit {
   /** Jobs dont l'annulation a ete demandee (plus fiable que de relire un
    *  champ mute pendant l'await de fin de process). */
   private readonly cancelRequested = new Set<string>();
+  /** Jobs tues par le watchdog : a distinguer d'une annulation volontaire,
+   *  sinon l'ecran affiche "Annule" pour quelque chose que personne n'a annule. */
+  private readonly killRequested = new Set<string>();
 
   /** Flux d'evenements pour le SSE (un evenement par mise a jour de job). */
   readonly events = new Subject<Job>();
@@ -111,6 +140,44 @@ export class JobsService implements OnModuleInit {
     return job;
   }
 
+  /**
+   * Supprime definitivement un job : son dossier de travail, sa video, et son
+   * entree dans l'historique.
+   *
+   * Refuse tant que le job tourne ou attend : il faut l'annuler d'abord,
+   * sinon on effacerait des fichiers sous les pieds du process Python.
+   */
+  remove(id: string): { id: string; freed: number } {
+    const job = this.get(id);
+    if (job.status === 'running' || job.status === 'queued') {
+      throw new BadRequestException(
+        "Ce job est en cours : annule-le avant de le supprimer.",
+      );
+    }
+
+    let freed = 0;
+    try {
+      const mesurer = (dossier: string): void => {
+        for (const e of fs.readdirSync(dossier, { withFileTypes: true })) {
+          const complet = path.join(dossier, e.name);
+          if (e.isDirectory()) mesurer(complet);
+          else freed += fs.statSync(complet).size;
+        }
+      };
+      if (fs.existsSync(job.outDir)) {
+        mesurer(job.outDir);
+        fs.rmSync(job.outDir, { recursive: true, force: true });
+      }
+    } catch (err) {
+      this.logger.warn(`Suppression partielle de ${id} : ${(err as Error).message}`);
+    }
+
+    this.jobs.delete(id);
+    this.save();
+    this.logger.log(`Job ${id} supprime (${(freed / 1048576).toFixed(1)} Mo liberes)`);
+    return { id, freed };
+  }
+
   // --- File d'attente -------------------------------------------------
 
   private async drain(): Promise<void> {
@@ -140,13 +207,20 @@ export class JobsService implements OnModuleInit {
 
     // L'idee est RESERVEE ici mais consommee seulement a la reussite : un
     // job echoue ou annule doit pouvoir etre relance sur le meme titre.
-    const idea = this.ideas.peek();
+    const idea = this.ideas.peek(job.params.format);
     if (idea) {
       job.ideaNumber = idea.n;
-      job.progress = { ...job.progress, idea: idea.de };
+      job.progress = { ...job.progress, idea: titreIdee(idea) };
     }
+    // Ferdinand recoit un titre, le format graphique le sujet complet en
+    // JSON (symbole et duree, dont le script a besoin pour charger la serie).
+    const charge = idea
+      ? job.params.format === 'graphique'
+        ? JSON.stringify(idea)
+        : (idea.de ?? '')
+      : undefined;
 
-    const handle = this.runner.run(job.params, job.outDir, {
+    const handle = this.runner.run(job.params, job.outDir, this.cacheDir(job), {
       onProgress: (patch: Partial<JobProgress>) => {
         // Une etape qui avance annule une attente en cours : sinon le compteur
         // "attente du modele" resterait affiche apres la fin de cette attente.
@@ -177,7 +251,7 @@ export class JobsService implements OnModuleInit {
       onIncident: (incident: ParsedIncident) => {
         this.addIncident(job, incident);
       },
-    }, idea?.de);
+    }, charge);
 
     this.running.set(job.id, handle);
     const { ok, code } = await handle.done;
@@ -186,13 +260,44 @@ export class JobsService implements OnModuleInit {
 
     job.finishedAt = new Date().toISOString();
     job.stalled = false;
-    if (this.cancelRequested.delete(job.id)) {
+    const tueParWatchdog = this.killRequested.delete(job.id);
+    if (tueParWatchdog) {
+      job.status = 'failed';
+      job.failure = {
+        kind: 'killed-stalled',
+        summary: 'Generation abandonnee : le process ne repondait plus',
+        hint: 'Le job a ete tue pour liberer la file. Relancer : les scenes deja produites sont reprises depuis le cache, sans nouveaux credits.',
+      };
+      job.error = job.failure.summary;
+      job.progress = { ...job.progress, step: 'failed', message: job.error };
+    } else if (this.cancelRequested.delete(job.id)) {
       job.status = 'cancelled';
       job.progress = { ...job.progress, step: 'failed', message: 'Annule' };
     } else if (ok && job.videoPath && fs.existsSync(job.videoPath)) {
       job.status = 'done';
-      job.progress = { ...job.progress, step: 'done', percent: 100, message: 'Video prete' };
-      if (job.ideaNumber !== undefined) this.ideas.markUsed(job.ideaNumber);
+      // Une video peut etre livree ET amputee : le script continue apres une
+      // scene ratee. Le bilan du script dit combien de scenes ont abouti.
+      const { scenesDone, scenesPlanned } = job.progress;
+      job.degraded =
+        scenesDone !== undefined &&
+        scenesPlanned !== undefined &&
+        scenesDone < scenesPlanned;
+      job.progress = {
+        ...job.progress,
+        step: 'done',
+        percent: 100,
+        message: job.degraded
+          ? `Video prete mais INCOMPLETE : ${scenesDone}/${scenesPlanned} scenes`
+          : 'Video prete',
+      };
+      // Une video amputee ne consomme PAS le sujet : il doit rester le
+      // prochain de la liste pour etre relance, et son cache de scenes est
+      // conserve pour ne repayer que les scenes manquantes.
+      if (job.ideaNumber !== undefined && !job.degraded) {
+        this.ideas.markUsed(job.params.format, job.ideaNumber);
+        this.viderCache(job);
+      }
+      this.purgeIntermediates(job);
     } else {
       const producedVideo = Boolean(job.videoPath && fs.existsSync(job.videoPath));
       job.failure = diagnose(job.logTail, job.incidents, producedVideo, ok);
@@ -210,6 +315,91 @@ export class JobsService implements OnModuleInit {
     );
   }
 
+  /**
+   * Supprime les fichiers de travail d'un job REUSSI, en ne gardant que la
+   * video finale.
+   *
+   * Un job Ferdinand conserve environ 200 Mo de fichiers intermediaires
+   * (concats, clips de scene, voix, images gelees) pour 11 Mo utiles : sans
+   * ce menage, vingt-cinq videos suffisent a remplir un disque de 5 Go.
+   *
+   * Uniquement a la REUSSITE : tant qu'un job echoue, ses scenes deja
+   * produites permettent de le relancer sans repayer les credits. Une fois la
+   * video livree, cette reprise n'a plus d'objet.
+   */
+  private purgeIntermediates(job: Job): void {
+    if (!job.videoPath) return;
+    const garder = path.resolve(job.videoPath);
+    let liberes = 0;
+
+    const parcourir = (dossier: string): void => {
+      let entrees: fs.Dirent[];
+      try {
+        entrees = fs.readdirSync(dossier, { withFileTypes: true });
+      } catch {
+        return;
+      }
+      for (const entree of entrees) {
+        const complet = path.join(dossier, entree.name);
+        if (entree.isDirectory()) {
+          parcourir(complet);
+          try {
+            fs.rmdirSync(complet);
+          } catch {
+            /* dossier non vide : il contenait la video finale */
+          }
+          continue;
+        }
+        if (path.resolve(complet) === garder) continue;
+        try {
+          liberes += fs.statSync(complet).size;
+          fs.unlinkSync(complet);
+        } catch {
+          /* non bloquant : un fichier verrouille ne doit pas faire echouer
+             un job par ailleurs reussi */
+        }
+      }
+    };
+
+    try {
+      parcourir(job.outDir);
+    } catch (err) {
+      this.logger.warn(`Purge incomplete pour ${job.id} : ${(err as Error).message}`);
+      return;
+    }
+    if (liberes > 0) {
+      this.logger.log(
+        `Job ${job.id} : ${(liberes / 1048576).toFixed(1)} Mo de fichiers de travail supprimes`,
+      );
+    }
+  }
+
+  /**
+   * Dossier de cache des scenes, commun a toutes les tentatives d'UN MEME
+   * sujet.
+   *
+   * Il etait jusqu'ici confondu avec le dossier de travail du job, lui-meme
+   * cree avec un identifiant neuf a chaque lancement : la "reprise depuis le
+   * cache" promise par l'interface et par diagnose.ts ne pouvait donc jamais
+   * avoir lieu - relancer un job echoue repayait l'integralite des scenes.
+   * Indexe sur le numero du sujet, il survit d'une tentative a l'autre.
+   */
+  private cacheDir(job: Job): string | undefined {
+    if (job.ideaNumber === undefined) return undefined;
+    return path.join(this.dataDir, 'cache', `${job.params.format}-${job.ideaNumber}`);
+  }
+
+  /** Efface le cache d'un sujet mene a terme : il n'a plus rien a reprendre. */
+  private viderCache(job: Job): void {
+    const dir = this.cacheDir(job);
+    if (!dir) return;
+    try {
+      fs.rmSync(dir, { recursive: true, force: true });
+    } catch (err) {
+      this.logger.warn(`Cache non efface (${dir}) : ${(err as Error).message}`);
+    }
+  }
+
   private addIncident(job: Job, incident: ParsedIncident): void {
     const full: JobIncident = { at: new Date().toISOString(), ...incident };
     job.incidents.push(full);
@@ -225,10 +415,33 @@ export class JobsService implements OnModuleInit {
    */
   private startWatchdog(job: Job): NodeJS.Timeout {
     const timer = setInterval(() => {
-      if (job.status !== 'running' || job.stalled) return;
+      if (job.status !== 'running') return;
       const last = job.lastOutputAt ? Date.parse(job.lastOutputAt) : Date.now();
       const silence = Date.now() - last;
-      if (silence < STALL_MS) return;
+      const debut = job.startedAt ? Date.parse(job.startedAt) : Date.now();
+      const total = Date.now() - debut;
+
+      // Abandon : signaler ne suffit pas, la file resterait bloquee derriere.
+      const motif =
+        silence >= KILL_AFTER_MS
+          ? `aucune reponse depuis ${Math.round(silence / 60000)} min`
+          : total >= MAX_JOB_MS
+            ? `duree totale de ${Math.round(total / 3600000)} h depassee`
+            : null;
+      if (motif) {
+        this.killRequested.add(job.id);
+        this.addIncident(job, {
+          level: 'error',
+          kind: 'stall',
+          message: `Job abandonne : ${motif}. Le process a ete tue pour liberer la file.`,
+        });
+        this.logger.warn(`Job ${job.id} tue par le watchdog (${motif})`);
+        this.running.get(job.id)?.kill();
+        this.touch(job);
+        return;
+      }
+
+      if (job.stalled || silence < STALL_MS) return;
       job.stalled = true;
       this.addIncident(job, {
         level: 'error',
@@ -266,8 +479,26 @@ export class JobsService implements OnModuleInit {
     if (persist) this.save();
   }
 
+  /**
+   * Oublie les jobs les plus anciens. L'historique n'avait aucune borne :
+   * jobs.json grossit d'environ 25 Ko par generation (le journal en represente
+   * la quasi-totalite) et etait reecrit en entier a chaque sauvegarde.
+   *
+   * Seule l'ENTREE d'historique disparait : les fichiers ont deja ete purges a
+   * la reussite, et une suppression de video reste un geste explicite.
+   */
+  private oublierLesPlusAnciens(): void {
+    if (this.jobs.size <= MAX_JOBS) return;
+    const tries = this.list(); // du plus recent au plus ancien
+    for (const job of tries.slice(MAX_JOBS)) {
+      if (job.status === 'running' || job.status === 'queued') continue;
+      this.jobs.delete(job.id);
+    }
+  }
+
   private save(): void {
     try {
+      this.oublierLesPlusAnciens();
       fs.writeFileSync(this.jobsFile, JSON.stringify([...this.jobs.values()], null, 2), 'utf8');
     } catch (err) {
       this.logger.warn(`Sauvegarde des jobs impossible : ${(err as Error).message}`);

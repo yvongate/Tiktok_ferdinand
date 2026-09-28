@@ -244,10 +244,10 @@ button.danger {
 
 .history li {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   grid-template-areas:
-    'badge title date'
-    'badge meta date';
+    'badge title date supprimer'
+    'badge meta  date supprimer';
   gap: 2px 12px;
   align-items: center;
   padding: 10px 12px;
@@ -494,11 +494,11 @@ button.danger {
 
   /* La date passe sous le titre plutot que de lui voler sa largeur. */
   .history li {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     grid-template-areas:
-      'badge title'
-      'badge meta'
-      'badge date';
+      'badge title supprimer'
+      'badge meta  supprimer'
+      'badge date  supprimer';
     gap: 3px 10px;
     align-items: start;
   }
@@ -608,4 +608,57 @@ button.danger {
   padding: 1px 5px;
   border-radius: 4px;
   font-size: 0.85em;
+}
+
+/* --- Suppression depuis l'historique --------------------------------- */
+
+.history li {
+  position: relative;
+}
+
+/* Colonne dediee : la croix ne doit pas se superposer a la date. */
+.history-delete {
+  grid-area: supprimer;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.history-delete:hover {
+  border-color: var(--err);
+  color: var(--err);
+  background: rgba(192, 68, 63, 0.12);
+}
+
+/* --- Deux formats -------------------------------------------------- */
+
+/* Le panneau du format non selectionne reste consultable mais s'efface. */
+.ideas-panel.inactif {
+  opacity: 0.45;
+}
+
+.ideas-panel.inactif:hover {
+  opacity: 0.8;
+}
+
+.pill.format {
+  background: rgba(88, 132, 255, 0.18);
+  color: #8fb0ff;
+  margin-right: 6px;
+}
+
+/* Video livree mais amputee : ni une reussite franche, ni un echec. */
+.failure-card.degraded {
+  border-color: rgba(240, 160, 60, 0.55);
+  background: rgba(240, 160, 60, 0.10);
+}
+
+.history-title .pill.error {
+  margin-left: 8px;
 }

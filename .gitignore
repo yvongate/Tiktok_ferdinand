@@ -25,6 +25,11 @@ back/data/
 # l'image Docker part sans aucun son.
 !back/python/sfx/*.wav
 
+# Meme raison pour les 72 images du medaillon Ferdinand : c'est l'animation du
+# renard, pas une sortie de pipeline. Non versionnees, elles manqueraient a
+# l'image Docker et le format graphique partirait sans son medaillon.
+!back/python/_medaillon/*.png
+
 # --- Logs ---
 *.log
 back_dev.log

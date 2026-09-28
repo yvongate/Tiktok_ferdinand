@@ -55,6 +55,14 @@ const RULES: Rule[] = [
     hint: 'Verifier PYTHON_BIN (souvent "python3" sous Linux/Docker, "python" sous Windows).',
   },
   {
+    // Avant la regle reseau generique : un refus de Yahoo est reconnaissable
+    // et n'appelle pas du tout le meme geste qu'une coupure de connexion.
+    kind: 'data-source',
+    match: /serie invalide|aucun taux de change|serie vide|cours indisponible|donnees boursieres/i,
+    summary: 'Les donnees boursieres sont inexploitables pour ce sujet',
+    hint: "Yahoo Finance n'a pas renvoye de serie utilisable (valeur retiree de la cote, historique trop court, cours ajuste negatif). Retirer ce sujet de subjects_de.json ou reduire le nombre d'annees.",
+  },
+  {
     kind: 'network',
     match: /erreur reseau|timeout apres|getaddrinfo|econnreset|remotedisconnected/i,
     summary: 'Le reseau a lache pendant les appels API',

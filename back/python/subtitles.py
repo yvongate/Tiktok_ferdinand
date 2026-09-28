@@ -166,8 +166,11 @@ def word_timeline(segments):
     return out
 
 
-def build_ass(segments, out_path):
+def build_ass(segments, out_path, y=980):
     """Ecrit un fichier .ass pour la suite de scenes donnee.
+
+    `y` positionne la ligne : 980 convient aux plans filmes (tiers bas), mais
+    un format graphique a besoin de degager la zone de trace.
 
     Renvoie le nombre de mots sous-titres (0 = rien a incruster).
     """
@@ -191,7 +194,7 @@ def build_ass(segments, out_path):
         override = "" if size == FONT_SIZE else f"\\fs{size}"
         lines.append(
             f"Dialogue: 0,{_timestamp(start)},{_timestamp(end)},Pop,,0,0,0,,"
-            f"{{\\pos(360,980){override}}}{' '.join(parts)}"
+            f"{{\\pos(360,{y}){override}}}{' '.join(parts)}"
         )
 
     if not lines:

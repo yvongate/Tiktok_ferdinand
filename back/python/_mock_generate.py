@@ -12,9 +12,11 @@ lignes que le vrai script), afin de tester l'affichage des incidents :
   MOCK_FAULTS=fatal     arret sur echec total
   MOCK_FAULTS=quota     arret sur HTTP 429
   MOCK_FAULTS=stall     silence prolonge (declenche le watchdog)
+  MOCK_FAULTS=partial   video livree mais amputee (scenes manquantes)
 Plusieurs valeurs separees par des virgules.
 """
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -27,6 +29,10 @@ p.add_argument("--lang", default="fr")
 p.add_argument("--video-model", default="runway")
 p.add_argument("--out-dir", default=".")
 p.add_argument("--idea", default=None)
+# Le format graphique recoit son sujet en JSON (--subject) la ou Ferdinand
+# recoit un titre (--idea). Les deux doivent donner la meme ligne "Idee
+# imposee", sinon le backend ne sait pas quelle entree a ete reservee.
+p.add_argument("--subject", default=None)
 
 # parse_known_args et non parse_args : toute option ajoutee au vrai script
 # sans l'etre ici faisait echouer TOUS les jobs sur un "unrecognized
@@ -53,7 +59,10 @@ print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_mode
 
 print("=== 1. Generation de l'idee ===")
 time.sleep(STEP)
-if args.idea:
+if args.subject:
+    sujet = json.loads(args.subject)
+    print(f"-> Idee imposee : {sujet['nom']} — {sujet['annees']} ans")
+elif args.idea:
     print(f"-> Idee imposee : {args.idea}")
 else:
     print("1. Voici pourquoi ton salaire disparait si vite")
@@ -92,7 +101,16 @@ print(f"{N_SCENES} scenes generees.")
 time.sleep(STEP)
 
 print("\n=== 4. Generation scene par scene (voix individuelle + image + video calee sur sa duree) ===")
+produites = 0
 for n in range(1, N_SCENES + 1):
+    # MOCK_FAULTS=partial : credits epuises en cours de route. Le pipeline
+    # continue sans ces scenes et livre une video plus courte - le cas exact
+    # de la video a 58s du 27/09, qui se presentait comme une reussite.
+    if "partial" in FAULTS and n >= N_SCENES - 1:
+        print(f"\n=== Scene {n}/{N_SCENES} : image ===")
+        print("  HTTP 402: {\"error\":\"insufficient credits\"}")
+        print("  Echec generation image.")
+        continue
     for stage in ("voix", "image", f"video ({args.video_model})"):
         print(f"\n=== Scene {n}/{N_SCENES} : {stage} ===")
         time.sleep(STEP)
@@ -113,9 +131,18 @@ for n in range(1, N_SCENES + 1):
             # Plus aucune sortie : le watchdog du backend doit le signaler.
             print("  (simulation de blocage : plus aucune sortie pendant 4 min)")
             time.sleep(240)
+    produites += 1
     print(f"  Video OK -> {out / f'scene_{n:02d}.mp4'} (calee sur 4.20s)")
 
 print("\n=== 5. Montage FFmpeg ===")
+# Le vrai script laisse derriere lui ~200 Mo de fichiers de travail (concats,
+# clips de scene, voix). Le mock en depose une version miniature pour que la
+# purge de fin de job soit reellement exercee par les tests.
+(out / "scenes").mkdir(exist_ok=True)
+for nom, taille in (("concat.mp4", 140_000), ("concat_subs.mp4", 120_000),
+                    ("voice.wav", 90_000), ("_precheck.wav", 60_000),
+                    ("scenes/scene_01.mp4", 80_000), ("scenes/scene_01.wav", 40_000)):
+    (out / nom).write_bytes(b"\0" * taille)
 final = out / "final_mock.mp4"
 subprocess.run(
     ["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-i", "color=c=darkred:s=360x640:d=3",
@@ -123,4 +150,8 @@ subprocess.run(
     check=False,
 )
 print(f"  Fusion audio OK -> {final}")
+print(f"\n=== BILAN : {produites}/{N_SCENES} scenes produites ===")
+if produites < N_SCENES:
+    print(f"ATTENTION : {N_SCENES - produites} scene(s) manquante(s), "
+          f"la video est plus courte que prevu.")
 print(f"\n=== TERMINE : {final} ===")

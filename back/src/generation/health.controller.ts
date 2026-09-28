@@ -27,12 +27,20 @@ export interface HealthReport {
 export class HealthController {
   @Get()
   async check(): Promise<HealthReport> {
+    const python = process.env.PYTHON_BIN ?? 'python';
     const checks = await Promise.all([
       this.checkApiKey(),
-      this.checkBinary('Python', process.env.PYTHON_BIN ?? 'python', ['--version']),
+      this.checkToken(),
+      this.checkBinary('Python', python, ['--version']),
       this.checkBinary('FFmpeg', 'ffmpeg', ['-version']),
       this.checkBinary('FFprobe', 'ffprobe', ['-version']),
-      this.checkScript(),
+      // Pillow ne sert qu'au format graphique : sans lui, ce format echoue a
+      // chaque lancement alors que tout le reste parait sain.
+      this.checkBinary('Pillow (format graphique)', python, [
+        '-c',
+        'import PIL; print("Pillow", PIL.__version__)',
+      ]),
+      ...this.checkScripts(),
       this.checkDataDir(),
     ]);
     return {
@@ -48,9 +56,19 @@ export class HealthController {
       // On ne renvoie jamais la cle, seulement de quoi verifier que c'est la bonne.
       return { name: 'Cle API KIE.AI', ok: true, detail: `definie (…${fromEnv.slice(-4)})` };
     }
-    const local = path.resolve(__dirname, '..', '..', 'python', 'api.txt');
-    if (fs.existsSync(local)) {
-      return { name: 'Cle API KIE.AI', ok: true, detail: 'lue depuis api.txt (local)' };
+    // Memes emplacements de repli que generate.py : n'en verifier qu'un
+    // affichait "cle absente" alors que le script, lui, la trouvait.
+    for (const local of [
+      path.resolve(__dirname, '..', '..', 'python', 'api.txt'),
+      'F:\\Tiktok\\api.txt',
+    ]) {
+      if (fs.existsSync(local)) {
+        return {
+          name: 'Cle API KIE.AI',
+          ok: true,
+          detail: `lue depuis ${local} (local)`,
+        };
+      }
     }
     return {
       name: 'Cle API KIE.AI',
@@ -59,15 +77,53 @@ export class HealthController {
     };
   }
 
-  private checkScript(): CheckResult {
-    const script =
-      process.env.PYTHON_SCRIPT_PATH ??
-      path.resolve(__dirname, '..', '..', 'python', 'generate.py');
-    const ok = fs.existsSync(script);
+  /**
+   * Un controle par FORMAT. Seul generate.py etait verifie : graphique.py
+   * pouvait manquer de l'image sans que rien ne l'indique, et le bandeau
+   * restait vert jusqu'au premier echec.
+   */
+  private checkScripts(): CheckResult[] {
+    const force = process.env.PYTHON_SCRIPT_PATH;
+    if (force) {
+      const ok = fs.existsSync(force);
+      return [
+        {
+          name: 'Script de generation (force)',
+          ok,
+          detail: ok
+            ? `${path.basename(force)} — PYTHON_SCRIPT_PATH impose ce script a TOUS les formats`
+            : `introuvable : ${force}`,
+        },
+      ];
+    }
+    const formats: Array<[string, string]> = [
+      ['Script Ferdinand', 'generate.py'],
+      ['Script graphique', 'graphique.py'],
+    ];
+    return formats.map(([name, fichier]) => {
+      const script = path.resolve(__dirname, '..', '..', 'python', fichier);
+      const ok = fs.existsSync(script);
+      return { name, ok, detail: ok ? fichier : `introuvable : ${script}` };
+    });
+  }
+
+  /**
+   * Sans jeton, l'API est ouverte : n'importe qui peut declencher des
+   * generations facturees. Le signaler ici plutot que de le decouvrir sur la
+   * facture.
+   */
+  private checkToken(): CheckResult {
+    const defini = Boolean(process.env.API_TOKEN?.trim());
+    if (defini) {
+      return { name: "Jeton d'ecriture", ok: true, detail: 'API_TOKEN defini' };
+    }
+    const production = process.env.NODE_ENV === 'production';
     return {
-      name: 'Script de generation',
-      ok,
-      detail: ok ? path.basename(script) : `introuvable : ${script}`,
+      name: "Jeton d'ecriture",
+      ok: !production,
+      detail: production
+        ? 'API_TOKEN absent : toutes les generations sont refusees. Definir la meme valeur ici et dans VITE_API_TOKEN cote front.'
+        : 'absent — ecritures ouvertes (acceptable en local uniquement)',
     };
   }
 
@@ -76,7 +132,19 @@ export class HealthController {
     try {
       fs.mkdirSync(dir, { recursive: true });
       fs.accessSync(dir, fs.constants.W_OK);
-      return { name: 'Dossier de donnees', ok: true, detail: `${dir} (accessible en ecriture)` };
+      // La place restante manquait au tableau : le disque Render fait 5 Go et
+      // une generation Ferdinand en occupe ~200 Mo avant purge. Un disque plein
+      // se manifeste sinon par un echec FFmpeg incomprehensible en fin de job.
+      const stat = fs.statfsSync(dir);
+      const libreMo = (stat.bavail * stat.bsize) / 1048576;
+      const assez = libreMo >= 500;
+      return {
+        name: 'Dossier de donnees',
+        ok: assez,
+        detail: assez
+          ? `${dir} — ${libreMo.toFixed(0)} Mo libres`
+          : `${dir} — seulement ${libreMo.toFixed(0)} Mo libres : supprimer des videos avant de relancer`,
+      };
     } catch (err) {
       return { name: 'Dossier de donnees', ok: false, detail: (err as Error).message };
     }

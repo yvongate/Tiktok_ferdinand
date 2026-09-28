@@ -4,6 +4,9 @@ import {
   api,
   INCIDENT_LABELS,
   STEP_LABELS,
+  FORMAT_LABELS,
+  titreIdee,
+  type Format,
   type HealthReport,
   type IdeasProgress,
   type Job,
@@ -27,6 +30,7 @@ function since(iso: string, now: number): string {
 
 function App() {
   const [params, setParams] = useState<JobParams>({
+    format: 'ferdinand',
     mode: '60s',
     lang: 'de',
     videoModel: 'runway',
@@ -36,7 +40,7 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [launching, setLaunching] = useState(false)
   const [health, setHealth] = useState<HealthReport | null>(null)
-  const [ideas, setIdeas] = useState<IdeasProgress | null>(null)
+  const [ideas, setIdeas] = useState<IdeasProgress[]>([])
   const unsubscribe = useRef<(() => void) | null>(null)
 
   const upsert = useCallback((job: Job) => {
@@ -44,7 +48,15 @@ function App() {
       const i = prev.findIndex((j) => j.id === job.id)
       if (i === -1) return [job, ...prev]
       const next = [...prev]
-      next[i] = job
+      // L'historique arrive allege (logTail et incidents vides, voir le
+      // controleur) : l'y fusionner tel quel effacerait le detail deja recu
+      // par le flux live du job affiche.
+      const ancien = prev[i]
+      next[i] = {
+        ...job,
+        logTail: job.logTail?.length ? job.logTail : ancien.logTail,
+        incidents: job.incidents?.length ? job.incidents : ancien.incidents,
+      }
       return next
     })
   }, [])
@@ -60,7 +72,7 @@ function App() {
       })
       .catch((e: Error) => setError(e.message))
     api.health().then(setHealth).catch(() => setHealth(null))
-    api.ideas().then(setIdeas).catch(() => setIdeas(null))
+    api.ideas().then(setIdeas).catch(() => setIdeas([]))
   }, [])
 
   // Suivi live du job selectionne
@@ -82,6 +94,26 @@ function App() {
     api.ideas().then(setIdeas).catch(() => {})
   }, [activeCount])
 
+  /**
+   * Rafraichissement de l'historique tant qu'un job tourne.
+   *
+   * Le flux live ne suit que le job SELECTIONNE. Il suffisait donc de cliquer
+   * sur une autre ligne pendant une generation pour que celle-ci reste
+   * « running » a l'ecran jusqu'a la fin des temps : le bouton affichait
+   * « Generation en cours… » definitivement et la barre d'idees ne bougeait
+   * plus, un rechargement de page etant le seul remede.
+   */
+  useEffect(() => {
+    if (activeCount === 0) return
+    const t = setInterval(() => {
+      api
+        .list()
+        .then((liste) => liste.forEach(upsert))
+        .catch(() => {})
+    }, 5000)
+    return () => clearInterval(t)
+  }, [activeCount, upsert])
+
   const selected = jobs.find((j) => j.id === selectedId) ?? null
 
   const launch = async () => {
@@ -99,16 +131,27 @@ function App() {
     }
   }
 
-  const cancel = async (id: string) => {
+  // Un job actif s'annule ; un job termine disparait pour de bon, fichiers
+  // compris. Meme geste, meme bouton, effet adapte a l'etat.
+  const cancelOrDelete = async (id: string) => {
     try {
-      upsert(await api.cancel(id))
+      const res = await api.cancelOrDelete(id)
+      if ('freed' in res) {
+        setJobs((prev) => prev.filter((j) => j.id !== id))
+        setSelectedId((cur) => (cur === id ? null : cur))
+      } else {
+        upsert(res)
+      }
     } catch (e) {
       setError((e as Error).message)
     }
   }
 
   const hasActive = activeCount > 0
-  const exhausted = ideas !== null && ideas.total > 0 && ideas.remaining === 0
+  // L'epuisement se juge sur la liste DU FORMAT choisi : Ferdinand peut
+  // etre termine alors qu'il reste des sujets graphiques.
+  const courant = ideas.find((i) => i.format === params.format) ?? null
+  const exhausted = courant !== null && courant.total > 0 && courant.remaining === 0
 
   return (
     <div className="app">
@@ -123,21 +166,44 @@ function App() {
 
       <HealthBanner health={health} onRefresh={() => api.health().then(setHealth).catch(() => {})} />
 
-      <IdeasPanel ideas={ideas} />
+      {ideas.map((i) => (
+        <IdeasPanel key={i.format} ideas={i} actif={i.format === params.format} />
+      ))}
 
       <section className="panel">
         <h2>Nouvelle video</h2>
         <div className="form">
           <label>
-            Format
+            Type de video
             <select
-              value={params.mode}
-              onChange={(e) => setParams({ ...params, mode: e.target.value as JobParams['mode'] })}
+              value={params.format}
+              onChange={(e) =>
+                setParams({ ...params, format: e.target.value as Format })
+              }
             >
-              <option value="60s">60s (duree garantie, monetisable)</option>
-              <option value="short">Court (histoire resserree)</option>
+              {(Object.keys(FORMAT_LABELS) as Format[]).map((f) => (
+                <option key={f} value={f}>
+                  {FORMAT_LABELS[f]}
+                </option>
+              ))}
             </select>
           </label>
+
+          {/* Ampleur narrative et modele video n'existent que pour Ferdinand :
+              graphique.py les ignore. Les laisser affiches donnait deux
+              reglages sans le moindre effet. */}
+          {params.format === 'ferdinand' && (
+            <label>
+              Format
+              <select
+                value={params.mode}
+                onChange={(e) => setParams({ ...params, mode: e.target.value as JobParams['mode'] })}
+              >
+                <option value="60s">60s (duree garantie, monetisable)</option>
+                <option value="short">Court (histoire resserree)</option>
+              </select>
+            </label>
+          )}
 
           <label>
             Langue
@@ -151,18 +217,20 @@ function App() {
             </select>
           </label>
 
-          <label>
-            Modele video
-            <select
-              value={params.videoModel}
-              onChange={(e) =>
-                setParams({ ...params, videoModel: e.target.value as JobParams['videoModel'] })
-              }
-            >
-              <option value="runway">Runway (defaut)</option>
-              <option value="seedance">Seedance (repli)</option>
-            </select>
-          </label>
+          {params.format === 'ferdinand' && (
+            <label>
+              Modele video
+              <select
+                value={params.videoModel}
+                onChange={(e) =>
+                  setParams({ ...params, videoModel: e.target.value as JobParams['videoModel'] })
+                }
+              >
+                <option value="runway">Runway (defaut)</option>
+                <option value="seedance">Seedance (repli)</option>
+              </select>
+            </label>
+          )}
 
           <button onClick={launch} disabled={launching || hasActive || exhausted}>
             {launching
@@ -181,7 +249,7 @@ function App() {
         )}
       </section>
 
-      {selected && <JobDetail job={selected} onCancel={cancel} />}
+      {selected && <JobDetail job={selected} onCancel={cancelOrDelete} />}
 
       <section className="panel">
         <h2>Historique</h2>
@@ -196,9 +264,13 @@ function App() {
               <span className={`badge ${job.status}`}>{job.status}</span>
               <span className="history-title">
                 {job.progress.idea ?? STEP_LABELS[job.progress.step]}
+                {job.degraded && <span className="pill error">incomplete</span>}
               </span>
               <span className="history-meta">
-                {job.params.mode} · {job.params.lang} · {job.params.videoModel}
+                <span className="pill format">{job.params.format ?? 'ferdinand'}</span>
+                {job.params.format === 'graphique'
+                  ? ` ${job.params.lang}`
+                  : ` ${job.params.mode} · ${job.params.lang} · ${job.params.videoModel}`}
                 {/* incidentCount vient de l'historique allege ; incidents du
                     flux SSE, qui remplace l'entree par le job complet. */}
                 {incidentTotal(job) > 0 && (
@@ -208,6 +280,22 @@ function App() {
               <span className="history-date">
                 {new Date(job.createdAt).toLocaleString('fr-FR')}
               </span>
+              {/* stopPropagation : sans ca, le clic selectionnerait aussi la
+                  ligne avant de la supprimer. */}
+              <button
+                className="history-delete"
+                title={
+                  ACTIVE.includes(job.status)
+                    ? 'Annuler cette generation'
+                    : 'Supprimer definitivement (libere le disque)'
+                }
+                onClick={(e) => {
+                  e.stopPropagation()
+                  cancelOrDelete(job.id)
+                }}
+              >
+                {ACTIVE.includes(job.status) ? '■' : '×'}
+              </button>
             </li>
           ))}
         </ul>
@@ -223,14 +311,17 @@ function App() {
  * et le voir AVANT de lancer evite de decouvrir apres coup qu'on a produit
  * une video dont le sujet ne convenait pas.
  */
-function IdeasPanel({ ideas }: { ideas: IdeasProgress | null }) {
-  if (!ideas || ideas.total === 0) return null
+function IdeasPanel({ ideas, actif }: { ideas: IdeasProgress; actif: boolean }) {
+  if (ideas.total === 0) return null
   const done = ideas.remaining === 0
 
+  // Le panneau du format NON selectionne reste visible mais en retrait :
+  // on doit pouvoir verifier son avancement sans le confondre avec celui
+  // qui partira au prochain clic.
   return (
-    <section className="panel ideas-panel">
+    <section className={`panel ideas-panel ${actif ? '' : 'inactif'}`}>
       <h2>
-        Idees validees
+        {FORMAT_LABELS[ideas.format]}
         <span className="ideas-count">
           {ideas.used} / {ideas.total}
         </span>
@@ -246,9 +337,9 @@ function IdeasPanel({ ideas }: { ideas: IdeasProgress | null }) {
 
       {done ? (
         <div className="failure-card">
-          <strong>Les {ideas.total} idees ont ete utilisees.</strong>
+          <strong>Les {ideas.total} entrees ont ete utilisees.</strong>
           <p>
-            Regenere la liste (<code>ideas_de.json</code>), valide-la, puis
+            Regenere la liste, valide-la, puis
             redeploie. Le bouton reste desactive d'ici la — plutot que de
             reboucler en silence sur des sujets deja publies.
           </p>
@@ -257,8 +348,11 @@ function IdeasPanel({ ideas }: { ideas: IdeasProgress | null }) {
         ideas.next && (
           <div className="next-idea">
             <span className="next-label">Prochaine ({ideas.next.n})</span>
-            <p className="next-de">{ideas.next.de}</p>
-            <p className="next-fr">{ideas.next.fr}</p>
+            <p className="next-de">{titreIdee(ideas.next)}</p>
+            <p className="next-fr">
+              {ideas.next.fr ??
+                `${ideas.next.histoire} — 100 € deviennent ${ideas.next.final} €`}
+            </p>
           </div>
         )
       )}
@@ -406,13 +500,28 @@ function JobDetail({ job, onCancel }: { job: Job; onCancel: (id: string) => void
         job.error && <div className="error-banner">{job.error}</div>
       )}
 
+      {/* Une video peut etre livree ET amputee. Sans cet encart, elle se
+          presentait exactement comme une reussite complete : c'est ainsi
+          qu'une video de 58s au lieu de 75s est passee inapercue. */}
+      {job.degraded && (
+        <div className="failure-card degraded">
+          <strong>
+            Video incomplete : {progress.scenesDone}/{progress.scenesPlanned} scenes
+          </strong>
+          <p>
+            Des scenes ont echoue et le montage a continue sans elles — la video est plus
+            courte que prevu. Le sujet n'a PAS ete consomme et les scenes deja payees sont
+            conservees : relancer ne refacturera que les scenes manquantes. Le detail est
+            dans les incidents ci-dessous.
+          </p>
+        </div>
+      )}
+
       <Incidents incidents={job.incidents ?? []} />
 
-      {running && (
-        <button className="danger" onClick={() => onCancel(job.id)}>
-          Annuler
-        </button>
-      )}
+      <button className="danger" onClick={() => onCancel(job.id)}>
+        {running ? 'Annuler' : 'Supprimer (libere le disque)'}
+      </button>
 
       {job.status === 'done' && (
         <div className="result">
