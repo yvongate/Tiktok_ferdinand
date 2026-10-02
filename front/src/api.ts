@@ -25,6 +25,13 @@ export const STYLE_LABELS: Record<Style, string> = {
   vox: 'Collage documentaire (papier decoupe)',
 }
 
+export type Quality = '720p' | '1080p'
+
+export const QUALITY_LABELS: Record<Quality, string> = {
+  '720p': '720p (defaut)',
+  '1080p': '1080p (2,5x plus cher)',
+}
+
 export interface JobParams {
   format: Format
   mode: 'short' | '60s'
@@ -32,6 +39,8 @@ export interface JobParams {
   videoModel: 'runway' | 'seedance'
   /** Famille visuelle, format ferdinand uniquement. */
   style: Style
+  /** Resolution, format ferdinand uniquement. */
+  quality: Quality
 }
 
 export interface JobProgress {

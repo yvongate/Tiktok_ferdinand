@@ -21,4 +21,8 @@ export class CreateGenerationDto {
   @IsOptional()
   @IsIn(['ferdinand', 'vox'])
   style: 'ferdinand' | 'vox' = 'ferdinand';
+
+  @IsOptional()
+  @IsIn(['720p', '1080p'])
+  quality: '720p' | '1080p' = '720p';
 }

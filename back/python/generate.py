@@ -37,9 +37,11 @@ import urllib.error
 import http.client
 from pathlib import Path
 
+import ai_metadata
 import sfx
 import styles
 import subtitles
+import synthid_remove
 import variation
 import watermark
 
@@ -87,6 +89,27 @@ OUT_DIR = Path(__file__).parent
 CACHE_DIR = None
 
 SCENE_CLIP_SECONDS = 5  # duree fixe par scene (Seedance/Runway)
+
+# Resolution de sortie, choisie par --quality. UNE seule source de verite :
+# la valeur demandee aux modeles et celle imposee aux segments reencodes
+# doivent concorder, sinon le concat final (-c copy) refuse de coller des
+# segments de tailles differentes.
+# Les sous-titres et le filigrane n'ont pas a y etre adaptes : leurs fichiers
+# ASS declarent un canevas 720x1280 que libass met a l'echelle tout seul, et
+# les deux resolutions ont le meme rapport 9:16.
+RESOLUTIONS = {"720p": (720, 1280), "1080p": (1080, 1920)}
+VIDEO_QUALITY = "720p"  # envoye a Runway ("quality") et Seedance ("resolution")
+VIDEO_WIDTH, VIDEO_HEIGHT = RESOLUTIONS[VIDEO_QUALITY]
+VIDEO_SCALE = f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}"
+
+# Qualite des clips INTERMEDIAIRES (calage sur la voix). Plus fine que celle
+# de la passe finale a dessein : les pertes se cumulent, et ce qu'un premier
+# encodage ecrase ne revient pas. Sans ce reglage, libx264 appliquait son
+# defaut (crf 23) juste apres le telechargement - donc une compression plus
+# agressive que la passe sous-titres (crf 20) qui suit, ce qui gachait une
+# partie de la resolution payee au fournisseur. Les fichiers grossissent,
+# mais ils sont purges des que le job reussit.
+CLIP_CRF = "18"
 
 # Constat du 24/09 : predire la duree de la voix a partir d'un nombre de mots
 # ne marche pas de facon fiable (langue, debit, pauses, balises d'emotion...) -
@@ -720,7 +743,7 @@ def fit_clip_to_duration(clip_path, target_duration, out_path):
     rogne si le clip est plus long (cas courant - Runway ne genere que du 5s
     ou 10s), gele la derniere image si le clip est plus court (rare - phrase
     plus longue que le plus grand clip disponible). Reencode dans tous les
-    cas pour garder des parametres uniformes (h264/yuv420p/24fps/720x1280),
+    cas pour garder des parametres uniformes (h264/yuv420p/24fps, VIDEO_SCALE),
     necessaires pour le concat final en -c copy."""
     clip_path, out_path = Path(clip_path), Path(out_path)
     clip_dur = get_duration(clip_path)
@@ -729,8 +752,8 @@ def fit_clip_to_duration(clip_path, target_duration, out_path):
         # sur un mauvais keyframe et donner un resultat imprecis/casse).
         subprocess.run(
             ["ffmpeg", "-y", "-v", "error", "-i", str(clip_path), "-t", f"{target_duration:.2f}",
-             "-r", "24", "-vf", "scale=720:1280", "-pix_fmt", "yuv420p",
-             "-c:v", "libx264", "-an", str(out_path)],
+             "-r", "24", "-vf", VIDEO_SCALE, "-pix_fmt", "yuv420p",
+             "-c:v", "libx264", "-crf", CLIP_CRF, "-an", str(out_path)],
             check=False,
         )
     elif clip_dur < target_duration - 0.1:
@@ -746,7 +769,7 @@ def fit_clip_to_duration(clip_path, target_duration, out_path):
         freeze_tail = OUT_DIR / "_scene_freeze_tail_tmp.mp4"
         subprocess.run(
             ["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", str(last_frame),
-             "-t", f"{extra:.2f}", "-r", "24", "-vf", "scale=720:1280", "-pix_fmt", "yuv420p", str(freeze_tail)],
+             "-t", f"{extra:.2f}", "-r", "24", "-vf", VIDEO_SCALE, "-pix_fmt", "yuv420p", str(freeze_tail)],
             check=False,
         )
         concat_list = OUT_DIR / "_scene_concat_tmp.txt"
@@ -763,8 +786,8 @@ def fit_clip_to_duration(clip_path, target_duration, out_path):
         # garantir des parametres uniformes avec les autres scenes.
         subprocess.run(
             ["ffmpeg", "-y", "-v", "error", "-i", str(clip_path),
-             "-r", "24", "-vf", "scale=720:1280", "-pix_fmt", "yuv420p",
-             "-c:v", "libx264", "-an", str(out_path)],
+             "-r", "24", "-vf", VIDEO_SCALE, "-pix_fmt", "yuv420p",
+             "-c:v", "libx264", "-crf", CLIP_CRF, "-an", str(out_path)],
             check=False,
         )
 
@@ -787,7 +810,7 @@ def sync_video_to_audio(video_path, audio_path, out_path):
         freeze_tail = OUT_DIR / "_freeze_tail_tmp.mp4"
         subprocess.run(
             ["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", str(last_frame),
-             "-t", f"{extra:.2f}", "-r", "24", "-vf", "scale=720:1280", "-pix_fmt", "yuv420p", str(freeze_tail)],
+             "-t", f"{extra:.2f}", "-r", "24", "-vf", VIDEO_SCALE, "-pix_fmt", "yuv420p", str(freeze_tail)],
             check=False,
         )
         concat_list2 = OUT_DIR / "_concat_extended_tmp.txt"
@@ -816,7 +839,11 @@ def main():
     parser.add_argument("--lang", choices=sorted(LANGUAGES), default="en",
                          help="Langue du script et de la voix : en (defaut), fr, de.")
     parser.add_argument("--video-model", choices=["seedance", "runway"], default="runway",
-                         help="runway = runway (defaut, ~31%% moins cher a 720p, valide sur plusieurs runs) ; seedance = bytedance/seedance-1.5-pro (repli)")
+                         help="runway = runway (defaut, le moins cher des deux, valide sur plusieurs runs) ; seedance = bytedance/seedance-1.5-pro (repli)")
+    parser.add_argument("--quality", choices=sorted(RESOLUTIONS), default="720p",
+                         help="Resolution demandee au modele video ET imposee au montage : "
+                              "720p (defaut) ou 1080p, qui coute 2,5x plus cher chez "
+                              "le fournisseur ($0.15 vs $0.06 par clip de 5s).")
     parser.add_argument("--out-dir", default=None,
                          help="Dossier de sortie (defaut: a cote du script). Utilise par le backend "
                               "pour isoler chaque job dans son propre dossier.")
@@ -867,6 +894,14 @@ def main():
     CACHE_DIR = Path(args.cache_dir) if args.cache_dir else OUT_DIR
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+    # La resolution doit etre posee AVANT la premiere scene : fit_clip_to_duration
+    # lit VIDEO_SCALE a chaque clip, et le concat final refuserait des segments
+    # de tailles differentes si elle changeait en cours de route.
+    global VIDEO_QUALITY, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_SCALE
+    VIDEO_QUALITY = args.quality
+    VIDEO_WIDTH, VIDEO_HEIGHT = RESOLUTIONS[VIDEO_QUALITY]
+    VIDEO_SCALE = f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}"
+
     # Tout ce qui distingue cette video des autres, tire une fois ici. La
     # graine vient du titre impose : une relance du meme sujet redonne la meme
     # ambiance, sinon une reprise depuis le cache melangerait dans une seule
@@ -893,8 +928,15 @@ def main():
     # les memes fichiers de cache et se reprendraient l'une l'autre.
     if cfg_style["nom"] != styles.DEFAUT:
         suffix += "_" + cfg_style["nom"]
+    # Meme raison pour la resolution : relancer un sujet en 1080p apres un
+    # essai en 720p doit regenerer les clips, pas reprendre les petits depuis
+    # le cache - le concat final les refuserait de toute facon. Le 720p ne
+    # prend pas de suffixe : c'est le defaut, et les caches deja sur le disque
+    # sont du 720p sans suffixe.
+    if VIDEO_QUALITY != "720p":
+        suffix += "_" + VIDEO_QUALITY
     print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_model} "
-          f"/ Style : {cfg_style['nom']} ===\n")
+          f"/ Style : {cfg_style['nom']} / Resolution : {VIDEO_QUALITY} ===\n")
     print(f"  Variation : {var.resume(ambiance)}")
     print(f"  Style : {cfg_style['libelle']} | fond={ambiance.split(':')[-1].strip()[:44]}")
 
@@ -1101,7 +1143,7 @@ def main():
                     "prompt": s["animation_prompt"],
                     "image_url": img_url,
                     "duration": "5",
-                    "quality": "720p",
+                    "quality": VIDEO_QUALITY,
                     "aspect_ratio": "9:16",
                     "watermark": "",
                 },
@@ -1114,7 +1156,7 @@ def main():
                     "prompt": s["animation_prompt"],
                     "input_urls": [img_url],
                     "aspect_ratio": "9:16",
-                    "resolution": "720p",
+                    "resolution": VIDEO_QUALITY,
                     "duration": 5,
                     "fixed_lens": False,
                     "generate_audio": False,
@@ -1249,6 +1291,51 @@ def main():
     else:
         final_video = concat_video
         print("  Pas d'audio, video finale = concat seule.")
+
+    # --- Regeneration des pixels (optionnelle, desactivee par defaut) ----
+    # Re-synthetise chaque image via un VAE sur un service GPU distant :
+    # perturbation generique de tout signal invisible, efficacite
+    # invérifiable (aucun fournisseur ne publie de detecteur). Degrade les
+    # sous-titres, incrustes plus haut. Voir synthid_remove.py.
+    if synthid_remove.is_enabled():
+        print("  Regeneration des pixels (VAE distant) demandee...")
+        synthid_out = OUT_DIR / f"final_synthid{suffix}.mp4"
+        if synthid_remove.remove(final_video, synthid_out):
+            final_video = synthid_out
+            print(f"  Regeneration des pixels OK -> {final_video}")
+        else:
+            print("  ATTENTION : regeneration des pixels echouee, on continue avec la video d'origine.")
+
+    # --- Nettoyage final du conteneur ------------------------------------
+    # SYSTEMATIQUE, meme quand l'inspection ne trouve rien d'anormal - ce qui
+    # est le cas usuel, les remux successifs du montage ayant deja fait
+    # disparaitre ce que les modeles auraient pu poser. Deux raisons :
+    #   - la passe est en copie de flux : pas de reencodage, pixels intacts,
+    #     environ une seconde ;
+    #   - elle applique +faststart, qui place l'index (moov) en tete de
+    #     fichier. La lecture demarre alors sans attendre le telechargement
+    #     complet, ce qui compte a l'upload et en streaming. Conditionner le
+    #     nettoyage a la presence de marqueurs privait toutes les videos de
+    #     ce gain, puisqu'on n'en trouve jamais.
+    # Elle retire au passage les tags d'encodeur residuels (versions FFmpeg)
+    # et tout marqueur de provenance IA qui serait present (C2PA...).
+    try:
+        avant = ai_metadata.inspect_video(final_video)
+        if avant["has_ai_metadata"]:
+            print(f"  Metadonnees IA detectees : {', '.join(avant['markers'])}")
+        nettoyee = OUT_DIR / f"final_clean{suffix}.mp4"
+        if ai_metadata.strip_metadata(final_video, nettoyee):
+            final_video = nettoyee
+            restants = ai_metadata.inspect_video(final_video)["markers"]
+            if restants:
+                print(f"  ATTENTION : marqueurs toujours presents apres nettoyage : "
+                      f"{', '.join(restants)}")
+            else:
+                print(f"  Conteneur nettoye (+faststart) -> {final_video}")
+        else:
+            print("  ATTENTION : nettoyage du conteneur echoue, on continue avec la video d'origine.")
+    except OSError as e:
+        print(f"  ATTENTION : inspection du conteneur impossible ({e}), on continue.")
 
     # Bilan AVANT la ligne de fin : une scene ratee n'arrete pas le pipeline,
     # la video sort simplement plus courte. Sans ce compte, une video amputee

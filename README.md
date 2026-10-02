@@ -20,6 +20,7 @@ front/   Vite + React — tableau de bord
 | Script | `python/generate.py` | `python/graphique.py` |
 | Sujets | liste validée, consommée séquentiellement | liste validée, consommée séquentiellement |
 | Style visuel | 3D photoréaliste ou collage papier (voir plus bas) | rendu de courbe fixe |
+| Sortie | 720×1280 par défaut, 1080×1920 au choix (9:16), 24 fps | 720×1280 (9:16) |
 
 Les deux listes de sujets vivent côté `python/` et sont consommées une par
 une à chaque génération réussie — pas de répétition tant que la liste n'est
@@ -107,6 +108,84 @@ MOCK_FAULTS=retries PYTHON_SCRIPT_PATH=./python/_mock_generate.py npm run start:
 | `quota` | HTTP 429 puis abandon (diagnostic `quota`) |
 | `stall` | 4 min de silence — déclenche le watchdog |
 
+## Résolution : 720p ou 1080p
+
+Choisie dans l'interface (format Ferdinand uniquement), transmise au modèle
+vidéo **et** imposée à tout le montage — les deux doivent concorder, sinon le
+concat final en `-c copy` refuse de coller des segments de tailles
+différentes.
+
+**720p par défaut**, parce que le 1080p coûte **2,5× plus cher** chez le
+fournisseur (Runway image-to-video 5 s : $0,15 contre $0,06). Sur une vidéo
+de 12 scènes — le cas courant en mode 60s — c'est $1,80 contre $0,72.
+
+Les clips intermédiaires sont ré-encodés en **crf 18**, plus fin que la passe
+finale (crf 20) : les pertes se cumulent, et ce qu'un premier encodage écrase
+ne revient pas. Sans ce réglage, libx264 appliquait son défaut (crf 23) juste
+après le téléchargement, gâchant une partie de la résolution payée.
+
+Changer de résolution sur un même sujet **ne réutilise pas** le cache des
+scènes : les clips doivent être regénérés à la bonne taille.
+
+## Nettoyage des métadonnées IA
+
+Après le montage final, `python/ai_metadata.py` scanne la vidéo (tags
+ffprobe + boîtes MP4) puis nettoie le conteneur **systématiquement**, en une
+passe `ffmpeg -c copy` : pas de ré-encodage, pixels intacts, environ une
+seconde.
+
+Systématique et non conditionnel, pour deux raisons :
+
+- **`+faststart`** place l'index (`moov`) en tête de fichier, si bien que la
+  lecture démarre sans attendre le téléchargement complet — utile à l'upload
+  et en streaming. Ne nettoyer qu'en cas de marqueur détecté privait toutes
+  les vidéos de ce gain, puisqu'on n'en trouve jamais.
+- Ça retire aussi les **tags d'encodeur résiduels** (versions de FFmpeg) et
+  tout marqueur de provenance IA qui serait présent (C2PA, « AI-generated »).
+
+En pratique les remux successifs du montage ont déjà fait disparaître ce que
+Runway ou Seedance auraient pu poser : l'inspection d'une vraie sortie ne
+trouve aucun marqueur. Le scan reste un filet de sécurité, et signale tout
+marqueur qui survivrait au nettoyage.
+
+Non bloquant : un échec garde la vidéo d'origine plutôt que de perdre la
+génération.
+
+### Régénération des pixels (optionnelle, désactivée par défaut)
+
+`python/synthid_remove.py` envoie la vidéo finale à un service GPU externe
+qui re-synthétise chaque image à travers un VAE : les pixels de sortie ne
+sont plus ceux du modèle vidéo, ce qui perturbe tout signal invisible qui y
+serait caché. Perturbation **générique** — le code d'origine visait SynthID
+(Google), le mécanisme ne cible aucun filigrane en particulier.
+
+Activation : `SYNTHID_REMOVE=1` **et** `SYNTHID_REMOTE_URL` (sans service
+configuré, l'étape est simplement ignorée). Le service expose `/submit`,
+`/status/:id`, `/result/:id` — voir `back/modal/app.py` du projet
+[remove-ai-matadata](https://github.com/yvongate/remove-ai-matadata).
+
+| Variable | Rôle |
+|---|---|
+| `SYNTHID_REMOVE` | `1` pour activer l'étape |
+| `SYNTHID_REMOTE_URL` | URL du service GPU |
+| `SYNTHID_REMOTE_KEY` | clé envoyée en `x-api-key` |
+| `SYNTHID_LONG_SIDE` | défaut : le grand côté réel de la vidéo (pas d'upscale inutile) |
+| `SYNTHID_NOISE_STD` | défaut `0.15` (valeur calibrée en amont, à 512 px) |
+| `SYNTHID_REMOTE_TIMEOUT_S` | défaut `3600` |
+
+Trois réserves avant d'activer :
+
+- **Les sous-titres sont incrustés avant cette étape** : un VAE reconstruit
+  mal le texte fin, attendre un rendu plus mou sur les sous-titres animés.
+- **L'efficacité est invérifiable** : aucun fournisseur ne publie de
+  détecteur, ni Google, ni ByteDance, ni Runway. Ni preuve que ça marche,
+  ni preuve que c'est nécessaire.
+- **Le coût GPU est réel**, facturé à la seconde, en plus d'un aller-retour
+  réseau de la taille de la vidéo.
+
+Non bloquant comme le reste du pipeline : service injoignable, délai dépassé
+ou erreur GPU laissent la vidéo d'origine intacte.
+
 ## Développement
 
 ```bash
@@ -132,7 +211,7 @@ PYTHON_SCRIPT_PATH=./python/_mock_generate.py npm run start:dev
 
 | Méthode | Route | Rôle |
 |---|---|---|
-| `POST` | `/api/generation` | Lance un job (`format`, `mode`, `lang`, `videoModel`, `style`) |
+| `POST` | `/api/generation` | Lance un job (`format`, `mode`, `lang`, `videoModel`, `style`, `quality`) |
 | `GET` | `/api/generation` | Historique des jobs |
 | `GET` | `/api/generation/:id` | État d'un job |
 | `GET` | `/api/generation/:id/events` | Suivi live (SSE) |
@@ -220,3 +299,11 @@ clé KIE.AI ou supprimer des vidéos. En production, l'absence du jeton fait
 
 Les routes de lecture (`GET`) restent libres : consulter l'avancement d'un
 job ne coûte rien et ne modifie rien.
+
+## Crédits
+
+`ai_metadata.py` et le client GPU de `synthid_remove.py` sont des ports
+originaux (stdlib pure) de la logique de
+[remove-ai-matadata](https://github.com/yvongate/remove-ai-matadata). Le code
+VAE sous licence Apache-2.0 n'est **pas** embarqué ici : il vit côté service
+GPU, ce qui évite de traîner 70 Ko de code tiers inexécutable dans ce dépôt.

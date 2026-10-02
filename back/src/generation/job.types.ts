@@ -21,6 +21,10 @@ export interface JobParams {
   /** Famille visuelle du format ferdinand : rendu 3D cinematique, ou
    *  collage papier documentaire. Sans effet sur le format graphique. */
   style: 'ferdinand' | 'vox';
+  /** Resolution demandee au modele video ET imposee au montage. Le 1080p
+   *  est plus net mais plus cher chez le fournisseur. Sans effet sur le
+   *  format graphique, qui dessine ses images localement. */
+  quality: '720p' | '1080p';
 }
 
 export interface JobProgress {

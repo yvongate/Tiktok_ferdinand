@@ -62,6 +62,7 @@ export class GenerationController {
       lang: dto.lang ?? 'de',
       videoModel: dto.videoModel ?? 'runway',
       style: dto.style ?? 'ferdinand',
+      quality: dto.quality ?? '720p',
     });
   }
 

@@ -81,6 +81,11 @@ export class PythonRunnerService {
     if (params.format !== 'graphique' && params.style && params.style !== 'ferdinand') {
       args.push('--style', params.style);
     }
+    // Idem pour la resolution : graphique.py dessine ses images localement a
+    // sa propre taille et n'a pas d'option --quality.
+    if (params.format !== 'graphique' && params.quality) {
+      args.push('--quality', params.quality);
+    }
     // Cache commun a toutes les tentatives d'un meme sujet : c'est ce qui rend
     // vraie la "reprise sans nouveaux credits" affichee apres un echec.
     if (cacheDir) args.push('--cache-dir', cacheDir);

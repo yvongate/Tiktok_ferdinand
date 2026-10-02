@@ -6,9 +6,11 @@ import {
   STEP_LABELS,
   FORMAT_LABELS,
   STYLE_LABELS,
+  QUALITY_LABELS,
   titreIdee,
   type Format,
   type Style,
+  type Quality,
   type HealthReport,
   type IdeasProgress,
   type Job,
@@ -37,6 +39,7 @@ function App() {
     lang: 'de',
     videoModel: 'runway',
     style: 'ferdinand',
+    quality: '720p',
   })
   const [jobs, setJobs] = useState<Job[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -253,6 +256,24 @@ function App() {
             </label>
           )}
 
+          {/* Comme le style : le format graphique dessine ses images
+              localement, la resolution du modele video ne le concerne pas. */}
+          {params.format === 'ferdinand' && (
+            <label>
+              Resolution
+              <select
+                value={params.quality}
+                onChange={(e) => setParams({ ...params, quality: e.target.value as Quality })}
+              >
+                {(Object.keys(QUALITY_LABELS) as Quality[]).map((q) => (
+                  <option key={q} value={q}>
+                    {QUALITY_LABELS[q]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
           <button onClick={launch} disabled={launching || hasActive || exhausted}>
             {launching
               ? 'Lancement...'
@@ -291,7 +312,9 @@ function App() {
                 <span className="pill format">{job.params.format ?? 'ferdinand'}</span>
                 {job.params.format === 'graphique'
                   ? ` ${job.params.lang}`
-                  : ` ${job.params.mode} · ${job.params.lang} · ${job.params.videoModel}`}
+                  : ` ${job.params.mode} · ${job.params.lang} · ${job.params.videoModel}` +
+                    // Jobs d'avant l'option : ni 720p ni 1080p enregistres.
+                    (job.params.quality ? ` · ${job.params.quality}` : '')}
                 {job.params.style === 'vox' && (
                   <span className="pill format">collage</span>
                 )}
