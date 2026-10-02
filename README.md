@@ -1,51 +1,79 @@
 # Ferdinand Renard — générateur de shorts « Voici pourquoi »
 
 Application web pour lancer et suivre la génération de vidéos courtes
-(finance / psychologie de l'argent, rendu 3D photoréaliste, mascotte
-récurrente Ferdinand) depuis n'importe où.
+(finance / psychologie de l'argent, mascotte récurrente Ferdinand) depuis
+n'importe où.
 
 ```
 back/    NestJS — API, file d'attente, orchestration du pipeline
-  python/generate.py   le pipeline de génération (source de vérité)
+  python/generate.py    pipeline du format narré (source de vérité)
+  python/graphique.py   pipeline du format graphique boursier
+  python/styles.py      familles de rendu visuel (3D / collage papier)
 front/   Vite + React — tableau de bord
 ```
 
+## Deux formats, deux pipelines
+
+| | `ferdinand` | `graphique` |
+|---|---|---|
+| Contenu | histoire narrée par Ferdinand | animation d'un graphique boursier réel |
+| Script | `python/generate.py` | `python/graphique.py` |
+| Sujets | liste validée, consommée séquentiellement | liste validée, consommée séquentiellement |
+| Style visuel | 3D photoréaliste ou collage papier (voir plus bas) | rendu de courbe fixe |
+
+Les deux listes de sujets vivent côté `python/` et sont consommées une par
+une à chaque génération réussie — pas de répétition tant que la liste n'est
+pas épuisée. `GET /api/generation/ideas` renvoie l'avancement des deux.
+
+## Deux styles visuels pour le format ferdinand
+
+| | `ferdinand` (défaut) | `vox` |
+|---|---|---|
+| Rendu | 3D photoréaliste cinématique | collage papier documentaire (découpes, trame, palette désaturée) |
+| Référence image | aucune | `python/planches/vox.png`, jointe à chaque prompt pour que le personnage reste identique d'une scène à l'autre |
+| Robustesse | — | planche absente ou édition échouée : repli automatique sur génération sans référence, jamais de vidéo perdue pour ça |
+
+Les règles de prompt (palette, mise en page, interdits) sont isolées dans
+`python/styles.py`, indépendantes du moteur de génération — ajouter un
+troisième style n'y touche pas.
+
 ## Architecture
 
-Le backend **n'implémente pas** la génération : il orchestre le script
-Python `back/python/generate.py`, qui reste la source de vérité (tous les
-correctifs de robustesse accumulés — retries réseau, validation du script,
-calage vidéo/audio par scène — y vivent).
+Le backend n'implémente pas la génération : il orchestre les scripts
+Python (`generate.py` ou `graphique.py` selon le format), qui restent la
+source de vérité — retries réseau, validation du script, calage vidéo/audio
+par scène, tous les correctifs de robustesse y vivent.
 
-Une génération prend **15 à 90 minutes**, donc elle ne peut pas tenir dans
+Une génération prend 15 à 90 minutes, donc elle ne peut pas tenir dans
 une requête HTTP :
 
 1. `POST /api/generation` dépose un job dans une file et répond immédiatement
-2. Un worker interne lance `generate.py` en sous-processus
+2. Un worker interne lance le script Python en sous-processus
 3. Sa sortie est parsée ligne par ligne en progression structurée
    (étape, scène n/N, sous-étape voix/image/vidéo, pourcentage)
-4. Le front suit en direct via **SSE** (`GET /api/generation/:id/events`)
+4. Le front suit en direct via SSE (`GET /api/generation/:id/events`)
 5. La vidéo finale est servie avec support des requêtes `Range`
 
-La file est **séquentielle et interne** (pas de Redis/BullMQ) : pour un usage
+La file est séquentielle et interne (pas de Redis/BullMQ) : pour un usage
 mono-utilisateur c'est suffisant, et ça évite un service supplémentaire à
 héberger. Toute la logique est isolée dans `jobs.service.ts` — passer à
 BullMQ plus tard ne toucherait que ce fichier.
 
 ## Visibilité sur les erreurs
 
-Une génération dure des dizaines de minutes et dépend d'API externes. Quatre
+Une génération dure des dizaines de minutes et dépend d'API externes. Plusieurs
 mécanismes évitent d'attendre sans savoir ce qui se passe :
 
-**1. Pré-vol** — `GET /api/health` vérifie la clé API, Python, FFmpeg, FFprobe,
-le script et le dossier de données. Le front affiche un bandeau **avant** de
-lancer quoi que ce soit ; une clé manquante ne se découvre plus au milieu d'un
-job, après des appels déjà facturés.
+**1. Pré-vol** — `GET /api/health` vérifie la clé API, le jeton d'écriture,
+Python, FFmpeg, FFprobe, les scripts des deux formats, la planche de style et
+le dossier de données. Le front affiche un bandeau avant de lancer quoi
+que ce soit ; une clé ou une planche manquante ne se découvre plus au milieu
+d'un job, après des appels déjà facturés.
 
-**2. Journal des incidents** — chaque ligne anormale de `generate.py` est
-classée (`network`, `http`, `api-task`, `download`, `validation`, `timeout`,
-`scene`, `stall`, `fatal`), horodatée, rattachée à sa scène et à son compteur
-de tentatives. Les incidents dont le pipeline s'est **remis** sont conservés :
+**2. Journal des incidents** — chaque ligne anormale d'un script est classée
+(`network`, `http`, `api-task`, `download`, `validation`, `timeout`, `scene`,
+`stall`, `fatal`), horodatée, rattachée à sa scène et à son compteur de
+tentatives. Les incidents dont le pipeline s'est remis sont conservés :
 c'est ce qui distingue « ça a pris 40 min » de « ça a pris 40 min parce que
 Runway a échoué 3 fois sur la scène 7 ».
 
@@ -55,10 +83,14 @@ les ~24 s pendant les attentes longues (sinon la sortie est muette jusqu'à
 pendant 3 minutes et le job est marqué `stalled`, avec un incident. L'interface
 affiche en continu le délai depuis le dernier signe de vie.
 
-**4. Diagnostic d'échec** — `diagnose.ts` traduit un « code de sortie 1 » en
+**4. Diagnostic d'échec** — `diagnose.ts` traduit un code de sortie 1 en
 cause lisible et en action : clé absente, clé refusée, crédits épuisés, quota
 atteint, FFmpeg ou Python manquant, réseau. Le front l'affiche à la place du
 message technique.
+
+**5. Repli plutôt qu'échec sec** — quand un élément annexe manque (planche de
+style, référence d'édition image), le script le signale comme incident et
+continue en mode dégradé plutôt que de perdre toute la génération.
 
 ### Tester ces chemins d'erreur
 
@@ -100,13 +132,16 @@ PYTHON_SCRIPT_PATH=./python/_mock_generate.py npm run start:dev
 
 | Méthode | Route | Rôle |
 |---|---|---|
-| `POST` | `/api/generation` | Lance un job (`mode`, `lang`, `videoModel`) |
+| `POST` | `/api/generation` | Lance un job (`format`, `mode`, `lang`, `videoModel`, `style`) |
 | `GET` | `/api/generation` | Historique des jobs |
 | `GET` | `/api/generation/:id` | État d'un job |
 | `GET` | `/api/generation/:id/events` | Suivi live (SSE) |
-| `GET` | `/api/generation/:id/video` | Vidéo finale (support `Range`) |
-| `DELETE` | `/api/generation/:id` | Annule un job |
-| `GET` | `/api/health` | Pré-vol : clé API, Python, FFmpeg, disque |
+| `GET` | `/api/generation/:id/video?download=1` | Vidéo finale (support `Range`, `download` force le téléchargement) |
+| `DELETE` | `/api/generation/:id` | Annule si le job tourne encore, **supprime** (fichiers compris) s'il est terminé |
+| `GET` | `/api/generation/ideas` | Avancement des listes de sujets, par format |
+| `GET` | `/api/health` | Pré-vol : clé API, jeton, Python, FFmpeg, scripts, planche de style, disque |
+
+`POST` et `DELETE` exigent le jeton d'écriture (voir section Sécurité).
 
 ## Hébergement — front sur Vercel, back sur Render
 
@@ -126,6 +161,8 @@ Variables à renseigner dans le tableau de bord :
 |---|---|
 | `KIE_API_KEY` | ta clé KIE.AI |
 | `FRONT_ORIGIN` | l'URL Vercel, sans slash final (plusieurs séparées par des virgules) |
+| `API_TOKEN` | jeton d'écriture — **obligatoire en production**, voir Sécurité |
+| `WATERMARK` | pseudo incrusté en filigrane mobile (ex. `@darum.finanzen`) ; vide = aucun filigrane |
 
 `DATA_DIR`, `PYTHON_BIN` et `PYTHON_SCRIPT_PATH` sont déjà posés par l'image.
 
@@ -142,14 +179,17 @@ Variables à renseigner dans le tableau de bord :
 **Root Directory : `front`** (sinon Vercel construit la racine et ne trouve
 rien). Le framework Vite est détecté automatiquement.
 
-Une seule variable, dans *Settings > Environment Variables* :
+Deux variables, dans *Settings > Environment Variables* :
 
 ```
-VITE_API_BASE = https://<ton-service>.onrender.com
+VITE_API_BASE  = https://ton-service.onrender.com
+VITE_API_TOKEN = la même valeur que API_TOKEN côté Render
 ```
 
-> **Vite fige cette valeur au moment du build.** La modifier dans Vercel ne
-> change rien tant qu'un nouveau déploiement n'a pas été lancé.
+> **Vite fige ces valeurs au moment du build.** Les modifier dans Vercel ne
+> change rien tant qu'un nouveau déploiement n'a pas été lancé — et les deux
+> jetons (front/back) doivent rester identiques en permanence, sinon toutes
+> les générations sont refusées.
 
 ### 3. Boucler le CORS
 
@@ -163,14 +203,20 @@ Vercel crée aussi une URL par déploiement de préversion : les ajouter à
 ### Vérifier
 
 ```bash
-curl https://<ton-service>.onrender.com/api/health
+curl https://ton-service.onrender.com/api/health
 ```
 
-Doit répondre `ok: true` avec Python, FFmpeg, FFprobe et la clé API au vert.
-Sinon l'interface affichera le bandeau rouge de pré-vol.
+Doit répondre `ok: true` avec Python, FFmpeg, FFprobe, la clé API, le jeton
+et la planche de style au vert. Sinon l'interface affichera le bandeau rouge
+de pré-vol.
 
-### Point de sécurité
+### Sécurité
 
-Il n'y a **aucune authentification** : qui connaît l'URL Render peut lancer
-des générations facturées sur ta clé KIE.AI. Choix assumé (URL privée). Si
-l'URL fuite, la parade immédiate est de changer `KIE_API_KEY`.
+`POST /api/generation` et `DELETE /api/generation/:id` exigent un jeton
+(en-tête `x-api-token`, valeur `API_TOKEN`) — sans lui, n'importe qui
+connaissant l'URL Render pourrait lancer des générations facturées sur la
+clé KIE.AI ou supprimer des vidéos. En production, l'absence du jeton fait
+échouer ces deux routes plutôt que de les laisser ouvertes.
+
+Les routes de lecture (`GET`) restent libres : consulter l'avancement d'un
+job ne coûte rien et ne modifie rien.
