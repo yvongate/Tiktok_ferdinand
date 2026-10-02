@@ -18,6 +18,9 @@ export interface JobParams {
   mode: 'short' | '60s';
   lang: 'en' | 'fr' | 'de';
   videoModel: 'runway' | 'seedance';
+  /** Famille visuelle du format ferdinand : rendu 3D cinematique, ou
+   *  collage papier documentaire. Sans effet sur le format graphique. */
+  style: 'ferdinand' | 'vox';
 }
 
 export interface JobProgress {

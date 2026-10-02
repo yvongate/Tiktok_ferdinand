@@ -34,6 +34,11 @@ back/data/
 # le nommage et la provenance - ce sont des marques deposees, deposees ici a
 # la main et jamais telechargees par le code.
 !back/python/logos/*.png
+
+# Planches de style : reference visuelle jointe a chaque prompt d'image du
+# rendu collage. Sans elle, le style derive d'une scene a l'autre et le
+# personnage se fait remplacer - mesure sur de vrais rendus.
+!back/python/planches/*.png
 # Sauf la planche de contact et les rebuts : outils de relecture, pas des
 # assets. Ils n'ont rien a faire dans l'image Docker.
 back/python/logos/_planche.png

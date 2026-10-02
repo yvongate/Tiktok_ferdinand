@@ -76,6 +76,11 @@ export class PythonRunnerService {
       '--out-dir',
       outDir,
     ];
+    // Le style ne concerne que generate.py ; graphique.py l'ignorerait,
+    // et le defaut vaut le comportement historique.
+    if (params.format !== 'graphique' && params.style && params.style !== 'ferdinand') {
+      args.push('--style', params.style);
+    }
     // Cache commun a toutes les tentatives d'un meme sujet : c'est ce qui rend
     // vraie la "reprise sans nouveaux credits" affichee apres un echec.
     if (cacheDir) args.push('--cache-dir', cacheDir);

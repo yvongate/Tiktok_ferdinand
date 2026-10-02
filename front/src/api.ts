@@ -18,11 +18,20 @@ export const FORMAT_LABELS: Record<Format, string> = {
   graphique: 'Graphique boursier',
 }
 
+export type Style = 'ferdinand' | 'vox'
+
+export const STYLE_LABELS: Record<Style, string> = {
+  ferdinand: 'Ferdinand 3D (rendu cinematique)',
+  vox: 'Collage documentaire (papier decoupe)',
+}
+
 export interface JobParams {
   format: Format
   mode: 'short' | '60s'
   lang: 'en' | 'fr' | 'de'
   videoModel: 'runway' | 'seedance'
+  /** Famille visuelle, format ferdinand uniquement. */
+  style: Style
 }
 
 export interface JobProgress {

@@ -38,6 +38,7 @@ import http.client
 from pathlib import Path
 
 import sfx
+import styles
 import subtitles
 import variation
 import watermark
@@ -106,12 +107,9 @@ MODES = {
     },
 }
 
-STYLE_LOCK = (
-    "semi-realistic 3D CGI, GTA V / The Last of Us cutscene quality, realistic skin "
-    "texture with visible pores, natural cinematic lighting, detailed real-world "
-    "environment, photorealistic 3D render, no cartoon, no cel shading, no Pixar, "
-    "no simple background, no studio backdrop"
-)
+# Conserve pour compatibilite : la source de verite du rendu vit desormais
+# dans styles.py, qui porte DEUX familles completes (3D et collage papier).
+STYLE_LOCK = styles.FERDINAND["style_lock"]
 
 # Mascotte recurrente de la chaine (demande explicite utilisateur, en
 # remplacement de Picsou/Scrooge McDuck - meme esprit "riche et malin" mais
@@ -178,7 +176,7 @@ LANGUAGES = {
             "offices look German: older apartment buildings with tall windows, tiled "
             "supermarket floors with narrow aisles, bicycles, "
             "regional trains. Never American suburbs, strip malls, yellow school buses or "
-            "dollar bills. Keep signage unreadable or absent - no brand logos anywhere."
+            "dollar bills. Real shop and brand signage stays unreadable or absent - never reproduce an existing company's name or logo. This does NOT forbid the video's own headline cards and numbers, which follow the style rules above."
         ),
     },
 }
@@ -315,7 +313,7 @@ Style rules:
 Output: return ONLY the spoken script text, ending with the call-to-action sentence from step 6. Nothing else, no preamble, no title, no quotes around it. Never wrap the output in any document/canvas/artifact markup such as ":::writing{{...}}" or code fences - plain spoken text only, nothing before the first word or after the last word."""
 
 
-def build_scenes_system(n_scenes_hint, lang="en", ambiance=None):
+def build_scenes_system(n_scenes_hint, lang="en", ambiance=None, style=None):
     # Micro-details visuels/animation extraits d'une analyse frame-by-frame
     # (1 frame/seconde, pas juste 1 frame par beat) de 2 vraies videos finance
     # - voir video-vision/library_finance/REVIEW.md, section "Micro-details
@@ -330,13 +328,20 @@ def build_scenes_system(n_scenes_hint, lang="en", ambiance=None):
     # precise (demande explicite utilisateur du 26/09, la prediction de duree
     # par nombre de mots n'etant pas fiable). n_scenes_hint est donc une
     # INDICATION approximative, pas une cible exacte a atteindre a tout prix.
-    return """You are an AI visual director creating cinematic scenes in the exact visual style of viral 3D-animated YouTube Shorts, and an AI animation director writing motion prompts for an image-to-video model.
+    #
+    # Les blocs qui dependent du STYLE (role, regles de mise en scene, regle
+    # d'animation, interdits) viennent de styles.py : le collage papier ne se
+    # contente pas d'un autre style_lock, il inverse plusieurs de ces regles -
+    # notamment la camera, fixe en 3D et mobile en collage.
+    cfg_style = style or styles.get(styles.DEFAUT)
+    return """{role}
 
 TASK: given a video script, break it into scene-by-scene prompts, in order - roughly {n_scenes_hint} scenes as a loose guide (not a hard target). Each scene must also carry the EXACT spoken_text assigned to it (verbatim substring of the script, including any [tag] present) - every word of the script must be assigned to exactly one scene, in order, with nothing skipped or duplicated. A beat is usually one sentence, but group 2 short consecutive sentences into ONE scene when they describe the same location/moment (see the final-scene note below). AVOID creating a scene whose spoken_text is only a few words (under ~4-5 words) - merge it into the adjacent scene instead, since a very short spoken line makes a wastefully short video clip.
 
 MASCOT RULE (mandatory - this is the channel's main recurring host, critical for brand recognition): this exact character, reused word-for-word whenever he appears:
 "{character}"
 He MUST appear in the very FIRST scene (the hook) and the very LAST scene (the payoff+CTA) of every video, presented in a confident, knowing host-like pose - even if the script's words don't literally name him. He is the constant anchor of the channel, but he is not necessarily the only figure: OTHER human characters MAY also appear in other scenes when the story genuinely needs them (e.g. an illustrative example about "someone", a second person for a comparison, a bank teller, a shopper) - describe any such other character clearly and keep THEM consistent scene-to-scene within that one video, but never let another character replace Ferdinand as the host in the hook/closing scenes. Scenes with no character at all (a pure object/environment shot, or a diagram/evidence-board beat) are fine too.
+{note_personnage}
 
 MANDATORY STYLE LOCK - append this exact text at the end of every image_prompt:
 "{style_lock}"
@@ -345,17 +350,15 @@ CAMERA ANGLES for image_prompt - pick a different one each scene, never repeat c
 
 VISIBLE NUMBERS RULE (only when the script beat actually contains a number - most beats in this format won't, and that's fine): if a scene's script beat does contain a specific number, amount, or percentage, that number should appear PHYSICALLY WRITTEN AND READABLE somewhere inside the image itself - not just implied. Put it on a photorealistic in-world prop: a price tag, a receipt, a road sign, a digital screen/monitor, a document. Do not invent a number-bearing prop for a beat that has no number in the script.
 
-MECHANISM/REASON LITERALIZATION RULE: when a scene's beat reveals the hidden reason/mechanism behind the everyday feeling (a psychological trick, a pricing strategy, a banking mechanism, an economic principle), stage it as a literal, visual metaphor - photorealistic 3D-rendered - rather than just a character talking. Example patterns: a price tag physically changing from a round number to one ending in .99; a hand adjusting a store's shelf layout; a phone screen glowing with a notification designed to pull attention; a vault or ledger for a banking/interest mechanism; a puppet-string or magnet visual for a psychological pull. Pick whatever concrete visual best matches THIS specific mechanism - the reveal should coincide with the exact sentence that explains it in the script.
+ON-SCREEN TEXT LANGUAGE (critical for a non-English market): every word that appears INSIDE the image - on a price tag, a headline card, a sign, a screen, a receipt - must be written in {lang_name}, never in English. A German video showing "75% OFF" instead of "75% RABATT" reads instantly as foreign, recycled content. Keep such wording to one or two common, correctly spelled words; when unsure of the spelling, describe a number alone rather than a word.
 
-DIAGRAM / RUNNING-NUMBERS BEATS: when a beat is about numbers accumulating or a step-by-step breakdown (rather than a character action), do NOT describe a flat 2D infographic. Instead describe a photorealistic 3D "evidence board" or "war room" scene consistent with the style lock: a corkboard covered in printed documents, photos and string connections, or a glass wall/whiteboard covered in handwritten figures and taped receipts, or a holographic financial display in a dark room - something a thriller/heist movie would show a character analyzing. If a character is present in this kind of beat, keep them small in frame, in a observing/presenting stance, off to one side, so the numbers/documents stay the visual focus.
+{regle_mecanisme}
+
+{regle_diagramme}
 
 ENVIRONMENT DENSITY BY BEAT FUNCTION: for action/establishing beats (character going somewhere, doing something), the environment must be fully detailed as usual (never empty). For reaction/reveal/key-number beats, keep a real, detailed environment but rendered with shallow depth of field (background softly blurred or in shadow) so the character and the number-bearing prop stay the sharp focal point - never a flat/plain/empty background, always real depth with soft-focus context behind it.
 
-SCENE LIVELINESS RULE (critical - this is what stops scenes from feeling like "a character posed alone in an empty-feeling room"): every single scene must feel genuinely lived-in and populated, not just a nicely-detailed but static backdrop behind one posed character. For each scene, use at least one (mix and vary across scenes, don't repeat the same technique every time):
-- A concrete prop/object directly tied to what that beat is saying (a phone showing a bank app, a receipt in hand, a laptop screen with a relevant page open, hands counting cash, a specific store shelf) - read the sentence and ask "what physical thing from this can I put in frame?"
-- OTHER PEOPLE in the background or midground, doing something plausible for the location (other shoppers, coworkers at other desks, passersby on a street, other customers in line) - a real space has other people in it, not just the main character alone.
-- Ambient activity/life in the environment (a TV or screen playing something in the background, steam from a coffee, traffic outside a window, someone walking past in the corridor).
-Never leave a scene as just the character standing/posed in a pretty-but-static space with nothing else going on.
+{regle_vivacite}
 
 HELD POSE RULE: describe each character pose as a single, clear, deliberately held gesture (arms crossed, hand on chin in thought, pointing, presenting stance) rather than a mid-motion or ambiguous pose - the image must read instantly as a frozen, storyboard-clear moment, not a blurred in-between frame.
 
@@ -363,11 +366,11 @@ FINAL SCENE (mandatory grouping): the script's last two sentences are always the
 
 Each image_prompt: character (if any) + specific action or held pose + at least one liveliness element from the SCENE LIVELINESS RULE + environment per the density rule above + any number/mechanism made physically visible per the rules above + camera angle + lighting (natural daylight/golden hour/indoor fluorescent/night streetlight/dramatic shadows) + mood (tense/panicked/calm/urgent/shocked) + the style lock appended at the end.
 
-Each animation_prompt (max 50 words): camera motion and subject motion described separately, ONE dominant motion, camera essentially STATIC/LOCKED for almost every scene - real shots in this genre hold perfectly still and let hard cuts carry the energy, not movement within the shot. Only allow subtle micro-motion (breathing, a slight blink, hair or paper stirring, a light flicker) unless the scene is the tense/reveal/final beat, where a slow push-in or slight handheld shake is allowed. Never describe camera movement as the default.
+{regle_animation}
 
 {visual_context}
 
-Never use: "simple background", "clean background", "smooth skin", "vibrant colors", "cartoon", "Pixar", "octane render", "stylized", brand logos, "infographic", "flat design", "2D".
+{interdits}
 
 SOUND DESIGN RULE: each scene may carry at most ONE sound effect, chosen ONLY from this closed list:
 {sfx_vocabulary}
@@ -377,12 +380,20 @@ Aim to give EVERY scene a sound effect when one genuinely fits - a word that evo
 Output ONLY valid JSON (no markdown fences, no preamble), matching exactly:
 {{{{"scenes": [{{{{"scene_no": 1, "spoken_text": "...", "medium": "real|3d_anatomical|3d_game", "camera_angle": "...", "image_prompt": "...", "animation_prompt": "...", "sfx": null}}}}]}}}}""".format(
         n_scenes_hint=n_scenes_hint,
-        # L'ambiance s'ajoute au medium sans le remplacer : le rendu 3D et
-        # le personnage restent identiques, seule la lumiere change.
-        style_lock=STYLE_LOCK + (f", {ambiance}" if ambiance else ""),
+        # L'ambiance s'ajoute au medium sans le remplacer : le rendu et le
+        # personnage restent identiques, seul le fond/la lumiere change.
+        style_lock=cfg_style["style_lock"] + (f", {ambiance}" if ambiance else ""),
         character=CHARACTER,
+        role=cfg_style["role"],
+        note_personnage=cfg_style["note_personnage"],
+        regle_mecanisme=cfg_style["regle_mecanisme"],
+        regle_diagramme=cfg_style["regle_diagramme"],
+        regle_vivacite=cfg_style["regle_vivacite"],
+        regle_animation=cfg_style["regle_animation"],
+        interdits=cfg_style["interdits"],
         sfx_vocabulary=sfx.vocabulary_block() or "- (aucun son disponible)",
         visual_context=lang_cfg(lang).get("visual_context", ""),
+        lang_name=lang_cfg(lang)["name"],
     )
 
 
@@ -501,6 +512,88 @@ def create_and_wait(model, input_body, max_wait=300, job_retries=3):
     return None
 
 
+def televerser(chemin):
+    """Envoie un fichier local chez KIE et renvoie son URL publique.
+
+    Necessaire parce que nano-banana-edit attend des URL dans `image_urls`,
+    jamais un fichier. Les fichiers televerses sont supprimes au bout de 24h :
+    la planche de style est donc renvoyee a chaque generation, ce qui coute un
+    appel de quelques kilo-octets.
+
+    Renvoie None en cas d'echec - l'appelant retombe alors sur la generation
+    d'image sans reference, ce qui donne un rendu moins tenu mais une video
+    quand meme.
+    """
+    import mimetypes
+    import uuid
+
+    chemin = Path(chemin)
+    if not chemin.exists():
+        return None
+    frontiere = "----kie" + uuid.uuid4().hex
+    mime = mimetypes.guess_type(chemin.name)[0] or "application/octet-stream"
+
+    def champ(nom, valeur):
+        return (f"--{frontiere}\r\nContent-Disposition: form-data; name=\"{nom}\"\r\n\r\n"
+                f"{valeur}\r\n").encode("utf-8")
+
+    corps = (
+        champ("uploadPath", "images/ferdinand")
+        + champ("fileName", chemin.name)
+        + (f"--{frontiere}\r\nContent-Disposition: form-data; name=\"file\"; "
+           f"filename=\"{chemin.name}\"\r\nContent-Type: {mime}\r\n\r\n").encode("utf-8")
+        + chemin.read_bytes()
+        + f"\r\n--{frontiere}--\r\n".encode("utf-8")
+    )
+    # Domaine kieai.redpandaai.co et non api.kie.ai : l'endpoint documente sur
+    # api.kie.ai renvoie 404, verifie sur un vrai appel.
+    req = urllib.request.Request(
+        "https://kieai.redpandaai.co/api/file-stream-upload", data=corps, method="POST")
+    req.add_header("Authorization", f"Bearer {api_key()}")
+    req.add_header("Content-Type", f"multipart/form-data; boundary={frontiere}")
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        return (data.get("data") or {}).get("downloadUrl")
+    except urllib.error.HTTPError as e:
+        print(f"  HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:200]}")
+    except (urllib.error.URLError, TimeoutError, OSError,
+            http.client.HTTPException, json.JSONDecodeError) as e:
+        print(f"  Erreur reseau ({type(e).__name__}): {e}")
+    return None
+
+
+def generer_image(prompt, planche_url=None):
+    """Image d'une scene, avec ou sans planche de style en reference.
+
+    Avec planche, on passe par nano-banana-EDIT : la reference verrouille la
+    palette, le traitement des decoupes et surtout l'apparence du personnage.
+    Sans elle, le rendu derive d'une scene a l'autre - mesure sur des rendus
+    reels, ou Ferdinand s'etait fait remplacer par un inconnu en photo
+    decoupee.
+    """
+    if planche_url:
+        data = create_and_wait(
+            "google/nano-banana-edit",
+            {"prompt": prompt, "image_urls": [planche_url],
+             "image_size": "9:16", "output_format": "png"},
+            max_wait=180,
+        )
+        if data:
+            return data
+        # Repli sans reference plutot que de perdre la scene. Une panne du
+        # modele d'edition, ou une URL de planche expiree, faisait echouer
+        # TOUTES les scenes et donc la video entiere - alors qu'un rendu au
+        # style moins tenu reste exploitable. Signale comme incident.
+        print("  ATTENTION : rendu avec planche indisponible, "
+              "repli sur une generation sans reference.")
+    return create_and_wait(
+        "google/nano-banana",
+        {"prompt": prompt, "image_size": "9:16", "output_format": "png"},
+        max_wait=180,
+    )
+
+
 def get_result_url(data):
     result_json = data.get("resultJson")
     if not result_json:
@@ -537,10 +630,21 @@ def strip_json_fences(text):
     # variante, on extrait simplement le premier objet JSON complet (du
     # premier '{' au dernier '}'), peu importe ce qu'il y a autour.
     first_brace = text.find("{")
-    last_brace = text.rfind("}")
-    if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
-        text = text[first_brace:last_brace + 1]
-    return text.strip()
+    if first_brace == -1:
+        return text.strip()
+    # raw_decode et non un decoupage jusqu'au DERNIER '}' : quand le modele
+    # ajoute quoi que ce soit apres son JSON (un second objet, une phrase de
+    # conclusion), le decoupage large ramenait les deux et json.loads echouait
+    # sur "Extra data". Ici on lit le premier objet complet et on ignore la
+    # suite. Constate sur un appel reel de decoupage en scenes.
+    try:
+        _, fin = json.JSONDecoder().raw_decode(text[first_brace:])
+        return text[first_brace:first_brace + fin].strip()
+    except ValueError:
+        last_brace = text.rfind("}")
+        if last_brace > first_brace:
+            return text[first_brace:last_brace + 1].strip()
+        return text.strip()
 
 
 def generate_valid_script(script_system, user_prompt, trigger_phrase, retries=3, max_tokens=800):
@@ -727,6 +831,11 @@ def main():
                               "variable d'environnement WATERMARK ; vide = aucun filigrane.")
     parser.add_argument("--no-sfx", action="store_true",
                          help="Desactive les bruitages (actifs par defaut).")
+    parser.add_argument("--style", choices=sorted(styles.TOUS), default=styles.DEFAUT,
+                         help="Famille visuelle : ferdinand (3D cinematique, defaut) ou "
+                              "vox (collage papier documentaire). Change le rendu des "
+                              "images ET la direction d'animation - le collage demande "
+                              "une camera mobile la ou le 3D la garde fixe.")
     parser.add_argument("--variation-index", type=int, default=None,
                          help="Rang du sujet dans sa liste validee. Sert a tirer la "
                               "charpente, l'ambiance et la voix dans un paquet battu, "
@@ -765,13 +874,47 @@ def main():
     index = args.variation_index if args.variation_index is not None else 0
     var = variation.pour(args.idea or "sans-titre", index, args.lang)
 
+    cfg_style = styles.get(args.style)
+    # Le collage papier a ses propres variations de fond : les ambiances
+    # lumineuses du 3D (« nuit aux lampadaires orange ») combattraient sa
+    # palette archive. Chaque style pioche donc dans sa propre liste, avec le
+    # meme paquet battu, pour que deux videos voisines different quand meme.
+    ambiance = var.ambiance
+    if cfg_style["ambiances"]:
+        ambiance = variation._paquet(
+            cfg_style["ambiances"], index, "ambiance-" + cfg_style["nom"])
+
     mode_cfg = MODES[args.mode]
     suffix = "" if args.mode == "short" else f"_{args.mode}"
     suffix += lang_cfg(args.lang)["suffix"]
     if args.video_model == "seedance":
         suffix += "_seedance"  # runway est desormais le defaut (pas de suffixe)
-    print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_model} ===\n")
-    print(f"  Variation : {var.resume()}")
+    # Sans ca, une video collage et une video 3D du MEME sujet ecriraient dans
+    # les memes fichiers de cache et se reprendraient l'une l'autre.
+    if cfg_style["nom"] != styles.DEFAUT:
+        suffix += "_" + cfg_style["nom"]
+    print(f"=== Mode : {args.mode} / Langue : {args.lang} / Video : {args.video_model} "
+          f"/ Style : {cfg_style['nom']} ===\n")
+    print(f"  Variation : {var.resume(ambiance)}")
+    print(f"  Style : {cfg_style['libelle']} | fond={ambiance.split(':')[-1].strip()[:44]}")
+
+    # Planche de style : televersee une fois pour toute la video, puis jointe a
+    # chaque prompt d'image. Les fichiers KIE expirent en 24h, donc on renvoie
+    # a chaque generation plutot que de garder une URL. Absente ou upload en
+    # echec, on continue sans - rendu moins tenu, mais pas de video perdue.
+    planche_url = None
+    if cfg_style["planche"]:
+        planche = Path(__file__).parent / "planches" / cfg_style["planche"]
+        planche_url = televerser(planche)
+        if planche_url:
+            print(f"  Planche de style : jointe ({planche.name})")
+        else:
+            # Prefixe ATTENTION : c'est ce que le backend reconnait comme
+            # incident. Sans lui, la video sortait avec un style qui derive
+            # d'une scene a l'autre et un personnage qui change, sans que rien
+            # n'apparaisse a l'ecran pour l'expliquer.
+            print(f"  ATTENTION : planche de style indisponible ({planche.name}), "
+                  f"rendu sans reference visuelle - style et personnage moins tenus.")
 
     script_system = build_script_system(mode_cfg, lang=args.lang,
                                         charpente=var.charpente)
@@ -883,7 +1026,7 @@ def main():
 
         print("\n=== 3. Decoupage en scenes (avec texte parle par scene) ===")
         scenes_system = build_scenes_system(n_scenes_hint, lang=args.lang,
-                                            ambiance=var.ambiance)
+                                            ambiance=ambiance, style=cfg_style)
         scenes_raw = claude(scenes_system, f"Script:\n{script}", max_tokens=6000)
         if not scenes_raw:
             print("ECHEC total sur le decoupage en scenes. Arret.")
@@ -937,11 +1080,7 @@ def main():
         print(f"  Voix OK ({seg_dur:.2f}s) : {spoken_text[:60]!r}")
 
         print(f"=== Scene {n}/{n_scenes} : image ===")
-        img_data = create_and_wait(
-            "google/nano-banana",
-            {"prompt": s["image_prompt"], "image_size": "9:16", "output_format": "png"},
-            max_wait=180,
-        )
+        img_data = generer_image(s["image_prompt"], planche_url)
         if not img_data:
             print("  Echec generation image.")
             continue

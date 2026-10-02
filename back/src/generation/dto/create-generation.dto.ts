@@ -17,4 +17,8 @@ export class CreateGenerationDto {
   @IsOptional()
   @IsIn(['runway', 'seedance'])
   videoModel: 'runway' | 'seedance' = 'runway';
+
+  @IsOptional()
+  @IsIn(['ferdinand', 'vox'])
+  style: 'ferdinand' | 'vox' = 'ferdinand';
 }

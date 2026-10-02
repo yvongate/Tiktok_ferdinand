@@ -243,10 +243,17 @@ class Variation:
         self.maintien = round(rng.uniform(*MAINTIEN), 1)
         self.medaillon = rng.randint(*MEDAILLON)
 
-    def resume(self):
+    def resume(self, ambiance=None):
         """Ligne de journal : sans elle, impossible de savoir apres coup
-        pourquoi deux videos ne se ressemblent pas."""
-        return (f"charpente={self.charpente_nom} ambiance={self.ambiance.split(',')[0]!r} "
+        pourquoi deux videos ne se ressemblent pas.
+
+        `ambiance` permet d'afficher celle REELLEMENT utilisee : un style qui
+        a ses propres fonds (le collage) n'emploie pas l'ambiance lumineuse
+        tiree ici, et le journal annoncait alors un reglage qui ne servait
+        pas.
+        """
+        eff = ambiance or self.ambiance
+        return (f"charpente={self.charpente_nom} ambiance={eff.split(',')[0]!r} "
                 f"voix={self.profil_voix.split(',')[0]!r} "
                 f"sous-titres={self.couleur_active} y={self.y_ferdinand}")
 

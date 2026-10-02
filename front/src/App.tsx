@@ -5,8 +5,10 @@ import {
   INCIDENT_LABELS,
   STEP_LABELS,
   FORMAT_LABELS,
+  STYLE_LABELS,
   titreIdee,
   type Format,
+  type Style,
   type HealthReport,
   type IdeasProgress,
   type Job,
@@ -34,6 +36,7 @@ function App() {
     mode: '60s',
     lang: 'de',
     videoModel: 'runway',
+    style: 'ferdinand',
   })
   const [jobs, setJobs] = useState<Job[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -217,6 +220,24 @@ function App() {
             </select>
           </label>
 
+          {/* Le style ne concerne que Ferdinand : graphique.py dessine ses
+              courbes lui-meme et ignore la famille visuelle. */}
+          {params.format === 'ferdinand' && (
+            <label>
+              Style visuel
+              <select
+                value={params.style}
+                onChange={(e) => setParams({ ...params, style: e.target.value as Style })}
+              >
+                {(Object.keys(STYLE_LABELS) as Style[]).map((s) => (
+                  <option key={s} value={s}>
+                    {STYLE_LABELS[s]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
           {params.format === 'ferdinand' && (
             <label>
               Modele video
@@ -271,6 +292,9 @@ function App() {
                 {job.params.format === 'graphique'
                   ? ` ${job.params.lang}`
                   : ` ${job.params.mode} · ${job.params.lang} · ${job.params.videoModel}`}
+                {job.params.style === 'vox' && (
+                  <span className="pill format">collage</span>
+                )}
                 {/* incidentCount vient de l'historique allege ; incidents du
                     flux SSE, qui remplace l'entree par le job complet. */}
                 {incidentTotal(job) > 0 && (

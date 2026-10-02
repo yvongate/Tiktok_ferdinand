@@ -41,6 +41,7 @@ export class HealthController {
         'import PIL; print("Pillow", PIL.__version__)',
       ]),
       ...this.checkScripts(),
+      this.checkPlanches(),
       this.checkDataDir(),
     ]);
     return {
@@ -105,6 +106,28 @@ export class HealthController {
       const ok = fs.existsSync(script);
       return { name, ok, detail: ok ? fichier : `introuvable : ${script}` };
     });
+  }
+
+  /**
+   * Planches de style du rendu collage.
+   *
+   * Sans planche, le style « vox » continue de produire une video, mais le
+   * rendu derive d'une scene a l'autre et le personnage se fait remplacer -
+   * mesure sur de vrais rendus. Le signaler ici evite de le decouvrir sur la
+   * video finie. Non bloquant : le rendu 3D, lui, n'en a pas besoin.
+   */
+  private checkPlanches(): CheckResult {
+    const dossier = path.resolve(__dirname, '..', '..', 'python', 'planches');
+    const presentes = fs.existsSync(dossier)
+      ? fs.readdirSync(dossier).filter((f) => f.endsWith('.png'))
+      : [];
+    return {
+      name: 'Planches de style',
+      ok: presentes.includes('vox.png'),
+      detail: presentes.includes('vox.png')
+        ? `${presentes.length} planche(s) : ${presentes.join(', ')}`
+        : 'vox.png absente — le style collage rendra sans reference visuelle',
+    };
   }
 
   /**

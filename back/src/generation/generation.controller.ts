@@ -61,6 +61,7 @@ export class GenerationController {
       mode: dto.mode ?? 'short',
       lang: dto.lang ?? 'de',
       videoModel: dto.videoModel ?? 'runway',
+      style: dto.style ?? 'ferdinand',
     });
   }
 
