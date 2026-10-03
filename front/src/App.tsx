@@ -510,6 +510,55 @@ function Incidents({ incidents }: { incidents: JobIncident[] }) {
   )
 }
 
+/**
+ * Legende de publication, avec son bouton "Copier".
+ *
+ * Le texte est dans un <textarea> plutot qu'un <pre> pour deux raisons : il
+ * reste selectionnable a la main si le presse-papier est refuse, et il sert de
+ * cible au repli execCommand ci-dessous. navigator.clipboard n'existe que sur
+ * une origine sure (https ou localhost) et peut aussi etre bloque par le
+ * navigateur : sans repli, le bouton ne ferait rien et rien ne le dirait.
+ */
+function Description({ texte }: { texte: string }) {
+  const zone = useRef<HTMLTextAreaElement>(null)
+  const [etat, setEtat] = useState<'pret' | 'copie' | 'echec'>('pret')
+
+  const copier = async () => {
+    try {
+      await navigator.clipboard.writeText(texte)
+      setEtat('copie')
+    } catch {
+      const champ = zone.current
+      if (champ) {
+        champ.focus()
+        champ.select()
+        setEtat(document.execCommand?.('copy') ? 'copie' : 'echec')
+      } else {
+        setEtat('echec')
+      }
+    }
+    setTimeout(() => setEtat('pret'), 2500)
+  }
+
+  return (
+    <div className="description">
+      <div className="description-tete">
+        <strong>Description TikTok</strong>
+        <span className="description-taille">{texte.length} caracteres</span>
+        <button className="copier" onClick={() => void copier()}>
+          {etat === 'copie' ? 'Copie ✓' : etat === 'echec' ? 'Copie refusee' : 'Copier'}
+        </button>
+      </div>
+      <textarea ref={zone} readOnly value={texte} rows={Math.min(16, texte.split('\n').length + 1)} />
+      {etat === 'echec' && (
+        <p className="description-aide">
+          Le navigateur a refuse l'acces au presse-papier. Le texte est selectionne : Ctrl+C.
+        </p>
+      )}
+    </div>
+  )
+}
+
 function JobDetail({ job, onCancel }: { job: Job; onCancel: (id: string) => void }) {
   const running = ACTIVE.includes(job.status)
   const { progress } = job
@@ -576,6 +625,7 @@ function JobDetail({ job, onCancel }: { job: Job; onCancel: (id: string) => void
           <a className="download" href={api.downloadUrl(job.id)}>
             Telecharger la video
           </a>
+          {job.description && <Description texte={job.description} />}
         </div>
       )}
 

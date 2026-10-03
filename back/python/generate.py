@@ -884,6 +884,100 @@ def sync_video_to_audio(video_path, audio_path, out_path):
     )
 
 
+# --- Description de publication -----------------------------------------
+# La video n'est pas publiable telle quelle : il faut encore lui ecrire une
+# legende. La legende est redigee ici, a partir du script reellement dit -
+# pas du titre seul - parce que le chiffre qui accroche se trouve dans le
+# corps du script, jamais dans la question d'ouverture.
+
+DESCRIPTION_MAX = 600
+"""Garde-fou de longueur. TikTok accepte 2200 caracteres, mais une legende
+qui depasse l'ecran se replie derriere un "plus" que personne ne deplie."""
+
+
+def build_description_system(lang="en"):
+    cfg = lang_cfg(lang)
+    return f"""You write the caption that goes under a vertical short video on
+TikTok. Language: {cfg['name']}. Write ONLY in {cfg['name']}.
+
+The video explains one money mechanism with real arithmetic. You will be given
+its title and its full spoken script.
+
+STRUCTURE, in this exact order, nothing else:
+1. One hook line that states the COUNTERINTUITIVE RESULT with its number, taken
+   from the script. Not the question - the answer. Max 90 characters.
+2. A blank line.
+3. Two or three short lines naming the mechanism and the number that proves it.
+   Plain words, no jargon beyond the one technical term the script itself uses.
+4. A blank line.
+5. One short line telling the viewer what to check in their own life.
+6. A blank line.
+7. Exactly 10 to 12 hashtags on one or two lines, lowercase, no accents, no
+   spaces inside a tag. Mix: 3-4 about the precise subject, 4-5 broad finance
+   tags people actually follow, and always #finanzmaulwurf last.
+
+RULES:
+- Every figure must already appear in the script. Invent nothing.
+- A hashtag must be a real word or an existing compound that people actually
+  type. Never weld two words into a compound that does not exist (in German,
+  '#spartipps' exists, '#sparentipps' does not).
+- Address the viewer informally ('du' in German, 'tu' in French).
+- No emoji except at most one, at the end of the hook line.
+- Never write 'In diesem Video', 'Dans cette video' or any meta commentary.
+- No quotation marks around the whole caption, no markdown, no title line.
+- Total under {DESCRIPTION_MAX} characters.
+
+Output the caption text only."""
+
+
+def description_de_secours(idea, script):
+    """Legende construite localement, sans appel API.
+
+    Sert quand le modele ne repond pas. Volontairement pauvre : son role est
+    qu'il y ait TOUJOURS quelque chose a copier au bout du bouton, pas de
+    rivaliser avec la version redigee.
+    """
+    lignes = [l.strip() for l in script.splitlines() if l.strip()]
+    # On saute la premiere ligne : c'est la question du titre, deja ci-dessus.
+    corps = [re.sub(r"^\[[^\]]*\]\s*", "", l) for l in lignes[1:4]]
+    tags = ("#finanzen #geldtipps #finanzbildung #sparen #zinsen #verbraucher "
+            "#finanzwissen #lernenmittiktok #finanzmaulwurf")
+    return "\n\n".join([idea.strip(), " ".join(corps).strip(), tags]).strip()
+
+
+def generer_description(idea, script, lang, cache_file):
+    """Redige la legende de publication et la met en cache.
+
+    Jamais bloquante : une legende manquante ne doit pas faire echouer une
+    video deja payee et deja montee.
+    """
+    if _utilisable(cache_file):
+        texte = cache_file.read_text(encoding="utf-8").strip()
+        if texte:
+            return texte
+
+    texte = claude(
+        build_description_system(lang),
+        f"Title: {idea}\n\nSpoken script:\n{script}",
+        max_tokens=600,
+        retries=2,  # un echec coute une legende, pas une video : on insiste peu
+    )
+    texte = (texte or "").strip().strip('"').strip()
+    if not texte:
+        print("  ATTENTION : description non redigee par le modele, repli local.")
+        texte = description_de_secours(idea, script)
+    elif len(texte) > DESCRIPTION_MAX * 2:
+        # Garde-fou : le modele part parfois en dissertation. On tronque sur
+        # une fin de ligne plutot qu'au milieu d'un hashtag.
+        texte = texte[: DESCRIPTION_MAX * 2].rsplit("\n", 1)[0].strip()
+
+    try:
+        cache_file.write_text(texte, encoding="utf-8")
+    except OSError as e:
+        print(f"  ATTENTION : description non enregistree ({e}).")
+    return texte
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=list(MODES.keys()), default="short",
@@ -1404,6 +1498,23 @@ def main():
     if len(clip_paths) < n_scenes:
         print(f"ATTENTION : {n_scenes - len(clip_paths)} scene(s) manquante(s), "
               f"la video est plus courte que prevu.")
+
+    # --- Legende de publication ------------------------------------------
+    # En dernier, et tolerante a l'echec : la video existe deja, rien ici ne
+    # doit pouvoir la perdre. Les marqueurs encadrants sont le contrat avec le
+    # backend, qui la range dans le job pour le bouton "Copier".
+    print("\n=== 6. Description de publication ===")
+    try:
+        description = generer_description(
+            first_idea, script, args.lang, OUT_DIR / f"description{suffix}.txt"
+        )
+    except Exception as e:  # noqa: BLE001 - jamais au prix de la video
+        print(f"  ATTENTION : description impossible ({type(e).__name__}: {e}).")
+        description = ""
+    if description:
+        print("=== DESCRIPTION ===")
+        print(description)
+        print("=== FIN DESCRIPTION ===")
 
     print(f"\n=== TERMINE : {final_video} ===")
 

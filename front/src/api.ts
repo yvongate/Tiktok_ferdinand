@@ -95,6 +95,8 @@ export interface Job {
   startedAt?: string
   finishedAt?: string
   videoPath?: string
+  /** Legende prete a coller sous la video sur TikTok. */
+  description?: string
   error?: string
   failure?: JobFailure
   incidents: JobIncident[]

@@ -154,4 +154,18 @@ print(f"\n=== BILAN : {produites}/{N_SCENES} scenes produites ===")
 if produites < N_SCENES:
     print(f"ATTENTION : {N_SCENES - produites} scene(s) manquante(s), "
           f"la video est plus courte que prevu.")
+
+# Legende de publication. Le texte contient volontairement un "ATTENTION" et
+# une ligne "=== " : c'est exactement ce que le backend doit NE PAS prendre
+# pour un incident ni pour une etape.
+print("\n=== 6. Description de publication ===")
+print("=== DESCRIPTION ===")
+print("1.000 Euro leihen kostet dich 15 Prozent, nicht 10. [mock]")
+print("")
+print("ATTENTION : cette ligne ne doit pas devenir un incident.")
+print("=== ceci ressemble a une etape mais n'en est pas une ===")
+print("")
+print("#finanzen #geldtipps #finanzmaulwurf")
+print("=== FIN DESCRIPTION ===")
+
 print(f"\n=== TERMINE : {final} ===")

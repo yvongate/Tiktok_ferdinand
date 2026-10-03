@@ -212,6 +212,64 @@ button.danger {
   font-size: 0.9rem;
 }
 
+/* Legende de publication : pleine largeur, elle se lit et se copie d'un geste. */
+.description {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  background: #100d0b;
+}
+
+.description-tete {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.description-taille {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-right: auto;
+}
+
+.copier {
+  background: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.copier:hover {
+  background: var(--accent-light);
+}
+
+.description textarea {
+  width: 100%;
+  resize: vertical;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.description textarea:focus {
+  outline: none;
+}
+
+.description-aide {
+  margin: 8px 0 0;
+  color: var(--warn);
+  font-size: 0.8rem;
+}
+
 .logs {
   margin-top: 18px;
 }

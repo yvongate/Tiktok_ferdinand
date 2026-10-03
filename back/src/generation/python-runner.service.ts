@@ -18,7 +18,21 @@ export interface RunCallbacks {
   onProgress: (patch: Partial<JobProgress>) => void;
   onLogLine: (line: string) => void;
   onIncident: (incident: ParsedIncident) => void;
+  /** Legende de publication, emise une fois en fin de generation. */
+  onDescription: (texte: string) => void;
 }
+
+/** Bornes du bloc de legende dans la sortie de generate.py. */
+const DESCRIPTION_DEBUT = '=== DESCRIPTION ===';
+const DESCRIPTION_FIN = '=== FIN DESCRIPTION ===';
+
+/**
+ * Plafond de lignes recueillies. stdout et stderr arrivent entremeles : si une
+ * ligne d'erreur se glissait a la place du marqueur de fin, sans ce plafond on
+ * avalerait tout le reste de la sortie - y compris la ligne TERMINE, et le job
+ * echouerait alors qu'il a produit sa video.
+ */
+const DESCRIPTION_MAX_LIGNES = 40;
 
 /**
  * Lance python/generate.py et traduit sa sortie texte en progression
@@ -124,7 +138,40 @@ export class PythonRunnerService {
     // ligne d'erreur, mais c'est l'information la plus utile a l'ecran.
     let currentScene: number | undefined;
 
+    /** Non-null tant qu'on est a l'interieur du bloc de legende. */
+    let legende: string[] | null = null;
+
+    const cloreLegende = () => {
+      if (!legende) return;
+      const texte = legende.join('\n').trim();
+      legende = null;
+      if (texte) cb.onDescription(texte);
+    };
+
     const traiter = (line: string) => {
+      const brut = line.trim();
+
+      // Le corps de la legende est du texte libre destine a TikTok : il passe
+      // a cote de l'analyse de progression et du journal. Sinon une ligne
+      // commencant par "ATTENTION" y serait comptee comme un incident, et la
+      // legende entiere viendrait grossir logTail.
+      if (legende) {
+        if (brut === DESCRIPTION_FIN || legende.length >= DESCRIPTION_MAX_LIGNES) {
+          cloreLegende();
+          if (brut === DESCRIPTION_FIN) return;
+        } else if (!brut.startsWith('=== TERMINE')) {
+          legende.push(line);
+          return;
+        } else {
+          // Marqueur de fin perdu : on cloture ici plutot que d'avaler la
+          // ligne qui porte le chemin de la video.
+          cloreLegende();
+        }
+      } else if (brut === DESCRIPTION_DEBUT) {
+        legende = [];
+        return;
+      }
+
       if (!line.trim()) return;
       cb.onLogLine(line);
 
@@ -169,7 +216,10 @@ export class PythonRunnerService {
     brancher(child.stderr);
 
     const done = new Promise<{ ok: boolean; code: number | null }>((resolve) => {
-      child.on('close', (code) => resolve({ ok: code === 0, code }));
+      child.on('close', (code) => {
+        cloreLegende(); // bloc reste ouvert si le process s'est arrete dedans
+        resolve({ ok: code === 0, code });
+      });
       child.on('error', (err) => {
         cb.onLogLine(`Erreur de lancement du process Python : ${err.message}`);
         resolve({ ok: false, code: null });

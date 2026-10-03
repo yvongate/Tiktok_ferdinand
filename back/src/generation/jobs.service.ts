@@ -251,6 +251,10 @@ export class JobsService implements OnModuleInit {
       onIncident: (incident: ParsedIncident) => {
         this.addIncident(job, incident);
       },
+      onDescription: (texte: string) => {
+        job.description = texte;
+        this.touch(job, false);
+      },
     }, charge, job.ideaNumber);
 
     this.running.set(job.id, handle);

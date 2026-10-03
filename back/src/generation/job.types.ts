@@ -112,6 +112,12 @@ export interface Job {
   finishedAt?: string;
   /** Chemin absolu de la video finale, une fois terminee. */
   videoPath?: string;
+  /**
+   * Legende prete a coller sous la video sur TikTok, redigee a partir du
+   * script reellement dit. Sans elle, chaque publication demandait encore un
+   * aller-retour manuel pour ecrire un texte et des hashtags.
+   */
+  description?: string;
   /** Dossier de travail isole de ce job. */
   outDir: string;
   /** Numero de l'idee reservee dans la liste validee, quand il y en a une.
