@@ -42,7 +42,7 @@ FERDINAND = {
         "no simple background, no studio backdrop"
     ),
 
-    "note_personnage": "",
+    "note_personnage": "REFERENCE PLATE: the attached image defines the MASCOT ONLY - his species, build, fur colour, snout, spectacles, suit and watch chain. It does NOT define the scene. Ignore its background, its framing and its camera angle completely: each scene has its own setting, its own shot type and its own action as described in the prompt. Copy the character, never the plate's room.",
 
     "regle_mecanisme": "MECHANISM/REASON LITERALIZATION RULE: when a scene's beat reveals the hidden reason/mechanism behind the everyday feeling (a psychological trick, a pricing strategy, a banking mechanism, an economic principle), stage it as a literal, visual metaphor - photorealistic 3D-rendered - rather than just a character talking. Example patterns: a price tag physically changing from a round number to one ending in .99; a hand adjusting a store's shelf layout; a phone screen glowing with a notification designed to pull attention; a vault or ledger for a banking/interest mechanism; a puppet-string or magnet visual for a psychological pull. Pick whatever concrete visual best matches THIS specific mechanism - the reveal should coincide with the exact sentence that explains it in the script.",
 
@@ -62,9 +62,17 @@ Never leave a scene as just the character standing/posed in a pretty-but-static 
     # historique : matin couvert, fin d'apres-midi, soir bleu...).
     "ambiances": None,
 
-    # Le 3D n'a pas besoin de reference visuelle : le texte suffit a tenir
-    # le rendu, prouve par des dizaines de videos.
-    "planche": None,
+    # Le 3D a LONGTEMPS tourne sans planche, et ca passait - mais par
+    # accident. Mesure du 03/10, premier run avec la taupe : a partir de la
+    # scene 8, GPT-5.2 abrege la description en "Ferdinand, exact recurring
+    # appearance", et le modele d'image, qui n'a aucune memoire d'une scene a
+    # l'autre, inventait un animal : berger allemand, chat, loup, ours, et
+    # meme un renard. Six scenes correctes sur dix-sept.
+    #
+    # Avec le renard, ce bug etait invisible : "animal anthropomorphe en
+    # costume" tombait souvent juste par hasard. Changer d'espece l'a revele.
+    # Le style vox, lui, tenait deja 6/6 grace a SA planche.
+    "planche": "ferdinand3d.png",
 }
 
 
@@ -109,7 +117,7 @@ VOX = {
     # Ferdinand reste reconnaissable, mais en materiau papier. Son costume
     # rouge devient l'accent chaud unique de la palette : le style et la marque
     # se renforcent au lieu de se contredire.
-    "note_personnage": "MASCOT IN THIS STYLE: render him as a hand-cut paper figure - a printed cutout with rough white keyline edges and slight drop shadow, standing as a physical layer inside the scene. Keep his design exactly as described (fox, deep-red three-piece suit, gold watch chain), but as printed matte paper, never as a 3D-rendered or photographic animal. CRITICAL: he is the ONLY figure in full colour - his orange fur and deep-red suit stay fully saturated while every other person in the frame is a colourless black-and-white halftone cutout. He is NEVER halftone, NEVER greyscale, never desaturated; that colour contrast is what makes him read as the host.",
+    "note_personnage": "MASCOT IN THIS STYLE: render him as a hand-cut paper figure - a printed cutout with rough white keyline edges and slight drop shadow, standing as a physical layer inside the scene. Keep his design exactly as described (mole, deep-red three-piece suit, gold watch chain, brass spectacles), but as printed matte paper, never as a 3D-rendered or photographic animal. CRITICAL: he is the ONLY figure in full colour - his deep-red suit, his pale pink snout and paws and his gold chain stay fully saturated, and his fur stays a visibly WARM sepia-brown, while every other person in the frame is a colourless black-and-white halftone cutout. His fur must never drift to the neutral grey of the halftone crowd: he is NEVER halftone, NEVER greyscale, never desaturated; that colour contrast is what makes him read as the host.",
 
     "regle_mecanisme": "MECHANISM/REASON LITERALIZATION RULE: when a scene's beat reveals the hidden reason/mechanism behind the everyday feeling, stage it as a physical paper-diorama metaphor rather than a character talking. Build it from cut paper: a price tag cutout flipping to reveal another number underneath, a paper hand sliding a shelf label, stacked paper coins sinking through a slot, a cut-paper magnet dragging halftone figures toward it, a folded arrow bending a queue of cutouts off its path. The mechanism must be readable as an object in space, with the reveal landing on the exact sentence that explains it.",
 
@@ -145,7 +153,11 @@ AVOID: no camera cuts within the clip, no new text appearing, no warped or gibbe
 
 
 TOUS = {s["nom"]: s for s in (FERDINAND, VOX)}
-DEFAUT = "ferdinand"
+# Vox est le defaut depuis le 03/10 : c'est le seul des deux styles dont la
+# coherence du personnage soit PROUVEE sur une video entiere (16/16 scenes,
+# contre 6/17 pour le 3D sans planche). Le 3D a depuis sa propre planche,
+# mais elle n'a pas encore ete testee en conditions reelles.
+DEFAUT = "vox"
 
 
 def get(nom):
@@ -155,4 +167,4 @@ def get(nom):
     generation deja payee en amont (idee, script), il doit produire la video
     habituelle.
     """
-    return TOUS.get(nom or DEFAUT, FERDINAND)
+    return TOUS.get(nom or DEFAUT, VOX)

@@ -435,7 +435,7 @@ export class PythonRunnerService {
       };
     }
 
-    // "  (tentative 2/3 rejetee : ne commence pas par "Voici pourquoi" -> ...)"
+    // "  (tentative 2/3 rejetee : ne commence pas par "Pourquoi" -> ...)"
     const rejected = /^\(tentative (\d+)\/(\d+) rejetee\s*:\s*(.+?)\)$/.exec(line);
     if (rejected) {
       return {

@@ -1,8 +1,8 @@
-# Ferdinand Renard — générateur de shorts « Voici pourquoi »
+# Ferdinand — générateur de shorts « Pourquoi… ? »
 
 Application web pour lancer et suivre la génération de vidéos courtes
-(finance / psychologie de l'argent, mascotte récurrente Ferdinand) depuis
-n'importe où.
+(finance / psychologie de l'argent, mascotte récurrente Ferdinand la taupe)
+depuis n'importe où.
 
 ```
 back/    NestJS — API, file d'attente, orchestration du pipeline
@@ -16,7 +16,7 @@ front/   Vite + React — tableau de bord
 
 | | `ferdinand` | `graphique` |
 |---|---|---|
-| Contenu | histoire narrée par Ferdinand | animation d'un graphique boursier réel |
+| Contenu | fable chiffrée menée par Ferdinand | animation d'un graphique boursier réel |
 | Script | `python/generate.py` | `python/graphique.py` |
 | Sujets | liste validée, consommée séquentiellement | liste validée, consommée séquentiellement |
 | Style visuel | 3D photoréaliste ou collage papier (voir plus bas) | rendu de courbe fixe |
@@ -25,6 +25,32 @@ front/   Vite + React — tableau de bord
 Les deux listes de sujets vivent côté `python/` et sont consommées une par
 une à chaque génération réussie — pas de répétition tant que la liste n'est
 pas épuisée. `GET /api/generation/ideas` renvoie l'avancement des deux.
+
+## Le format de script
+
+Chaque vidéo est une **fable chiffrée**, pas un exposé. Structure en sept
+temps, mesurée sur 110 vidéos de chaînes comparables (voir `scriptik/`) :
+
+| # | Étape | Rôle |
+|---|---|---|
+| 1 | **Question** | Le titre, mot pour mot : « Warum… ? ». Une question ouvre une boucle, une affirmation la ferme. |
+| 2 | Ce que tout le monde voit | La lecture évidente, énoncée sans ironie |
+| 3 | **La taupe creuse** | Elle regarde sous le contrat, les petites lignes, les vrais chiffres |
+| 4 | **Le mécanisme, en chiffres** | Le cœur : l'arithmétique déroulée pas à pas, vérifiable |
+| 5 | Pourquoi personne ne le voit | Trop petit pour se sentir, trop ennuyeux pour être vérifié |
+| 6 | **Chute en antithèse** | Deux phrases opposées : ce que voient les autres / ce que voit la taupe |
+| 7 | Appel | Court, chaleureux, sans survente |
+
+Ferdinand n'est pas celui qui profite du mécanisme : **il le déterre et le
+montre**. Il est du côté du spectateur.
+
+Les chiffres ne sont pas un ornement, ce sont eux qui portent la révélation —
+et ils doivent tomber juste. Le prompt interdit explicitement d'inventer des
+statistiques : seuls les montants de la situation elle-même sont permis.
+
+`variation.py` fait varier **la façon de dérouler le calcul** (calcul direct,
+deux chemins comparés, empilement de petites sommes, chronologie) pour que
+deux vidéos ne se ressemblent pas.
 
 ## Deux styles visuels pour le format ferdinand
 
@@ -292,7 +318,7 @@ de pré-vol.
 ### Sécurité
 
 `POST /api/generation` et `DELETE /api/generation/:id` exigent un jeton
-(en-tête `x-api-token`, valeur `API_TOKEN`) — sans lui, n'importe qui
+(en-tête `x-ferdinand-token`, valeur `API_TOKEN`) — sans lui, n'importe qui
 connaissant l'URL Render pourrait lancer des générations facturées sur la
 clé KIE.AI ou supprimer des vidéos. En production, l'absence du jeton fait
 échouer ces deux routes plutôt que de les laisser ouvertes.

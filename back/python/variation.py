@@ -33,7 +33,7 @@ import random
 # --- Ambiances Ferdinand -----------------------------------------------
 # Ce qui varie ici, c'est la LUMIERE, jamais le medium ni le personnage :
 # STYLE_LOCK garde « 3D CGI semi-realiste, qualite cinematique », CHARACTER
-# garde le renard au mot pres. Deux videos se distinguent au premier coup
+# garde la taupe au mot pres. Deux videos se distinguent au premier coup
 # d'oeil sans cesser d'appartenir au meme univers.
 #
 # Pour resserrer l'identite visuelle, il suffit de couper cette liste aux
@@ -48,42 +48,39 @@ AMBIANCES = [
 
 
 # --- Charpentes narratives Ferdinand -----------------------------------
-# Remplace la seule forme disponible jusqu'ici (sensation -> raison cachee).
-# L'accroche (etape 1) et la chute + appel (etapes 5-6) ne bougent pas : ce
-# sont le format et la signature de la chaine. Seul le CHEMIN entre les deux
-# change.
+# Format mesure sur 110 videos concurrentes (voir scriptik/) : l'accroche est
+# une QUESTION, la taupe creuse, et le mecanisme se revele EN CHIFFRES. Seule
+# l'etape 4 - la facon dont le calcul est deroule - change d'une video a
+# l'autre. L'accroche, la chute en antithese et l'appel ne bougent jamais :
+# c'est la signature de la chaine.
 CHARPENTES = [
-    # L'originale, reprise MOT POUR MOT du prompt d'avant : c'est la seule
-    # dont le rendu a ete valide a l'ecran, elle ne doit pas deriver.
-    ("revelation",
-     "2. THE RELATABLE FEELING (1-2 sentences): describe the everyday experience so the "
-     "viewer instantly recognizes themselves in it - concrete and specific, but no "
-     "character or invented numbers needed here, just a vivid, familiar situation.\n"
-     "3. THE HIDDEN REASON (2-4 sentences): reveal the real underlying mechanism - a "
-     "psychological bias, a business/pricing strategy, a banking mechanism, or an economic "
-     "principle - explained in the simplest possible terms. Use a number ONLY if one "
-     "genuinely helps illustrate the mechanism (e.g. a typical price, rate, or percentage) "
-     "- never invent a chain of numbers for their own sake."),
+    ("calcul-direct",
+     "4. THE MECHANISM, IN NUMBERS (4-7 sentences - this is the heart of the video): "
+     "walk through the actual arithmetic out loud, one small step per sentence, so the "
+     "viewer can follow along in their head. Start from one concrete everyday amount, "
+     "then show what it really becomes. Every figure must be realistic and checkable - "
+     "a plausible price, rate or monthly cost - never a round invented number. End this "
+     "block on the single figure that is the point of the whole video."),
 
-    ("contre-pied",
-     "2. WHAT EVERYONE BELIEVES (1-2 sentences): state, without irony, the explanation "
-     "almost everyone gives for this - the obvious, reasonable-sounding one.\n"
-     "3. WHY THAT IS WRONG, AND WHAT IS ACTUALLY HAPPENING (2-4 sentences): dismantle it "
-     "in one sentence, then reveal the real mechanism underneath."),
+    ("deux-chemins",
+     "4. THE MECHANISM, IN NUMBERS (4-7 sentences - this is the heart of the video): "
+     "follow two people who start from the exact same amount and the same month - one "
+     "takes the obvious option, the other the one the mole found. Alternate between them, "
+     "one short sentence each, with the running figure every time. The gap between the "
+     "two numbers at the end IS the lesson - say that final gap out loud."),
 
-    ("trois-signes",
-     "2. THREE CONCRETE SIGNS (3 short sentences, one per sign): three small everyday "
-     "situations the viewer has already lived through, listed one after another, without "
-     "explaining them yet - let them pile up.\n"
-     "3. WHAT THEY HAVE IN COMMON (2-3 sentences): reveal the single mechanism that "
-     "produces all three at once."),
+    ("empilement",
+     "4. THE MECHANISM, IN NUMBERS (4-7 sentences - this is the heart of the video): "
+     "stack three or four small amounts that each look harmless on their own - a few "
+     "euros here, a small monthly fee there - naming the figure each time. Then add them "
+     "up over a year in one sentence. The total must land as a shock precisely because "
+     "every single piece sounded trivial."),
 
     ("chronologie",
-     "2. HOW IT STARTS (1-2 sentences): the first month, or the first time it happened - "
-     "small enough that nobody reacts.\n"
-     "3. WHERE IT ENDS UP (3-4 sentences): walk forward in time in two or three steps "
-     "(six months later, two years later), showing the mechanism compounding quietly, "
-     "and name it plainly at the end."),
+     "4. THE MECHANISM, IN NUMBERS (4-7 sentences - this is the heart of the video): "
+     "move forward in time in three or four steps (first month, after a year, after five "
+     "years), giving the running figure at each step, so the viewer watches the mechanism "
+     "compound quietly. Name the final amount plainly, then say how long it took."),
 ]
 
 

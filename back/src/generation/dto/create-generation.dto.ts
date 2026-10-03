@@ -20,7 +20,7 @@ export class CreateGenerationDto {
 
   @IsOptional()
   @IsIn(['ferdinand', 'vox'])
-  style: 'ferdinand' | 'vox' = 'ferdinand';
+  style: 'ferdinand' | 'vox' = 'vox';
 
   @IsOptional()
   @IsIn(['720p', '1080p'])

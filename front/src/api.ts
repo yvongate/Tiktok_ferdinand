@@ -21,8 +21,8 @@ export const FORMAT_LABELS: Record<Format, string> = {
 export type Style = 'ferdinand' | 'vox'
 
 export const STYLE_LABELS: Record<Style, string> = {
-  ferdinand: 'Ferdinand 3D (rendu cinematique)',
-  vox: 'Collage documentaire (papier decoupe)',
+  vox: 'Collage documentaire (defaut)',
+  ferdinand: 'Ferdinand 3D (cinematique)',
 }
 
 export type Quality = '720p' | '1080p'

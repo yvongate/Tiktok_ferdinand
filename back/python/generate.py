@@ -1,7 +1,7 @@
 """
-Pipeline complet : genere une video "Voici pourquoi..." de bout en bout
+Pipeline complet : genere une video "Pourquoi... ?" de bout en bout
 (finance / psychologie de l'argent, rendu 3D photorealiste style Zack D
-Films, mascotte recurrente Ferdinand), via KIE.AI (GPT-5.2, nano-banana,
+Films, mascotte recurrente Ferdinand la taupe), via KIE.AI (GPT-5.2, nano-banana,
 Runway/Seedance, Gemini 3.1 Flash TTS) + FFmpeg local pour le montage.
 
 Voir GENERATION_GUIDE.md (video-vision/) pour la doc complete et a jour -
@@ -126,7 +126,7 @@ MODES = {
     },
     "60s": {
         "story_scope": "a fuller explanation: hook, the relatable feeling, the hidden reason (with more depth), an optional short example (step 4), and the payoff+CTA.",
-        "words_hint": "roughly 140-190 words as a rough feel for length - NOT a hard limit, just a guide for a fuller explanation. Let it breathe naturally rather than padding or cutting words to hit a number.",
+        "words_hint": "roughly 145-175 words as a rough feel for length - NOT a hard limit, just a guide for a fuller explanation. This range is measured on a real finished video, not guessed: the voice used here delivers about 120 words per minute, so 145 words lands near 72 seconds and 175 near 87 seconds - comfortably over the 60-second threshold without dragging. Going much past 175 words makes the video overlong, not richer. Spend the room on step 4 - more arithmetic steps, not more adjectives.",
     },
 }
 
@@ -140,11 +140,12 @@ STYLE_LOCK = styles.FERDINAND["style_lock"]
 # reutilisee mot pour mot sur TOUTES les videos (pas juste au sein d'une
 # meme video) pour construire une identite de marque reconnaissable.
 CHARACTER = (
-    "Ferdinand, an anthropomorphic red fox standing and posing like a human, "
-    "sleek reddish-orange fur with a white muzzle and chest and black-tipped "
-    "ears and paws, sharp intelligent amber eyes, wearing a tailored deep-red "
+    "Ferdinand, an anthropomorphic European mole standing and posing like a "
+    "human, dense velvety fur in warm dark sepia-brown (never flat black, "
+    "never grey), a pale pink pointed snout and large pale pink shovel-shaped "
+    "front paws, small round brass spectacles, wearing a tailored deep-red "
     "three-piece suit with a gold pocket-watch chain and a black silk pocket "
-    "square, sleek well-groomed fur, confident bourgeois posture, no logos"
+    "square, confident bourgeois posture, no logos"
 )
 
 # NICHE : finance / investissement / economie / psychologie de l'argent.
@@ -161,13 +162,13 @@ CHARACTER = (
 # retrouver chaque `if lang == "fr"`, et en oublier un passait inapercu.
 LANGUAGES = {
     "en": {
-        "trigger": "Here's why",
+        "trigger": "Why",
         "name": "English",
         "audio_profile": "dramatic narrator",
         "suffix": "",
     },
     "fr": {
-        "trigger": "Voici pourquoi",
+        "trigger": "Pourquoi",
         "name": "French",
         "audio_profile": "dramatic French narrator",
         # Suffixe historique : distingue du doublage manuel d'avant la voix
@@ -175,7 +176,7 @@ LANGUAGES = {
         "suffix": "_fr_direct",
     },
     "de": {
-        "trigger": "Darum",
+        "trigger": "Warum",
         "name": "German",
         "audio_profile": "dramatic German narrator",
         "suffix": "_de",
@@ -245,13 +246,13 @@ def build_idea_system(lang="en"):
         f"LANGUAGE: write the ENTIRE title in natural spoken {cfg['name']} - the whole "
         "sentence, not only the opening phrase. Never mix English words in."
     )
-    return f"""You are a YouTube Shorts idea strategist for a French-style finance/money-psychology channel with one strong, recognizable format: every single title starts with the exact phrase "{trigger_phrase}", followed by a short, ultra-relatable everyday feeling or observation about money that almost everyone has personally had - the video then reveals the hidden reason behind it.
+    return f"""You are a YouTube Shorts idea strategist for a French-style finance/money-psychology channel with one strong, recognizable format: every single title is a QUESTION starting with "{trigger_phrase}" about an everyday money situation the viewer personally pays for or lives through - the video then has Ferdinand the mole dig underneath it and uncover the real mechanism, in numbers.
 
-TASK: Generate 10 video titles, each starting with "{trigger_phrase}".
+TASK: Generate 10 video titles, each starting with "{trigger_phrase}" and ending with a question mark.
 
 {lang_rule}
 
-THE PATTERN (critical): the title itself must be the literal relatable trigger sentence a normal person would say or think - not an abstract topic name. Shape only: "{trigger_phrase} <everyday feeling about money>", "{trigger_phrase} <mundane money habit>". Fill those placeholders yourself - any literal example written in this prompt is a FORBIDDEN output, never a suggestion to copy. It must describe a mundane, universally-felt experience, addressed directly to the viewer ("you"/"your"). The video's job is to reveal the hidden mechanism (psychological, business-strategy, banking, or economic) behind that everyday feeling.
+THE PATTERN (critical): the title is a question about something concrete the viewer actually pays for, signs, or does - never an abstract topic name, never a distant political or societal scandal. Shape only: "{trigger_phrase} <concrete everyday thing the viewer pays for>?". Fill that placeholder yourself - any literal example written in this prompt is a FORBIDDEN output, never a suggestion to copy. The strongest titles contain a small built-in paradox the viewer cannot resolve alone (something that is free yet costs, cheap yet expensive, optional yet unavoidable), because that is what makes them need the answer. The video's job is to reveal the hidden mechanism (psychological, pricing, banking, contractual or tax) behind it, with real arithmetic.
 
 Rotate across these angles (do not use the same angle for all 10 - spread across at least 5 of them):
 1. Everyday money & life - common money frustrations (spending, saving, feeling broke, prices feeling higher)
@@ -263,9 +264,9 @@ Rotate across these angles (do not use the same angle for all 10 - spread across
 7. Strong curiosity - sharply counterintuitive money facts
 8. Local everyday life (only when it fits naturally, do not force every video here) - local prices, local currency, local everyday scenes
 
-Requirements: understood instantly in under 1 second, triggers strong personal recognition ("that's literally me") or curiosity, highly visual, feels like something the viewer has actually felt before.
+Requirements: understood instantly in under 1 second, makes the viewer realise this is happening to them RIGHT NOW, highly visual, and answerable with honest arithmetic - never a question whose answer would need invented statistics.
 Avoid: generic personal-finance advice ("save more", "budget better"), abstract institutional topics with no personal relatable angle, long titles.
-Title rules: the full title (trigger phrase + observation) stays under 12 words, casual spoken language, no explanations, no jargon.
+Title rules: the full question stays under 12 words, casual spoken language, ends with a question mark, no explanations, no jargon.
 
 Output: return ONLY the 10 titles, one per line, numbered 1 to 10, spanning at least 5 different angles above. Nothing else, no preamble."""
 
@@ -292,35 +293,35 @@ LANGUAGE (critical): the video idea given to you may be phrased in English - tha
         lang_instruction += """
 GERMAN COMPOUND RULE: prefer short everyday words over long compound nouns. Say "die Kosten fuer Wohnen" rather than "Lebenshaltungskosten", "die Beitraege zur Krankenkasse" rather than "Krankenversicherungsbeitraege". Very long compounds are hard to read as burned-in subtitles and slow the viewer down. Never build a compound longer than about 20 letters when a simple phrase says the same thing.
 """
-    return f"""You are a YouTube Shorts scriptwriter for a French-style finance/money-psychology channel built around one recognizable format: "{trigger_phrase} [relatable everyday feeling about money]", then a clear explanation of the hidden reason behind it.
+    return f"""You are a YouTube Shorts scriptwriter for a French-style finance/money-psychology channel built around one recognizable format: a "{trigger_phrase} ...?" question about an everyday money situation, answered as a short fable in which Ferdinand the mole digs underneath it and uncovers the real mechanism, in numbers.
 {lang_instruction}
 TASK: Write a script for the video idea the user gives you (a "{trigger_phrase}..." title).
 
-CORE TECHNIQUE - this is what makes these videos easy to understand, follow it precisely:
-This is an EXPLANATION of a relatable everyday phenomenon, NOT a story about a named character accumulating numbers. Address the viewer directly ("you"/"your", or "tu"/"ton" in French). Only bring in an illustrative example (a generic person, a real company like a bank or an app, or a simple "imagine you...") if it genuinely makes the mechanism clearer - never force a named character or a chain of numbers into a topic that doesn't need one.
+CORE TECHNIQUE - this is a FABLE, not a lecture. Follow it precisely:
+Ferdinand the mole is the one living the scene. He faces the same ordinary money situation the viewer faces, everyone around him accepts the obvious explanation, and he does the one thing moles do: he digs underneath it. He is NOT the one profiting from the trick - he is the one who uncovers it and shows it to the viewer. Tell it in the third person ("the mole"), present tense, and let the mechanism come out through what he FINDS, never through a lecture. The viewer should be following a story, not receiving a lesson.
 
 Follow this structure:
-1. HOOK (1 sentence, mandatory, opens the script almost verbatim as the video's title): starts with "{trigger_phrase}" followed by the exact relatable everyday feeling/observation taken from the chosen title - reuse that title, never an example written in this prompt.
+1. HOOK (1 sentence, mandatory, opens the script verbatim as the video's title): the exact question from the chosen title, starting with "{trigger_phrase}" and ending with a question mark - reuse that title word for word, never an example written in this prompt.
+2. WHAT EVERYONE SEES (1-2 sentences): the obvious, reasonable reading of the situation - the one almost everyone accepts without looking further. State it plainly, without irony.
+3. THE MOLE DIGS (1-2 sentences): the mole does not accept it. He looks underneath - at the contract, the small print, the real numbers - and finds something. End this block on a short attention line that tells the viewer to pay attention now.
 {charpente}
-4. OPTIONAL SHORT EXAMPLE (0-2 sentences, only if it truly clarifies): a brief concrete illustration - can reference a real-world type of actor (a bank, a store, an app) or a generic "imagine someone who..." - not a mandatory named character, and not a running numeric story.
-5. PAYOFF / REFRAME (1 sentence): a punchy closing insight that changes how the viewer will see this everyday moment from now on.
-6. CALL TO ACTION (mandatory, exactly 1 short sentence, always last): unlike generic Shorts, this niche's viewers respond to a warm, personal, low-hype ask to follow/subscribe - never a generic "smash that subscribe button" line. Always start with a short "if you enjoyed/liked this" conditional clause, then the effort/behind-the-scenes ask: mention the real work behind making the video and ask for a follow in return (e.g. "If you enjoyed this, following means a lot - these videos take hours to make."). Vary the exact wording each time (never reuse the same sentence twice) but always keep both parts: the "if you liked it" clause AND the effort ask - never switch to a "more content" pitch or any other angle. Keep it under 15 words, warm and humble in tone, not salesy or hyped.
+5. WHY NOBODY NOTICES (1-2 sentences): say plainly why this stays invisible - it is too small to feel, too boring to check, or buried where nobody reads. This is what makes the viewer feel the trick was aimed at them.
+6. ANTITHESIS CLOSE (exactly 2 short sentences, mandatory, this is the channel's signature): two opposed sentences built the same way - what ordinary people see, then what the mole sees. Example of the SHAPE only, never the content: "Most people see a monthly fee. The mole sees a year of free money for the bank." Keep both sentences short, parallel and punchy. This is the line the viewer should repeat to someone else.
+7. CALL TO ACTION (mandatory, exactly 1 short sentence, always last): unlike generic Shorts, this niche's viewers respond to a warm, personal, low-hype ask to follow/subscribe - never a generic "smash that subscribe button" line. Always start with a short "if you enjoyed/liked this" conditional clause, then the effort/behind-the-scenes ask: mention the real work behind making the video and ask for a follow in return (e.g. "If you enjoyed this, following means a lot - these videos take hours to make."). Vary the exact wording each time (never reuse the same sentence twice) but always keep both parts: the "if you liked it" clause AND the effort ask - never switch to a "more content" pitch or any other angle. Keep it under 15 words, warm and humble in tone, not salesy or hyped.
 
-NUMBERS RULE (relaxed - this is the opposite of the old rule, read carefully): numbers are optional seasoning, not the point of the video. Use a concrete number only when it genuinely makes the mechanism easier to picture (e.g. "prices ending in .99", "a typical 20% interest rate") - never pad the script with numbers, never force a running/compounding numeric story, and never invent precise figures that aren't needed to understand the point. Clarity and relatability matter far more than numeric precision here.
-
-For a COMPARISON idea (e.g. two people with the same salary ending up differently): keep it simple - describe both paths in a sentence or two each, without forcing a checkpoint-by-checkpoint numeric table.
+NUMBERS RULE (critical - the numbers ARE the video, read carefully): step 4 must carry real arithmetic the viewer can follow in their head, not a vague claim. Every figure has to be realistic and checkable for the audience - a plausible price, a plausible rate, a plausible monthly cost - and the amounts must actually add up when stated one after another. Prefer one concrete amount tracked all the way through over several unrelated figures. Never invent a precise-sounding statistic about a country, a market or "studies" - the only numbers allowed are the ones inside the mole's own situation. If you cannot make the arithmetic honest and simple, choose a simpler angle rather than faking precision.
 
 SIMPLE VOCABULARY RULE (critical - a 13-year-old with no finance background must understand every sentence on first listen):
 - Use only everyday, common words. Write the way you'd explain it out loud to a teenager, not the way a bank or a news article would write it.
 - Never use a financial/legal/technical term without immediately explaining what it means in plain words, in the same breath. Do not assume the viewer knows what "securities", "assets", "liquidity", "equity", "amortization", "estate", "trust", "regulator", "collateral", etc. mean - either replace them with a plain-language equivalent, or add a short plain-language clarification right after the term (e.g. instead of "the bank sells securities" say "the bank sells stocks and bonds it owns" or "the bank sells investments it owns"; instead of "pledges eligible assets" say "hands over valuable stuff as a guarantee").
-- THE HIDDEN REASON (step 3) is the one place a real technical/legal term is allowed and expected (that's the "aha" fact being taught) - but even there, immediately follow it with one plain-word explanation of what it actually means in practice.
+- THE MECHANISM (step 4) is the one place a real technical/legal term is allowed and expected (that's the "aha" fact being taught) - but even there, immediately follow it with one plain-word explanation of what it actually means in practice.
 - Prefer short concrete nouns over abstract ones (say "the money" not "the capital", say "a company" not "an entity", say "borrows money" not "secures financing").
 - If a sentence needs a teenager to have heard the word before to understand it, rewrite the sentence.
 
 AUDIO DELIVERY TAGS (the voice engine supports these - use them, but sparingly): you may insert short bracketed delivery tags right before the words they should affect, e.g. [whispers], [shouting], [urgency], [confidently], [curious], [enthusiastic]. Use ONLY 2 to 4 of them in the whole script, placed only at genuine emotional turning points - never on every sentence, never more than one per sentence. Suggested placements (skip any that don't fit naturally):
 - HOOK: a curiosity tag like [curious] or [intriguing] on the opening "{trigger_phrase}..." line.
-- THE HIDDEN REASON reveal: [whispers] or [confidently] works well for the "here's the actual reason" moment.
-- PAYOFF: a [dramatic] tag on the final reframing line.
+- THE MOLE DIGS (step 3): [whispers] or [confidently] works well on the moment he finds what is underneath.
+- ANTITHESIS CLOSE: a [dramatic] tag on the first of the two closing sentences.
 Always write the tag itself in English exactly as shown (e.g. [whispers]), even when the rest of the script is written in French or another language - only the surrounding words are translated, the tag keyword never is. Tags are delivery instructions, not spoken words - they do not count toward the word limit below.
 
 STORY SCOPE for this video: {mode_cfg['story_scope']}
@@ -334,6 +335,56 @@ Style rules:
 - Do not pad the script with filler to reach a word count, and do not rush/cut content to stay under one - write exactly what the explanation needs, at a natural spoken pace. The video's length will be built AROUND however long this script naturally takes to say, not the other way around.
 
 Output: return ONLY the spoken script text, ending with the call-to-action sentence from step 6. Nothing else, no preamble, no title, no quotes around it. Never wrap the output in any document/canvas/artifact markup such as ":::writing{{...}}" or code fences - plain spoken text only, nothing before the first word or after the last word."""
+
+
+# Mot qui identifie l'espece du personnage. Doit figurer dans CHARACTER :
+# c'est lui qu'on verifie scene par scene.
+ESPECE = "mole"
+
+
+def _utilisable(chemin):
+    """Fichier present ET non vide. Un fichier de 0 octet est le residu d'une
+    ecriture interrompue : il doit etre regenere, pas repris."""
+    try:
+        return chemin.stat().st_size > 0
+    except OSError:
+        return False
+
+
+def reparer_personnage(scenes):
+    """Reinjecte la description complete du personnage dans les scenes ou le
+    modele l'a abregee.
+
+    Mesure sur un vrai run (03/10) : a partir de la scene 8, GPT-5.2 cesse de
+    repeter la description et ecrit "Ferdinand, exact recurring appearance".
+    Or le modele d'IMAGE n'a AUCUNE memoire d'une scene a l'autre - chaque
+    prompt part de zero. Prive du mot "taupe", il inventait un animal au
+    hasard : berger allemand, chat, loup, ours, et meme un renard. Six scenes
+    correctes sur dix-sept.
+
+    Le bug existait deja avec le renard mais restait invisible : quand le
+    modele devinait "animal anthropomorphe en costume", il tombait souvent
+    juste. Changer d'espece l'a revele.
+
+    Renvoie le nombre de scenes reparees.
+    """
+    repares = 0
+    for s in scenes:
+        p = s.get("image_prompt", "")
+        if "ferdinand" not in p.lower() or ESPECE in p.lower():
+            continue
+        # "Ferdinand, exact recurring appearance," -> description complete
+        repare = re.sub(
+            r"Ferdinand\s*,\s*[^,.]{0,70}?appearance\s*,?", CHARACTER + ",", p, count=1,
+            flags=re.IGNORECASE,
+        )
+        if repare == p:  # autre forme d'abreviation : on remplace le prenom seul
+            repare = re.sub(r"\bFerdinand\b", CHARACTER, p, count=1)
+        s["image_prompt"] = repare
+        repares += 1
+    if repares:
+        print(f"  ({repares} scene(s) ou la description du personnage etait abregee - reinjectee)")
+    return repares
 
 
 def build_scenes_system(n_scenes_hint, lang="en", ambiance=None, style=None):
@@ -361,8 +412,9 @@ def build_scenes_system(n_scenes_hint, lang="en", ambiance=None, style=None):
 
 TASK: given a video script, break it into scene-by-scene prompts, in order - roughly {n_scenes_hint} scenes as a loose guide (not a hard target). Each scene must also carry the EXACT spoken_text assigned to it (verbatim substring of the script, including any [tag] present) - every word of the script must be assigned to exactly one scene, in order, with nothing skipped or duplicated. A beat is usually one sentence, but group 2 short consecutive sentences into ONE scene when they describe the same location/moment (see the final-scene note below). AVOID creating a scene whose spoken_text is only a few words (under ~4-5 words) - merge it into the adjacent scene instead, since a very short spoken line makes a wastefully short video clip.
 
-MASCOT RULE (mandatory - this is the channel's main recurring host, critical for brand recognition): this exact character, reused word-for-word whenever he appears:
+MASCOT RULE (mandatory - this is the channel's main recurring host, critical for brand recognition): this exact character, whose FULL description below must be copied word-for-word into EVERY image_prompt where he appears:
 "{character}"
+NEVER abbreviate him. The image model generates each scene independently and has NO memory of the other scenes, so a shorthand like "Ferdinand, exact recurring appearance", "the same mole as before" or "as previously described" tells it nothing at all - it will invent a random animal instead (measured on a real run: a dog, a cat, a wolf and a bear all appeared in one video). If he is in the scene, the whole description goes in, every single time, even for the fifteenth scene in a row.
 He MUST appear in the very FIRST scene (the hook) and the very LAST scene (the payoff+CTA) of every video, presented in a confident, knowing host-like pose - even if the script's words don't literally name him. He is the constant anchor of the channel, but he is not necessarily the only figure: OTHER human characters MAY also appear in other scenes when the story genuinely needs them (e.g. an illustrative example about "someone", a second person for a comparison, a bank teller, a shopper) - describe any such other character clearly and keep THEM consistent scene-to-scene within that one video, but never let another character replace Ferdinand as the host in the hook/closing scenes. Scenes with no character at all (a pure object/environment shot, or a diagram/evidence-board beat) are fine too.
 {note_personnage}
 
@@ -385,7 +437,7 @@ ENVIRONMENT DENSITY BY BEAT FUNCTION: for action/establishing beats (character g
 
 HELD POSE RULE: describe each character pose as a single, clear, deliberately held gesture (arms crossed, hand on chin in thought, pointing, presenting stance) rather than a mid-motion or ambiguous pose - the image must read instantly as a frozen, storyboard-clear moment, not a blurred in-between frame.
 
-FINAL SCENE (mandatory grouping): the script's last two sentences are always the PAYOFF line and a short follow/subscribe request. These two share ONE final scene together (both spoken over the same closing image/clip, and their spoken_text concatenated together) - never split them into two separate scenes.
+FINAL SCENE (mandatory grouping): the script's last sentences are always the two-sentence ANTITHESIS CLOSE and a short follow/subscribe request. These two share ONE final scene together (both spoken over the same closing image/clip, and their spoken_text concatenated together) - never split them into two separate scenes.
 
 Each image_prompt: character (if any) + specific action or held pose + at least one liveliness element from the SCENE LIVELINESS RULE + environment per the density rule above + any number/mechanism made physically visible per the rules above + camera angle + lighting (natural daylight/golden hour/indoor fluorescent/night streetlight/dramatic shadows) + mood (tense/panicked/calm/urgent/shocked) + the style lock appended at the end.
 
@@ -686,7 +738,7 @@ def generate_valid_script(script_system, user_prompt, trigger_phrase, retries=3,
         candidate = re.sub(r"\n?:::\s*$", "", candidate)
         candidate = candidate.strip()
         # Le hook peut legitimement commencer par une balise d'emotion avant
-        # le trigger phrase (ex. "[curious] Voici pourquoi...") - on l'ignore
+        # le trigger phrase (ex. "[curious] Pourquoi... ?") - on l'ignore
         # pour la validation, mais on la garde dans le script final.
         check_text = re.sub(r"^\[[a-zA-Z]+\]\s*", "", candidate)
         if check_text.lower().startswith(trigger_phrase.lower()):
@@ -859,8 +911,8 @@ def main():
     parser.add_argument("--no-sfx", action="store_true",
                          help="Desactive les bruitages (actifs par defaut).")
     parser.add_argument("--style", choices=sorted(styles.TOUS), default=styles.DEFAUT,
-                         help="Famille visuelle : ferdinand (3D cinematique, defaut) ou "
-                              "vox (collage papier documentaire). Change le rendu des "
+                         help="Famille visuelle : vox (collage papier documentaire, defaut) ou "
+                              "ferdinand (3D cinematique). Change le rendu des "
                               "images ET la direction d'animation - le collage demande "
                               "une camera mobile la ou le 3D la garde fixe.")
     parser.add_argument("--variation-index", type=int, default=None,
@@ -972,6 +1024,7 @@ def main():
         first_idea = idea_file.read_text(encoding="utf-8").strip()
         script = script_file.read_text(encoding="utf-8").strip()
         scenes = json.loads(scenes_file.read_text(encoding="utf-8"))["scenes"]
+        reparer_personnage(scenes)
         print(f"Idee : {first_idea}")
         print(f"Script : {script}")
         print(f"{len(scenes)} scenes.")
@@ -1045,7 +1098,7 @@ def main():
                     f"({audio_dur:.0f} seconds spoken aloud). Write a noticeably longer, "
                     f"fuller version this time - include the optional example (step 4) "
                     f"with real concrete detail, and go deeper into the hidden reason "
-                    f"(step 3) with an extra sentence or two of genuine explanation. "
+                    f"(step 4) with an extra step or two of genuine arithmetic. "
                     f"Do not pad with filler or repetition - add real additional substance."
                 )
                 candidate = generate_valid_script(script_system, longer_prompt, trigger_phrase)
@@ -1076,6 +1129,7 @@ def main():
         scenes_raw = strip_json_fences(scenes_raw)
         scenes_file.write_text(scenes_raw, encoding="utf-8")
         scenes = json.loads(scenes_raw)["scenes"]
+        reparer_personnage(scenes)
         print(f"{len(scenes)} scenes generees.")
         for s in scenes:
             print(f"  [{s['scene_no']}] {s['camera_angle']}: {s.get('spoken_text', '')[:50]!r} | {s['image_prompt'][:60]}...")
@@ -1097,7 +1151,12 @@ def main():
         n = s["scene_no"]
         clip_path = scenes_dir / f"scene_{n:02d}.mp4"
         seg_audio_path = scenes_dir / f"scene_{n:02d}.wav"
-        if clip_path.exists() and seg_audio_path.exists():
+        # Taille non nulle, pas seulement presence : un process tue en pleine
+        # ecriture laisse un fichier de 0 octet qui passe .exists(). Mesure du
+        # 03/10 : un clip vide a ete repris depuis le cache, ffmpeg l'a rejete
+        # au concat ("moov atom not found") et la scene a disparu de la video
+        # finale, sans que le bilan ne signale quoi que ce soit.
+        if _utilisable(clip_path) and _utilisable(seg_audio_path):
             print(f"\n=== Scene {n}/{n_scenes} : deja generee, on reutilise ===")
             clip_paths.append((n, clip_path))
             audio_seg_paths.append((n, seg_audio_path))

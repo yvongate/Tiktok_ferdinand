@@ -1,632 +1,564 @@
-# 300 idées à valider
+# 255 sujets a valider
 
-Le français sert à la relecture. **C'est la colonne allemande qui
-part réellement en production.**
+Format : une QUESTION par video, le mecanisme se revele en chiffres.
+Le francais sert a la relecture. **C'est la colonne allemande qui
+part reellement en production.**
 
 
-## Argent & vie quotidienne  (40)
+## kredit  (23)
 
-  1. Voici pourquoi ton argent disparaît si vite
-     `Darum verschwindet dein Geld so schnell`
-  2. Voici pourquoi tu n'arrives jamais à économiser
-     `Darum schaffst du es einfach nicht, Geld zu sparen`
-  3. Voici pourquoi ton salaire ne suffit jamais à la fin du mois
-     `Darum reicht dein Gehalt am Monatsende nie aus`
-  4. Voici pourquoi tout te semble plus cher qu'avant
-     `Darum fühlt sich alles teurer an als früher`
-  5. Voici pourquoi 100 euros ne valent plus ce qu'ils valaient
-     `Darum sind 100 Euro heute nicht mehr das wert wie früher`
-  6. Voici pourquoi tu es déjà fauché au milieu du mois
-     `Darum bist du Mitte des Monats schon pleite`
-  7. Voici pourquoi tu dépenses toujours plus que prévu
-     `Darum gibst du immer mehr aus als geplant`
-  8. Voici pourquoi ton salaire monte mais pas ton niveau de vie
-     `Darum steigt dein Gehalt, aber dein Lebensstandard nicht`
-  9. Voici pourquoi les petites dépenses quotidiennes te ruinent
-     `Darum ruinieren dich die kleinen Alltagsausgaben`
- 10. Voici pourquoi regarder seulement ton salaire est une erreur
-     `Darum solltest du aufhören, nur auf dein Gehalt zu schauen`
- 11. Voici pourquoi tu te sens pauvre même avec un bon salaire
-     `Darum fühlst du dich arm, obwohl du gut verdienst`
- 12. Voici pourquoi ton compte est vide trois jours après la paye
-     `Darum ist dein Konto drei Tage nach dem Zahltag leer`
- 13. Voici pourquoi tu ne sais jamais où part ton argent
-     `Darum weißt du nie, wo dein Geld eigentlich hingeht`
- 14. Voici pourquoi ton loyer mange plus que tu ne crois
-     `Darum frisst deine Miete mehr, als du denkst`
- 15. Voici pourquoi épargner à la fin du mois ne marche jamais
-     `Darum funktioniert Sparen am Monatsende nie`
- 16. Voici pourquoi tu retardes toujours tes gros achats
-     `Darum schiebst du große Anschaffungen immer wieder auf`
- 17. Voici pourquoi ton budget ne tient jamais plus d'un mois
-     `Darum hält dein Budget nie länger als einen Monat`
- 18. Voici pourquoi tu paies sans t'en rendre compte chaque jour
-     `Darum zahlst du jeden Tag, ohne es zu merken`
- 19. Voici pourquoi une augmentation ne change rien à ta situation
-     `Darum ändert eine Gehaltserhöhung nichts an deiner Lage`
- 20. Voici pourquoi tu as l'impression de travailler pour rien
-     `Darum hast du das Gefühl, umsonst zu arbeiten`
- 21. Voici pourquoi les factures arrivent toujours en même temps
-     `Darum kommen alle Rechnungen immer gleichzeitig`
- 22. Voici pourquoi ton argent liquide file plus vite que ta carte
-     `Darum ist Bargeld schneller weg als Kartenzahlung`
- 23. Voici pourquoi tu sous-estimes toujours tes dépenses mensuelles
-     `Darum unterschätzt du deine monatlichen Ausgaben immer`
- 24. Voici pourquoi la fin du mois arrive toujours trop tôt
-     `Darum kommt das Monatsende immer zu früh`
- 25. Voici pourquoi tu travailles plus sans gagner plus
-     `Darum arbeitest du mehr, ohne mehr zu verdienen`
- 26. Voici pourquoi ton compte épargne ne grandit jamais
-     `Darum wächst dein Sparkonto einfach nicht`
- 27. Voici pourquoi tu paies plus cher en payant en plusieurs fois
-     `Darum zahlst du bei Ratenzahlung am Ende mehr`
- 28. Voici pourquoi tu n'oses pas regarder ton solde bancaire
-     `Darum traust du dich nicht, auf deinen Kontostand zu schauen`
- 29. Voici pourquoi les gens autour de toi semblent plus riches
-     `Darum wirken alle um dich herum reicher als du`
- 30. Voici pourquoi tu recommences à zéro chaque mois
-     `Darum fängst du jeden Monat wieder bei null an`
- 31. Voici pourquoi ton argent te glisse entre les doigts
-     `Darum rinnt dir dein Geld durch die Finger`
- 32. Voici pourquoi tu paies un abonnement que tu as oublié
-     `Darum zahlst du für ein Abo, das du längst vergessen hast`
- 33. Voici pourquoi tes courses coûtent plus cher chaque mois
-     `Darum wird dein Wocheneinkauf jeden Monat teurer`
- 34. Voici pourquoi un imprévu suffit à tout faire basculer
-     `Darum reicht eine unerwartete Rechnung, um alles zu kippen`
- 35. Voici pourquoi tu ne ressens pas l'inflation tout de suite
-     `Darum spürst du die Inflation erst viel später`
- 36. Voici pourquoi ton salaire net est si loin de ton brut
-     `Darum liegt zwischen brutto und netto so viel Geld`
- 37. Voici pourquoi tu dépenses plus le week-end sans le voir
-     `Darum gibst du am Wochenende unbemerkt am meisten aus`
- 38. Voici pourquoi deux personnes au même salaire vivent différemment
-     `Darum leben zwei Menschen mit gleichem Gehalt völlig anders`
- 39. Voici pourquoi acheter du neuf te coûte deux fois
-     `Darum kostet dich Neukauf am Ende doppelt`
- 40. Voici pourquoi ton argent travaille pour quelqu'un d'autre
-     `Darum arbeitet dein Geld gerade für jemand anderen`
+  1. Pourquoi le taux est-il le plus élevé sur les petits crédits ?
+     `Warum ist der Zins bei kleinen Krediten am höchsten?`
+  2. Pourquoi un téléphone à crédit coûte-t-il plus qu'un prêt auto ?
+     `Warum ist ein Handy auf Raten teurer als ein Autokredit?`
+  3. Pourquoi es-tu évalué sans le savoir ?
+     `Warum prüft dich der Anbieter, ohne dass du es merkst?`
+  4. Pourquoi le paiement en plusieurs fois est-il « sans intérêts » ?
+     `Warum ist die Ratenzahlung „zinsfrei"?`
+  5. Pourquoi ton découvert coûte-t-il plus cher que n'importe quel crédit ?
+     `Warum ist dein Dispo teurer als jeder Kredit?`
+  6. Pourquoi la petite mensualité est-elle l'offre la plus chère ?
+     `Warum ist die kleine Rate das teuerste Angebot?`
+  7. Pourquoi la mensualité est-elle écrite en grand et le prix total en petit ?
+     `Warum steht die Rate groß und der Gesamtpreis klein?`
+  8. Pourquoi le vendeur demande-t-il ta mensualité plutôt que ton budget ?
+     `Warum fragt dich der Händler nach deiner Rate statt nach deinem Budget?`
+  9. Pourquoi rembourser un crédit en avance coûte-t-il un supplément ?
+     `Warum kostet dich ein Kredit extra, wenn du ihn früher zurückzahlst?`
+  10. Pourquoi la banque propose-t-elle si volontiers d'allonger la durée ?
+     `Warum verlängert dir die Bank so gern die Laufzeit?`
+  11. Pourquoi un rachat de crédit rend-il rarement libre de dettes ?
+     `Warum macht dich eine Umschuldung selten schuldenfrei?`
+  12. Pourquoi « acheter maintenant, payer plus tard » coûte-t-il plus cher au final ?
+     `Warum zahlst du bei „Jetzt kaufen, später zahlen" am Ende mehr?`
+  13. Pourquoi la banque veut-elle que tu ne payes que le minimum ?
+     `Warum will die Bank, dass du nur den Mindestbetrag zahlst?`
+  14. Pourquoi ta carte de crédit est-elle gratuite jusqu'à ce que tu en aies besoin ?
+     `Warum ist deine Kreditkarte gratis, bis du sie wirklich brauchst?`
+  15. Pourquoi une pause de mensualité ne réduit-elle pas ta dette ?
+     `Warum senkt eine Ratenpause deine Schulden nicht?`
+  16. Pourquoi le taux affiché n'est-il presque jamais le tien ?
+     `Warum ist der beworbene Zinssatz fast nie deiner?`
+  17. Pourquoi emprunter coûte-t-il le moins cher quand tu n'en as pas besoin ?
+     `Warum kostet Geld leihen am wenigsten, wenn du es nicht brauchst?`
+  18. Pourquoi la banque vend-elle une assurance avec le crédit ?
+     `Warum verkauft dir die Bank eine Versicherung zum Kredit?`
+  19. Pourquoi le financement chez le vendeur est-il le plus simple et le plus cher ?
+     `Warum ist die Finanzierung beim Händler die bequemste und teuerste?`
+  20. Pourquoi le taux zéro est-il un outil de vente ?
+     `Warum ist der Nullzins ein Verkaufsinstrument?`
+  21. Pourquoi un découvert ne t'aide-t-il jamais à sortir du découvert ?
+     `Warum hilft dir ein Dispo nie aus dem Dispo?`
+  22. Pourquoi zéro pour cent finit-il par devenir un taux ?
+     `Warum wird aus null Prozent am Ende doch ein Zins?`
+  23. Pourquoi personne ne demande-t-il à quoi sert l'argent ?
+     `Warum fragt dich beim Ratenkauf niemand, wofür du das Geld brauchst?`
 
-## Consommation & marketing  (40)
+## abo  (15)
 
- 41. Voici pourquoi tu achètes des choses dont tu n'as pas besoin
-     `Darum kaufst du Dinge, die du nicht brauchst`
- 42. Voici pourquoi les prix finissent toujours par 99 centimes
-     `Darum enden Preise fast immer auf 99 Cent`
- 43. Voici pourquoi les promotions te font dépenser plus
-     `Darum bringen dich Angebote dazu, mehr auszugeben`
- 44. Voici pourquoi tu perds de l'argent quand c'est à moins 50
-     `Darum verlierst du Geld, wenn du bei minus 50 Prozent zuschlägst`
- 45. Voici pourquoi les produits chers sont à hauteur des yeux
-     `Darum stehen die teuersten Produkte auf Augenhöhe`
- 46. Voici pourquoi 99 euros te paraissent bien moins que 100
-     `Darum wirken 99 Euro viel billiger als 100`
- 47. Voici pourquoi les caddies deviennent de plus en plus grands
-     `Darum werden Einkaufswagen immer größer`
- 48. Voici pourquoi tu ne dois jamais faire tes courses en ayant faim
-     `Darum solltest du niemals hungrig einkaufen gehen`
- 49. Voici pourquoi acheter pas cher revient souvent plus cher
-     `Darum ist billig kaufen oft das teuerste Geschäft`
- 50. Voici pourquoi les abonnements te vident les poches en silence
-     `Darum ziehen dir Abos unbemerkt das Geld aus der Tasche`
- 51. Voici pourquoi la musique du magasin change ta façon d'acheter
-     `Darum verändert die Musik im Laden dein Kaufverhalten`
- 52. Voici pourquoi le pain est toujours au fond du magasin
-     `Darum liegt das Brot immer ganz hinten im Laden`
- 53. Voici pourquoi il n'y a pas d'horloge dans les magasins
-     `Darum hängt in keinem Supermarkt eine Uhr`
- 54. Voici pourquoi le format familial n'est pas toujours moins cher
-     `Darum ist die Großpackung oft gar nicht günstiger`
- 55. Voici pourquoi tu repars toujours avec plus que prévu
-     `Darum gehst du immer mit mehr raus, als du wolltest`
- 56. Voici pourquoi les caisses sont entourées de petits produits
-     `Darum stehen an der Kasse lauter Kleinigkeiten`
- 57. Voici pourquoi un produit a trois prix différents la même semaine
-     `Darum hat ein Produkt in einer Woche drei verschiedene Preise`
- 58. Voici pourquoi la livraison gratuite te fait dépenser plus
-     `Darum bringt dich Gratisversand dazu, mehr zu bestellen`
- 59. Voici pourquoi tu commandes plus quand c'est en un clic
-     `Darum bestellst du mehr, wenn es nur ein Klick ist`
- 60. Voici pourquoi les marques changent la taille et pas le prix
-     `Darum schrumpft die Packung, aber nicht der Preis`
- 61. Voici pourquoi le premier prix affiché décide de tout
-     `Darum entscheidet der erste Preis, den du siehst, über alles`
- 62. Voici pourquoi il y a toujours un produit trop cher dans le rayon
-     `Darum steht im Regal immer ein viel zu teures Produkt`
- 63. Voici pourquoi tu achètes plus le soir que le matin
-     `Darum kaufst du abends mehr als morgens`
- 64. Voici pourquoi les magasins veulent que tu touches les produits
-     `Darum sollst du die Ware unbedingt anfassen`
- 65. Voici pourquoi le rayon frais est toujours à l'entrée
-     `Darum liegt Obst und Gemüse immer gleich am Eingang`
- 66. Voici pourquoi la période d'essai gratuite n'est jamais gratuite
-     `Darum ist die kostenlose Testphase nie wirklich kostenlos`
- 67. Voici pourquoi un panier abandonné revient te chercher
-     `Darum verfolgt dich dein abgebrochener Warenkorb`
- 68. Voici pourquoi tu ne vois jamais le prix au kilo
-     `Darum übersiehst du den Grundpreis pro Kilo`
- 69. Voici pourquoi les vitrines te font ralentir
-     `Darum bleibst du vor Schaufenstern unbewusst stehen`
- 70. Voici pourquoi une offre limitée dans le temps te fait craquer
-     `Darum kaufst du bei nur noch heute sofort`
- 71. Voici pourquoi tu gardes ce que tu voulais rendre
-     `Darum behältst du, was du eigentlich zurückschicken wolltest`
- 72. Voici pourquoi le prix barré n'a souvent jamais existé
-     `Darum hat es den durchgestrichenen Preis oft nie gegeben`
- 73. Voici pourquoi tu achètes la marque et pas le produit
-     `Darum kaufst du die Marke und nicht das Produkt`
- 74. Voici pourquoi une file d'attente te rend plus pressé d'acheter
-     `Darum macht dich eine Schlange kaufbereiter`
- 75. Voici pourquoi le troisième article est toujours offert
-     `Darum ist immer der dritte Artikel gratis`
- 76. Voici pourquoi les produits en promo sont parfois plus chers
-     `Darum ist die Aktionsware manchmal teurer als vorher`
- 77. Voici pourquoi tu te souviens du prix mais pas de la qualité
-     `Darum erinnerst du dich an den Preis, nicht an die Qualität`
- 78. Voici pourquoi le paiement sans contact te fait dépenser plus
-     `Darum gibst du mit kontaktlosem Zahlen mehr aus`
- 79. Voici pourquoi les couleurs rouges dominent les soldes
-     `Darum ist bei Rabatten immer alles rot`
- 80. Voici pourquoi tu reviens toujours dans le même magasin
-     `Darum gehst du immer wieder in denselben Laden`
+  24. Pourquoi le premier mois est-il gratuit ?
+     `Warum ist der erste Monat gratis?`
+  25. Pourquoi ne résilies-tu jamais l'abonnement que tu n'utilises pas ?
+     `Warum kündigst du das Abo nie, das du nicht nutzt?`
+  26. Pourquoi ton contrat devient-il plus cher si tu ne fais rien ?
+     `Warum wird dein Vertrag teurer, wenn du nichts tust?`
+  27. Pourquoi résilier est-il plus difficile que souscrire ?
+     `Warum ist Kündigen schwerer als Abschließen?`
+  28. Pourquoi obtiens-tu une meilleure offre dès que tu résilies ?
+     `Warum bekommst du ein besseres Angebot, sobald du kündigst?`
+  29. Pourquoi personne ne te rappelle-t-il ta période d'essai ?
+     `Warum erinnert dich niemand an dein Probeabo?`
+  30. Pourquoi les nouveaux clients ont-ils toujours le meilleur prix ?
+     `Warum gibt es für Neukunden immer den besseren Preis?`
+  31. Pourquoi ton abonnement n'est-il rentable qu'à partir de dix utilisations ?
+     `Warum rechnet sich dein Abo erst ab zehn Nutzungen im Monat?`
+  32. Pourquoi oublier coûte-t-il plus cher que décider ?
+     `Warum kostet dich Vergessen mehr als Entscheiden?`
+  33. Pourquoi la formule la moins chère devient-elle toujours plus pénible ?
+     `Warum wird die günstige Stufe immer unbequemer?`
+  34. Pourquoi payes-tu un espace de stockage jamais rempli ?
+     `Warum zahlst du für Speicherplatz, den du nie gefüllt hast?`
+  35. Pourquoi as-tu des abonnements dont tu ignores l'existence ?
+     `Warum hast du Abos, von denen du nichts weißt?`
+  36. Pourquoi un abonnement annuel est-il un pari sur toi-même ?
+     `Warum ist ein Jahresabo eine Wette auf dich selbst?`
+  37. Pourquoi ton contrat se reconduit-il tout seul ?
+     `Warum läuft dein Vertrag automatisch weiter?`
+  38. Pourquoi le prix n'augmente-t-il qu'après un an ?
+     `Warum steigt der Preis immer erst nach einem Jahr?`
 
-## Cerveau & argent  (40)
+## bank  (18)
 
- 81. Voici pourquoi ton cerveau te pousse à consommer
-     `Darum bringt dich dein eigenes Gehirn zum Konsumieren`
- 82. Voici pourquoi tu veux acheter ce que les autres ont
-     `Darum willst du kaufen, was andere schon haben`
- 83. Voici pourquoi le mot gratuit te fait gaspiller
-     `Darum bringt dich das Wort gratis zum Verschwenden`
- 84. Voici pourquoi perdre 50 euros fait plus mal que d'en gagner 50
-     `Darum schmerzt der Verlust von 50 Euro mehr als die Freude darüber`
- 85. Voici pourquoi tu préfères 100 euros maintenant que 200 plus tard
-     `Darum willst du lieber 100 Euro sofort als 200 im nächsten Monat`
- 86. Voici pourquoi tu gardes des abonnements inutilisés
-     `Darum kündigst du Abos nicht, die du gar nicht nutzt`
- 87. Voici pourquoi tu dépenses le plus juste après la paye
-     `Darum gibst du direkt nach dem Zahltag am meisten aus`
- 88. Voici pourquoi tu achètes plus quand tu es stressé
-     `Darum kaufst du mehr ein, wenn du gestresst bist`
- 89. Voici pourquoi une réduction peut t'appauvrir
-     `Darum macht dich ein Rabatt oft ärmer`
- 90. Voici pourquoi ton cerveau adore le paiement en plusieurs fois
-     `Darum liebt dein Gehirn die Ratenzahlung`
- 91. Voici pourquoi tu finis un plat que tu n'aimes pas
-     `Darum isst du auf, was dir gar nicht schmeckt`
- 92. Voici pourquoi tu ne vends jamais au bon moment
-     `Darum verkaufst du immer zum falschen Zeitpunkt`
- 93. Voici pourquoi tu crois toujours avoir raison sur l'argent
-     `Darum glaubst du beim Geld immer, recht zu haben`
- 94. Voici pourquoi tu dépenses plus quand tu es fatigué
-     `Darum gibst du mehr aus, wenn du müde bist`
- 95. Voici pourquoi tu te compares toujours à plus riche que toi
-     `Darum vergleichst du dich immer nach oben`
- 96. Voici pourquoi une somme ronde te paraît plus grosse
-     `Darum wirkt eine runde Summe größer auf dich`
- 97. Voici pourquoi tu n'agis que quand il est trop tard
-     `Darum handelst du erst, wenn es zu spät ist`
- 98. Voici pourquoi tu protèges ce que tu possèdes déjà
-     `Darum hältst du an allem fest, was du schon besitzt`
- 99. Voici pourquoi tu justifies chaque achat après coup
-     `Darum rechtfertigst du jeden Kauf im Nachhinein`
-100. Voici pourquoi tu as peur de regarder tes comptes
-     `Darum hast du Angst, in deine Finanzen zu schauen`
-101. Voici pourquoi acheter te calme quelques minutes seulement
-     `Darum beruhigt dich ein Kauf nur für ein paar Minuten`
-102. Voici pourquoi tu crois que tu commenceras le mois prochain
-     `Darum glaubst du, nächsten Monat fängst du wirklich an`
-103. Voici pourquoi une petite somme régulière te semble invisible
-     `Darum siehst du kleine regelmäßige Beträge gar nicht`
-104. Voici pourquoi tu suis la foule même en sachant qu'elle a tort
-     `Darum folgst du der Masse, obwohl du es besser weißt`
-105. Voici pourquoi tu te souviens des gains et oublies les pertes
-     `Darum erinnerst du dich an Gewinne und vergisst Verluste`
-106. Voici pourquoi ton humeur décide de tes dépenses
-     `Darum entscheidet deine Stimmung über deine Ausgaben`
-107. Voici pourquoi tu paies pour ne pas avoir à choisir
-     `Darum zahlst du dafür, nicht entscheiden zu müssen`
-108. Voici pourquoi le premier chiffre change tout
-     `Darum entscheidet die erste Ziffer über deinen Eindruck`
-109. Voici pourquoi tu veux ce que tu ne peux pas avoir
-     `Darum willst du genau das, was du nicht haben kannst`
-110. Voici pourquoi ton cerveau confond prix et valeur
-     `Darum verwechselt dein Gehirn Preis mit Wert`
-111. Voici pourquoi tu dépenses plus avec de l'argent reçu
-     `Darum gibst du geschenktes Geld schneller aus`
-112. Voici pourquoi remettre à demain te coûte de l'argent
-     `Darum kostet dich Aufschieben bares Geld`
-113. Voici pourquoi tu crois toujours que tu as le temps
-     `Darum glaubst du immer, du hättest noch Zeit`
-114. Voici pourquoi un cadeau t'engage plus que tu ne crois
-     `Darum verpflichtet dich ein Geschenk mehr, als du denkst`
-115. Voici pourquoi tu n'aimes pas entendre parler d'argent
-     `Darum redest du nicht gern über Geld`
-116. Voici pourquoi tu défends tes mauvaises décisions financières
-     `Darum verteidigst du deine schlechtesten Geldentscheidungen`
-117. Voici pourquoi tu crois que tu gères mieux que les autres
-     `Darum hältst du dich für besser mit Geld als andere`
-118. Voici pourquoi la peur te coûte plus cher que le risque
-     `Darum kostet dich die Angst mehr als das Risiko`
-119. Voici pourquoi tu te sens obligé de dépenser pour les autres
-     `Darum fühlst du dich verpflichtet, für andere zu zahlen`
-120. Voici pourquoi tu oublies ce que tu as payé la semaine passée
-     `Darum weißt du nicht mehr, was du letzte Woche bezahlt hast`
+  39. Pourquoi ta banque historique est-elle la plus chère ?
+     `Warum ist deine Hausbank meistens die teuerste Option?`
+  40. Pourquoi la banque facture-t-elle le papier ?
+     `Warum verlangt die Bank Gebühren für Papier?`
+  41. Pourquoi un virement du vendredi soir met-il plus de temps ?
+     `Warum ist eine Überweisung am Freitagabend langsamer?`
+  42. Pourquoi ton compte est-il « gratuit » alors que tu payes quand même ?
+     `Warum ist dein Konto „kostenlos", aber du zahlst trotzdem?`
+  43. Pourquoi la banque gagne-t-elle sur ton argent qui dort ?
+     `Warum verdient die Bank an deinem Geld, das einfach daliegt?`
+  44. Pourquoi ton compte courant ne rapporte-t-il aucun intérêt ?
+     `Warum bekommst du auf dem Girokonto keine Zinsen?`
+  45. Pourquoi ton compte jeune devient-il soudain payant ?
+     `Warum ist dein Jugendkonto plötzlich kostenpflichtig?`
+  46. Pourquoi le distributeur à l'étranger propose-t-il de payer en euros ?
+     `Warum fragt dich der Automat im Ausland, ob du in Euro zahlen willst?`
+  47. Pourquoi ta banque t'appelle-t-elle quand de l'argent arrive ?
+     `Warum ruft dich deine Bank an, wenn Geld eingeht?`
+  48. Pourquoi ta banque recommande-t-elle précisément ses propres produits ?
+     `Warum empfiehlt dir deine Bank genau ihre eigenen Produkte?`
+  49. Pourquoi le livret n'est-il bien rémunéré que pour les nouveaux ?
+     `Warum ist Tagesgeld nur für Neukunden gut verzinst?`
+  50. Pourquoi la banque affiche-t-elle un taux que tu n'auras jamais ?
+     `Warum wirbt die Bank mit einem Zins, den du nie bekommst?`
+  51. Pourquoi payer par carte en vacances coûte-t-il un supplément ?
+     `Warum kostet Kartenzahlung im Urlaub extra?`
+  52. Pourquoi changer de banque est-il presque toujours rentable et presque personne ne le fait ?
+     `Warum lohnt sich ein Bankwechsel fast immer und fast niemand macht ihn?`
+  53. Pourquoi ne sens-tu rien en payant sans contact ?
+     `Warum spürst du kontaktloses Bezahlen nicht?`
+  54. Pourquoi l'appli arrondit-elle tes achats à l'euro supérieur ?
+     `Warum rundet die App deine Käufe auf?`
+  55. Pourquoi la caisse demande-t-elle ton code postal ?
+     `Warum fragt die Kasse nach deiner Postleitzahl?`
+  56. Pourquoi retirer du liquide coûte-t-il parfois de l'argent ?
+     `Warum kostet Bargeld abheben manchmal Geld?`
 
-## Banques & crédit  (40)
+## preis  (32)
 
-121. Voici pourquoi les banques veulent absolument ton argent
-     `Darum wollen Banken unbedingt dein Geld`
-122. Voici pourquoi la banque te prête de l'argent
-     `Darum leiht dir die Bank wirklich Geld`
-123. Voici pourquoi un crédit te coûte le double à la fin
-     `Darum kostet dich ein Kredit am Ende doppelt so viel`
-124. Voici pourquoi acheter maintenant et payer plus tard est dangereux
-     `Darum ist jetzt kaufen, später zahlen so gefährlich`
-125. Voici pourquoi ton découvert te ruine en silence
-     `Darum ruinieren dich die Dispozinsen deiner Bank`
-126. Voici pourquoi les banques adorent les clients endettés
-     `Darum lieben Banken Kunden, die Schulden machen`
-127. Voici pourquoi tu paies deux fois le prix sans le voir
-     `Darum zahlst du unbemerkt den doppelten Preis`
-128. Voici pourquoi ton argent ne dort pas sur ton compte
-     `Darum liegt dein Geld nicht einfach auf dem Konto`
-129. Voici pourquoi les intérêts existent
-     `Darum gibt es überhaupt Zinsen`
-130. Voici pourquoi un prêt immobilier coûte bien plus que le montant
-     `Darum kostet ein Immobilienkredit viel mehr als die Kreditsumme`
-131. Voici pourquoi ton livret d'épargne te fait perdre de l'argent
-     `Darum verlierst du Geld auf dem Sparbuch`
-132. Voici pourquoi les frais de compte reviennent toujours
-     `Darum kommen Kontogebühren immer zurück`
-133. Voici pourquoi la banque connaît tes habitudes mieux que toi
-     `Darum kennt deine Bank deine Gewohnheiten besser als du`
-134. Voici pourquoi un taux bas ne veut pas dire pas cher
-     `Darum heißt ein niedriger Zins nicht günstig`
-135. Voici pourquoi rembourser lentement coûte une fortune
-     `Darum kostet dich langsames Abbezahlen ein Vermögen`
-136. Voici pourquoi ta carte de crédit gratuite ne l'est pas
-     `Darum ist deine kostenlose Kreditkarte nicht kostenlos`
-137. Voici pourquoi la banque te propose un crédit quand tu vas bien
-     `Darum bietet dir die Bank Kredit an, wenn es dir gut geht`
-138. Voici pourquoi une mensualité faible cache un coût énorme
-     `Darum versteckt eine kleine Rate riesige Kosten`
-139. Voici pourquoi les banques gagnent même quand tu ne fais rien
-     `Darum verdient die Bank, auch wenn du nichts tust`
-140. Voici pourquoi ton crédit dure plus longtemps que ton achat
-     `Darum läuft dein Kredit länger als das Gekaufte hält`
-141. Voici pourquoi personne ne t'explique les frais cachés
-     `Darum erklärt dir niemand die versteckten Gebühren`
-142. Voici pourquoi emprunter est parfois plus malin qu'épargner
-     `Darum kann ein Kredit klüger sein als Sparen`
-143. Voici pourquoi la banque préfère que tu ne lises pas le contrat
-     `Darum hofft die Bank, dass du den Vertrag nicht liest`
-144. Voici pourquoi ton assurance coûte plus qu'elle ne rapporte
-     `Darum kostet dich deine Versicherung mehr, als sie bringt`
-145. Voici pourquoi les intérêts composés jouent contre toi aussi
-     `Darum arbeitet der Zinseszins auch gegen dich`
-146. Voici pourquoi rembourser une dette rapporte plus qu'épargner
-     `Darum bringt Schulden tilgen mehr als Sparen`
-147. Voici pourquoi le crédit à la consommation est le plus cher
-     `Darum ist der Konsumkredit der teuerste von allen`
-148. Voici pourquoi ta banque te rappelle juste avant l'échéance
-     `Darum meldet sich deine Bank kurz vor der Fälligkeit`
-149. Voici pourquoi changer de banque te rapporte plus que négocier
-     `Darum bringt ein Bankwechsel mehr als jedes Verhandeln`
-150. Voici pourquoi une dette peut être un outil
-     `Darum nutzen reiche Menschen Schulden als Werkzeug`
+  57. Pourquoi les échantillons gratuits te transforment-ils en acheteur ?
+     `Warum machen dich Gratisproben zu Käufern?`
+  58. Pourquoi le même trajet coûte-t-il plus selon l'heure ?
+     `Warum kostet dieselbe Fahrt je nach Uhrzeit mehr?`
+  59. Pourquoi le prix monte-t-il quand tu hésites ?
+     `Warum steigt der Preis, wenn du zögerst?`
+  60. Pourquoi les lots sont-ils presque toujours plus chers ?
+     `Warum sind Bundles fast immer teurer?`
+  61. Pourquoi achètes-tu l'extension seulement en caisse ?
+     `Warum kaufst du die Verlängerung erst an der Kasse?`
+  62. Pourquoi la personnalisation coûte-t-elle un supplément ?
+     `Warum kostet Personalisierung extra, obwohl sie nichts kostet?`
+  63. Pourquoi choisir son créneau de livraison devient-il payant ?
+     `Warum ist der Lieferzeitpunkt plötzlich kostenpflichtig?`
+  64. Pourquoi dépenses-tu plus en carte qu'en liquide ?
+     `Warum gibst du mit Karte mehr aus als mit Bargeld?`
+  65. Pourquoi presque tous les prix finissent-ils par 9 ?
+     `Warum endet fast jeder Preis auf 9?`
+  66. Pourquoi y a-t-il toujours une offre encore plus chère à côté ?
+     `Warum steht neben dem teuren Angebot ein noch teureres?`
+  67. Pourquoi la taille moyenne est-elle toujours « la bonne » ?
+     `Warum ist die mittlere Größe immer die „richtige"?`
+  68. Pourquoi un prix barré paraît-il bon marché même s'il n'a jamais existé ?
+     `Warum wirkt ein durchgestrichener Preis günstig, auch wenn er nie galt?`
+  69. Pourquoi le petit format coûte-t-il plus cher au gramme ?
+     `Warum kostet die kleine Packung mehr pro Gramm?`
+  70. Pourquoi une remise si tu achètes plus que nécessaire ?
+     `Warum bekommst du Rabatt, wenn du mehr kaufst, als du brauchst?`
+  71. Pourquoi le cashback t'appauvrit-il ?
+     `Warum macht dich Cashback ärmer?`
+  72. Pourquoi les soldes commencent-ils avant la fin de la saison ?
+     `Warum beginnt der Schlussverkauf, bevor die Saison endet?`
+  73. Pourquoi le site affiche-t-il combien de gens regardent ?
+     `Warum zeigt dir der Shop, wie viele andere gerade zuschauen?`
+  74. Pourquoi le compte à rebours recommence-t-il toujours ?
+     `Warum läuft der Countdown immer wieder von vorn?`
+  75. Pourquoi la livraison n'est-elle « gratuite » qu'à partir d'un montant ?
+     `Warum ist Versand erst ab einem bestimmten Betrag „kostenlos"?`
+  76. Pourquoi ajoutes-tu 20 € au panier pour en économiser 3 ?
+     `Warum legst du für 3 Euro Ersparnis 20 Euro mehr in den Korb?`
+  77. Pourquoi le produit le plus cher existe-t-il pour que tu ne l'achètes pas ?
+     `Warum ist das teuerste Produkt da, damit du es nicht kaufst?`
+  78. Pourquoi le prix change-t-il selon l'appareil utilisé ?
+     `Warum ändert sich der Preis, je nachdem womit du suchst?`
+  79. Pourquoi payes-tu souvent le prix normal le Black Friday ?
+     `Warum zahlst du am Black Friday oft den Normalpreis?`
+  80. Pourquoi le premier prix vu devient-il ta référence ?
+     `Warum ist der erste Preis, den du siehst, dein Maßstab?`
+  81. Pourquoi achètes-tu plus vite quand c'est « seulement aujourd'hui » ?
+     `Warum kaufst du eher, wenn etwas „nur noch heute" gilt?`
+  82. Pourquoi compares-tu des pourcentages plutôt que des euros ?
+     `Warum vergleichst du Prozente statt Euro?`
+  83. Pourquoi un bon d'achat ressemble-t-il à un cadeau ?
+     `Warum fühlt sich ein Gutschein wie ein Geschenk an?`
+  84. Pourquoi le retour gratuit te coûte-t-il quand même ?
+     `Warum ist Rückgabe kostenlos und trotzdem teuer für dich?`
+  85. Pourquoi achètes-tu davantage après un premier achat ?
+     `Warum kaufst du mehr, wenn du schon etwas gekauft hast?`
+  86. Pourquoi « cher » semble-t-il parfois meilleur ?
+     `Warum wirkt teuer manchmal einfach besser?`
+  87. Pourquoi le confort coûte-t-il toujours le plus cher ?
+     `Warum kostet Bequemlichkeit immer am meisten?`
+  88. Pourquoi le grand format est-il parfois plus cher ?
+     `Warum ist die Großpackung manchmal teurer?`
 
-## Internet & technologie  (35)
+## alltag  (24)
 
-151. Voici pourquoi TikTok est totalement gratuit
-     `Darum ist TikTok komplett kostenlos`
-152. Voici pourquoi les réseaux font tout pour te garder accro
-     `Darum tut Social Media alles, damit du süchtig bleibst`
-153. Voici pourquoi Google sait ce que tu veux acheter demain
-     `Darum weiß Google, was du morgen kaufen willst`
-154. Voici pourquoi les applications gratuites sont les plus chères
-     `Darum sind Gratis-Apps in Wahrheit die teuersten`
-155. Voici pourquoi Netflix ne vend plus de films à l'unité
-     `Darum setzt Netflix nur noch auf Abos`
-156. Voici pourquoi les applications veulent tes données
-     `Darum sind deine Daten für Apps so wertvoll`
-157. Voici pourquoi tu vois une pub juste après une recherche
-     `Darum siehst du Werbung für das, was du gerade gesucht hast`
-158. Voici pourquoi les prix changent toutes les minutes en ligne
-     `Darum ändern sich Online-Preise im Minutentakt`
-159. Voici pourquoi les applications veulent ta connexion quotidienne
-     `Darum wollen Apps, dass du dich jeden Tag einloggst`
-160. Voici pourquoi gratuit ne veut jamais dire gratuit sur internet
-     `Darum bedeutet gratis im Internet nie kostenlos`
-161. Voici pourquoi le défilement infini n'a pas de fin
-     `Darum hat endloses Scrollen kein Ende`
-162. Voici pourquoi ton téléphone te montre ce qui t'énerve
-     `Darum zeigt dir dein Handy, was dich aufregt`
-163. Voici pourquoi une notification te rapporte de l'argent à eux
-     `Darum ist jede Benachrichtigung bares Geld wert`
-164. Voici pourquoi les jeux gratuits gagnent le plus d'argent
-     `Darum verdienen Gratis-Spiele am meisten Geld`
-165. Voici pourquoi ton attention vaut plus que ton argent
-     `Darum ist deine Aufmerksamkeit wertvoller als dein Geld`
-166. Voici pourquoi supprimer une application ne supprime pas tes données
-     `Darum verschwinden deine Daten nicht, wenn du die App löschst`
-167. Voici pourquoi l'abonnement a remplacé l'achat
-     `Darum hat das Abo den Kauf ersetzt`
-168. Voici pourquoi le premier mois est toujours à un euro
-     `Darum kostet der erste Monat immer nur einen Euro`
-169. Voici pourquoi résilier est toujours plus dur que s'inscrire
-     `Darum ist Kündigen immer schwerer als Anmelden`
-170. Voici pourquoi ton téléphone ralentit au bon moment
-     `Darum wird dein Handy genau zur richtigen Zeit langsam`
-171. Voici pourquoi les avis en ligne ne sont pas fiables
-     `Darum kannst du Online-Bewertungen nicht vertrauen`
-172. Voici pourquoi le compte à rebours sur un site est faux
-     `Darum ist der Countdown auf der Webseite erfunden`
-173. Voici pourquoi il reste toujours deux articles en stock
-     `Darum sind immer nur noch zwei Stück verfügbar`
-174. Voici pourquoi une application connaît ton humeur
-     `Darum kennt eine App deine Stimmung`
-175. Voici pourquoi la publicité te suit d'un appareil à l'autre
-     `Darum folgt dir Werbung von Gerät zu Gerät`
-176. Voici pourquoi tu payes plus cher sur ton téléphone que sur ordinateur
-     `Darum zahlst du am Handy mehr als am Computer`
-177. Voici pourquoi les conditions d'utilisation sont si longues
-     `Darum sind die AGB absichtlich so lang`
-178. Voici pourquoi le bouton accepter est toujours plus visible
-     `Darum ist der Akzeptieren-Button immer der auffälligste`
-179. Voici pourquoi l'intelligence artificielle sait ce qui te retient
-     `Darum weiß der Algorithmus, was dich festhält`
-180. Voici pourquoi une application te propose exactement ton budget
-     `Darum trifft eine App genau dein Budget`
-181. Voici pourquoi tu passes plus de temps que prévu sur ton téléphone
-     `Darum bleibst du länger am Handy, als du wolltest`
-182. Voici pourquoi les applications sont conçues comme des machines à sous
-     `Darum funktionieren Apps wie Spielautomaten`
-183. Voici pourquoi ta série se lance toute seule
-     `Darum startet die nächste Folge von allein`
-184. Voici pourquoi personne ne lit ce qu'il accepte
-     `Darum liest niemand, was er da akzeptiert`
-185. Voici pourquoi une entreprise gratuite vaut des milliards
-     `Darum ist eine Gratis-Firma Milliarden wert`
+  89. Pourquoi la consigne n'en est-elle pas vraiment une ?
+     `Warum ist die Pfandflasche kein echtes Pfand?`
+  90. Pourquoi les supermarchés jettent-ils plutôt que de donner ?
+     `Warum werfen Supermärkte Essen weg, statt es zu verschenken?`
+  91. Pourquoi la date limite est-elle un outil de vente ?
+     `Warum ist das Mindesthaltbarkeitsdatum ein Verkaufsinstrument?`
+  92. Pourquoi oublier sa liste coûte-t-il vingt euros ?
+     `Warum kostet dich ein vergessener Einkaufszettel zwanzig Euro?`
+  93. Pourquoi le lait est-il tout au fond du magasin ?
+     `Warum liegt die Milch ganz hinten im Laden?`
+  94. Pourquoi le paquet rétrécit-il à prix constant ?
+     `Warum wird die Packung kleiner und der Preis bleibt?`
+  95. Pourquoi le cher est-il à hauteur des yeux ?
+     `Warum steht das Teure auf Augenhöhe?`
+  96. Pourquoi ça sent le pain frais à l'entrée ?
+     `Warum riecht es am Eingang nach frischem Brot?`
+  97. Pourquoi n'y a-t-il ni fenêtre ni horloge au supermarché ?
+     `Warum gibt es im Supermarkt keine Fenster und keine Uhr?`
+  98. Pourquoi ce dont tu as besoin tous les jours n'est-il jamais en promo ?
+     `Warum sind die Dinge, die du täglich brauchst, nie im Angebot?`
+  99. Pourquoi les bonbons sont-ils en caisse ?
+     `Warum liegen Süßigkeiten an der Kasse?`
+  100. Pourquoi la promo n'est-elle valable qu'avec l'appli ?
+     `Warum ist das Angebot nur mit App gültig?`
+  101. Pourquoi collectionnes-tu des points qui ne valent presque rien ?
+     `Warum sammelst du Punkte, die fast nichts wert sind?`
+  102. Pourquoi la carte de fidélité est-elle gratuite ?
+     `Warum kostet dich die Kundenkarte nichts?`
+  103. Pourquoi le magasin réorganise-t-il sans cesse ses rayons ?
+     `Warum wechselt der Laden ständig die Regale?`
+  104. Pourquoi les courses dépassent-elles le budget malgré la liste ?
+     `Warum ist der Wocheneinkauf teurer, obwohl du eine Liste hattest?`
+  105. Pourquoi le prix au kilo est-il écrit si petit ?
+     `Warum steht der Preis pro Kilo so klein?`
+  106. Pourquoi l'eau du robinet est-elle cent fois moins chère ?
+     `Warum ist Leitungswasser hundertmal günstiger als Flaschenwasser?`
+  107. Pourquoi le café à la maison coûte-t-il dix fois moins ?
+     `Warum kostet Kaffee zu Hause ein Zehntel?`
+  108. Pourquoi déjeuner dehors coûte-t-il plus qu'une semaine de vacances ?
+     `Warum ist Mittagessen holen teurer als ein Urlaub im Jahr?`
+  109. Pourquoi les petites dépenses sont-elles plus dangereuses que les grandes ?
+     `Warum sind kleine Ausgaben gefährlicher als große?`
+  110. Pourquoi ne remarques-tu pas les prélèvements, mais bien le liquide ?
+     `Warum merkst du Abbuchungen nicht, aber Bargeld schon?`
+  111. Pourquoi la livraison est-elle la part la plus chère de ton repas ?
+     `Warum ist Lieferung der teuerste Teil deines Essens?`
+  112. Pourquoi le café en gare coûte-t-il le double ?
+     `Warum kostet der Kaffee im Bahnhof das Doppelte?`
 
-## Travail & richesse  (35)
+## versicherung  (16)
 
-186. Voici pourquoi un gros salaire ne suffit pas à devenir riche
-     `Darum reicht ein hohes Gehalt nicht, um reich zu werden`
-187. Voici pourquoi certaines compétences sont payées en or
-     `Darum werden manche Fähigkeiten extrem hoch bezahlt`
-188. Voici pourquoi changer d'entreprise rapporte plus qu'une augmentation
-     `Darum bringt ein Jobwechsel mehr als eine Gehaltserhöhung`
-189. Voici pourquoi travailler plus ne veut pas dire gagner plus
-     `Darum bedeutet mehr Arbeit nicht mehr Geld`
-190. Voici pourquoi ton salaire ne dit rien de ta richesse
-     `Darum sagt dein Gehalt nichts über deinen Wohlstand`
-191. Voici pourquoi les riches achètent des actifs et pas des choses
-     `Darum kaufen reiche Menschen Vermögenswerte statt Dinge`
-192. Voici pourquoi épargner seul ne rendra jamais riche
-     `Darum wirst du durch reines Sparen nie wohlhabend`
-193. Voici pourquoi échanger son temps contre de l'argent a une limite
-     `Darum hat Zeit gegen Geld eine harte Grenze`
-194. Voici pourquoi ton premier salaire est le plus important
-     `Darum ist dein erstes Gehalt das wichtigste deines Lebens`
-195. Voici pourquoi on te paie pour le problème que tu résous
-     `Darum wirst du für das Problem bezahlt, das du löst`
-196. Voici pourquoi personne ne te propose spontanément plus
-     `Darum bietet dir niemand von allein mehr Gehalt an`
-197. Voici pourquoi les heures supplémentaires te coûtent cher
-     `Darum kosten dich Überstunden mehr, als sie bringen`
-198. Voici pourquoi un métier stable peut être un piège
-     `Darum kann ein sicherer Job eine Falle sein`
-199. Voici pourquoi ta valeur ne se mesure pas en heures
-     `Darum misst sich dein Wert nicht in Stunden`
-200. Voici pourquoi on paie plus ce qui est rare que ce qui est dur
-     `Darum wird Seltenes besser bezahlt als Schweres`
-201. Voici pourquoi tu gagnes moins que ce que tu rapportes
-     `Darum verdienst du weniger, als du einbringst`
-202. Voici pourquoi le salaire se décide avant l'entretien
-     `Darum entscheidet sich dein Gehalt vor dem Gespräch`
-203. Voici pourquoi une promotion peut te faire perdre de l'argent
-     `Darum kann dich eine Beförderung ärmer machen`
-204. Voici pourquoi le patrimoine compte plus que le revenu
-     `Darum zählt Vermögen mehr als Einkommen`
-205. Voici pourquoi les riches paient moins d'impôts en pourcentage
-     `Darum zahlen Reiche prozentual weniger Steuern`
-206. Voici pourquoi ton travail ne détermine pas ta richesse future
-     `Darum bestimmt dein Job nicht, ob du reich wirst`
-207. Voici pourquoi certains gagnent de l'argent en dormant
-     `Darum verdienen manche Geld, während sie schlafen`
-208. Voici pourquoi apprendre rapporte plus que travailler plus
-     `Darum bringt Lernen mehr als Mehrarbeit`
-209. Voici pourquoi la sécurité de l'emploi coûte de l'argent
-     `Darum kostet dich Jobsicherheit bares Geld`
-210. Voici pourquoi ton employeur connaît ta valeur mieux que toi
-     `Darum kennt dein Arbeitgeber deinen Wert besser als du`
-211. Voici pourquoi un revenu unique est le plus grand risque
-     `Darum ist eine einzige Einkommensquelle dein größtes Risiko`
-212. Voici pourquoi tu es payé en fin de mois et pas avant
-     `Darum bekommst du dein Gehalt erst am Monatsende`
-213. Voici pourquoi les augmentations suivent rarement l'inflation
-     `Darum halten Gehaltserhöhungen selten mit der Inflation mit`
-214. Voici pourquoi posséder rapporte plus que produire
-     `Darum bringt Besitzen mehr als Arbeiten`
-215. Voici pourquoi personne ne devient riche avec un seul salaire
-     `Darum wird niemand allein mit Gehalt reich`
-216. Voici pourquoi ton diplôme ne garantit rien financièrement
-     `Darum garantiert dir dein Abschluss finanziell gar nichts`
-217. Voici pourquoi la retraite se joue à vingt ans
-     `Darum entscheidet sich deine Rente mit zwanzig`
-218. Voici pourquoi travailler dur ne suffit pas
-     `Darum reicht harte Arbeit allein nicht aus`
-219. Voici pourquoi la richesse est une question de temps
-     `Darum ist Reichtum vor allem eine Frage der Zeit`
-220. Voici pourquoi tu sous-estimes la valeur de ton expérience
-     `Darum unterschätzt du den Wert deiner Erfahrung`
+  113. Pourquoi l'assurance obsèques est-elle une mauvaise affaire ?
+     `Warum ist die Sterbegeldversicherung ein schlechtes Geschäft?`
+  114. Pourquoi personne ne te vend-il l'assurance vraiment utile ?
+     `Warum verkauft dir niemand die Versicherung, die du wirklich brauchst?`
+  115. Pourquoi payer une garantie que tu as déjà ?
+     `Warum zahlst du für eine Garantie, die du schon hast?`
+  116. Pourquoi l'assurance est-elle bon marché jusqu'au jour où tu en as besoin ?
+     `Warum ist die Versicherung billig, bis du sie brauchst?`
+  117. Pourquoi assures-tu surtout ce qui arrive rarement ?
+     `Warum versicherst du am liebsten das, was selten passiert?`
+  118. Pourquoi une franchise est-elle presque toujours rentable ?
+     `Warum lohnt sich eine Selbstbeteiligung fast immer?`
+  119. Pourquoi ta cotisation augmente-t-elle sans aucun sinistre ?
+     `Warum steigt dein Beitrag, obwohl du nie einen Schaden hattest?`
+  120. Pourquoi l'assurance téléphone est-elle inutile ?
+     `Warum brauchst du die Handyversicherung nicht?`
+  121. Pourquoi l'assurance la plus importante est-elle la plus ennuyeuse ?
+     `Warum ist die wichtigste Versicherung die langweiligste?`
+  122. Pourquoi tout le monde te vend une assurance et personne une résiliation ?
+     `Warum verkauft dir jeder eine Versicherung und niemand eine Kündigung?`
+  123. Pourquoi l'assurance voyage ne paye-t-elle souvent pas ?
+     `Warum zahlt die Reiseversicherung oft nicht?`
+  124. Pourquoi payer au mois coûte-t-il plus cher qu'à l'année ?
+     `Warum kostet Monatszahlung mehr als Jahreszahlung?`
+  125. Pourquoi le conseiller est-il payé quand tu signes ?
+     `Warum bekommt der Berater Geld, wenn du unterschreibst?`
+  126. Pourquoi as-tu trop d'assurances et pourtant les mauvaises ?
+     `Warum hast du zu viele Versicherungen und trotzdem die falschen?`
+  127. Pourquoi la couverture s'arrête-t-elle quand tu en as besoin ?
+     `Warum endet der Schutz genau dann, wenn du ihn brauchst?`
+  128. Pourquoi ton assurance habitation est-elle mal calibrée ?
+     `Warum ist deine Hausratversicherung zu hoch oder zu niedrig?`
 
-## Forte curiosité  (35)
+## vertrag  (14)
 
-221. Voici pourquoi tu n'es jamais trop pauvre pour investir
-     `Darum bist du nie zu arm, um zu investieren`
-222. Voici pourquoi ton argent rétrécit sans que le chiffre bouge
-     `Darum schrumpft dein Vermögen, obwohl die Zahl gleich bleibt`
-223. Voici pourquoi une augmentation ne te rend pas plus riche
-     `Darum macht dich eine Gehaltserhöhung selten reicher`
-224. Voici pourquoi les millionnaires n'ont presque pas de liquide
-     `Darum haben Millionäre kaum Bargeld auf der Bank`
-225. Voici pourquoi certaines entreprises valent des milliards sans profit
-     `Darum sind Firmen Milliarden wert, obwohl sie keinen Gewinn machen`
-226. Voici pourquoi les prix ne redescendent jamais vraiment
-     `Darum sinken Preise fast nie wieder`
-227. Voici pourquoi un euro aujourd'hui vaut plus qu'un euro demain
-     `Darum ist ein Euro heute mehr wert als morgen`
-228. Voici pourquoi l'argent n'a de valeur que parce qu'on y croit
-     `Darum hat Geld nur Wert, weil wir daran glauben`
-229. Voici pourquoi imprimer plus d'argent appauvrit tout le monde
-     `Darum macht mehr gedrucktes Geld alle ärmer`
-230. Voici pourquoi une dette peut disparaître toute seule
-     `Darum kann sich eine Schuld von selbst auflösen`
-231. Voici pourquoi les banques créent l'argent qu'elles te prêtent
-     `Darum erschaffen Banken das Geld, das sie dir leihen`
-232. Voici pourquoi personne ne possède vraiment son logement
-     `Darum gehört dir dein Zuhause nie ganz`
-233. Voici pourquoi la bourse monte sur le long terme
-     `Darum steigt die Börse langfristig fast immer`
-234. Voici pourquoi attendre le bon moment te coûte plus cher
-     `Darum kostet dich Warten auf den richtigen Moment am meisten`
-235. Voici pourquoi dix ans changent tout et un an presque rien
-     `Darum verändern zehn Jahre alles und ein Jahr fast nichts`
-236. Voici pourquoi un petit montant régulier bat une grosse somme
-     `Darum schlägt ein kleiner Betrag regelmäßig die große Summe`
-237. Voici pourquoi le temps rapporte plus que le montant
-     `Darum zählt Zeit mehr als die Höhe des Betrags`
-238. Voici pourquoi la plupart des gens vendent au pire moment
-     `Darum verkaufen die meisten genau im falschen Moment`
-239. Voici pourquoi les crises créent les plus grandes fortunes
-     `Darum entstehen in Krisen die größten Vermögen`
-240. Voici pourquoi ton argent perd de la valeur pendant que tu dors
-     `Darum verliert dein Geld an Wert, während du schläfst`
-241. Voici pourquoi un billet ne vaut rien en lui-même
-     `Darum ist ein Geldschein an sich wertlos`
-242. Voici pourquoi l'or fascine depuis des milliers d'années
-     `Darum fasziniert Gold seit Jahrtausenden`
-243. Voici pourquoi les riches empruntent au lieu de vendre
-     `Darum leihen sich Reiche Geld, statt zu verkaufen`
-244. Voici pourquoi une bonne dette existe vraiment
-     `Darum gibt es wirklich gute Schulden`
-245. Voici pourquoi la carte gratuite finit par coûter le plus cher
-     `Darum kostet die kostenlose Karte am Ende am meisten`
-246. Voici pourquoi les intérêts composés semblent magiques
-     `Darum wirkt der Zinseszins wie Magie`
-247. Voici pourquoi doubler son argent prend moins longtemps qu'on croit
-     `Darum dauert es kürzer, dein Geld zu verdoppeln, als du denkst`
-248. Voici pourquoi les frais minuscules coûtent des dizaines de milliers
-     `Darum kosten dich winzige Gebühren Zehntausende`
-249. Voici pourquoi la diversification n'est pas de la prudence
-     `Darum ist Streuen keine Feigheit`
-250. Voici pourquoi l'économie fonctionne sur la confiance seule
-     `Darum läuft die ganze Wirtschaft nur auf Vertrauen`
-251. Voici pourquoi les gens riches parlent peu d'argent
-     `Darum reden wirklich reiche Menschen selten über Geld`
-252. Voici pourquoi comprendre l'argent change ta façon de dépenser
-     `Darum verändert Finanzwissen, wie du jeden Euro siehst`
-253. Voici pourquoi l'école ne t'apprend rien sur l'argent
-     `Darum bringt dir die Schule nichts über Geld bei`
-254. Voici pourquoi ton cerveau est ton pire conseiller financier
-     `Darum ist dein Gehirn dein schlechtester Finanzberater`
-255. Voici pourquoi ton solde bancaire ne dit rien de ton avenir
-     `Darum sagt dein Kontostand nichts über deine Zukunft`
+  129. Pourquoi la fidélité te coûte-t-elle de l'argent ?
+     `Warum kostet dich Treue beim Anbieter Geld?`
+  130. Pourquoi la prime de bienvenue dépasse-t-elle ton économie ?
+     `Warum ist der Wechselbonus höher als deine Ersparnis?`
+  131. Pourquoi le téléphone est-il « offert » avec le forfait ?
+     `Warum ist das Handy „geschenkt", wenn du den Vertrag nimmst?`
+  132. Pourquoi ton électricité coûte-t-elle plus cher alors que tu consommes moins ?
+     `Warum kostet dein Strom mehr, obwohl du weniger verbrauchst?`
+  133. Pourquoi ton forfait augmente-t-il après deux ans ?
+     `Warum wird dein Tarif nach zwei Jahren teurer?`
+  134. Pourquoi payes-tu des gigas que tu n'utilises jamais ?
+     `Warum zahlst du für Datenvolumen, das du nie nutzt?`
+  135. Pourquoi une prime pour partir, aucune pour rester ?
+     `Warum bekommst du eine Prämie fürs Wechseln, aber nicht fürs Bleiben?`
+  136. Pourquoi l'abonnement fixe est-il le vrai prix ?
+     `Warum ist die Grundgebühr der eigentliche Preis?`
+  137. Pourquoi la durée d'engagement est-elle en petits caractères ?
+     `Warum steht die Vertragslaufzeit im Kleingedruckten?`
+  138. Pourquoi loues-tu ta box ?
+     `Warum zahlst du Miete für den Router?`
+  139. Pourquoi n'as-tu jamais le débit annoncé ?
+     `Warum bekommst du nie die beworbene Internetgeschwindigkeit?`
+  140. Pourquoi changer d'offre chez le même opérateur est-il rentable ?
+     `Warum lohnt sich der Tarifwechsel beim selben Anbieter?`
+  141. Pourquoi ta mensualité dépasse-t-elle ta consommation ?
+     `Warum ist dein Abschlag höher als dein Verbrauch?`
+  142. Pourquoi la hausse de prix arrive-t-elle par courrier ?
+     `Warum schickt dir dein Anbieter die Preiserhöhung per Post?`
 
-## Allemagne concrète  (35)
+## sparen  (18)
 
-256. Voici pourquoi le kebab devient de plus en plus cher en Allemagne
-     `Darum wird der Döner in Deutschland immer teurer`
-257. Voici pourquoi le prix de l'essence explose aux stations
-     `Darum explodieren die Spritpreise an den Tankstellen`
-258. Voici pourquoi les marques coûtent plus cher que la marque distributeur
-     `Darum sind Markenprodukte teurer als Eigenmarken`
-259. Voici pourquoi le gérant du magasin ne fixe pas les prix
-     `Darum bestimmt nicht der Ladenbesitzer die Preise`
-260. Voici pourquoi l'euro perd de sa valeur
-     `Darum verliert der Euro an Wert`
-261. Voici pourquoi le pain et les aliments augmentent en Allemagne
-     `Darum steigen die Brot- und Lebensmittelpreise in Deutschland`
-262. Voici pourquoi se loger à Munich ou Berlin est devenu impayable
-     `Darum ist Wohnen in München oder Berlin unbezahlbar`
-263. Voici pourquoi acheter en grande quantité te fait économiser
-     `Darum sparst du beim Kauf in Großmengen`
-264. Voici pourquoi le même produit coûte moins cher en ligne
-     `Darum kostet dasselbe Produkt online weniger als im Laden`
-265. Voici pourquoi tu paies près de la moitié en impôts et charges
-     `Darum zahlst du fast die Hälfte an Steuern und Abgaben`
-266. Voici pourquoi ton augmentation disparaît dans la progression fiscale
-     `Darum frisst die kalte Progression deine Gehaltserhöhung`
-267. Voici pourquoi le paiement fractionné est un piège
-     `Darum ist die Ratenzahlung beim Onlineshopping eine Falle`
-268. Voici pourquoi ton découvert autorisé coûte si cher en Allemagne
-     `Darum sind Dispozinsen in Deutschland so brutal`
-269. Voici pourquoi les Allemands gardent leur argent sur un livret
-     `Darum lassen so viele Deutsche ihr Geld auf dem Sparbuch`
-270. Voici pourquoi ne jamais aller chez Lidl ou Aldi en ayant faim
-     `Darum solltest du nie hungrig zu Lidl oder Aldi gehen`
-271. Voici pourquoi la consigne sur les bouteilles existe
-     `Darum gibt es überhaupt Pfand auf Flaschen`
-272. Voici pourquoi ton assurance santé coûte plus chaque année
-     `Darum steigt dein Krankenkassenbeitrag jedes Jahr`
-273. Voici pourquoi les loyers montent alors que rien ne change
-     `Darum steigen Mieten, obwohl sich nichts verändert`
-274. Voici pourquoi l'électricité coûte si cher en Allemagne
-     `Darum ist Strom in Deutschland so teuer`
-275. Voici pourquoi ta fiche de paie est si compliquée
-     `Darum ist deine Lohnabrechnung so unverständlich`
-276. Voici pourquoi acheter un logement reste hors de portée
-     `Darum bleibt eine eigene Wohnung für viele unerreichbar`
-277. Voici pourquoi les Allemands paient encore beaucoup en liquide
-     `Darum zahlen Deutsche immer noch so oft bar`
-278. Voici pourquoi ta retraite sera plus faible que prévu
-     `Darum wird deine Rente kleiner ausfallen als gedacht`
-279. Voici pourquoi le café à emporter coûte le prix d'un repas
-     `Darum kostet Coffee to go so viel wie eine Mahlzeit`
-280. Voici pourquoi les transports augmentent alors qu'ils sont subventionnés
-     `Darum werden Bus und Bahn teurer, obwohl sie subventioniert sind`
-281. Voici pourquoi une voiture te coûte le double de son prix
-     `Darum kostet dich ein Auto doppelt so viel wie der Kaufpreis`
-282. Voici pourquoi la TVA se cache dans chaque achat
-     `Darum versteckt sich die Mehrwertsteuer in jedem Einkauf`
-283. Voici pourquoi les discounters ont changé les habitudes allemandes
-     `Darum haben Discounter das Einkaufen in Deutschland verändert`
-284. Voici pourquoi les soldes d'hiver ne sont plus une bonne affaire
-     `Darum lohnt sich der Winterschlussverkauf nicht mehr`
-285. Voici pourquoi tu paies une redevance même sans télévision
-     `Darum zahlst du Rundfunkbeitrag auch ohne Fernseher`
-286. Voici pourquoi le chauffage coûte plus cher que le loyer parfois
-     `Darum kann Heizen teurer werden als die Miete`
-287. Voici pourquoi changer de fournisseur d'énergie rapporte vraiment
-     `Darum lohnt sich ein Wechsel des Stromanbieters wirklich`
-288. Voici pourquoi le supermarché du coin est plus cher que le discounter
-     `Darum ist der Supermarkt um die Ecke teurer als der Discounter`
-289. Voici pourquoi les prix montent avant les fêtes
-     `Darum steigen die Preise kurz vor Weihnachten`
-290. Voici pourquoi épargner en Allemagne te fait perdre de l'argent
-     `Darum verlierst du in Deutschland Geld, wenn du nur sparst`
+  143. Pourquoi « sûr » est-il le mot le plus cher en placement ?
+     `Warum ist „sicher" das teuerste Wort in der Geldanlage?`
+  144. Pourquoi chaque arbitrage te coûte-t-il des impôts ?
+     `Warum kostet dich jedes Umschichten Steuern?`
+  145. Pourquoi le plan épargne-logement de tes parents ne vaut-il plus rien ?
+     `Warum ist der Bausparvertrag deiner Eltern heute wertlos?`
+  146. Pourquoi l'inflation dévore-t-elle ton livret ?
+     `Warum frisst die Inflation dein Sparbuch?`
+  147. Pourquoi attendre coûte-t-il plus cher qu'investir ?
+     `Warum kostet dich Warten mehr als Investieren?`
+  148. Pourquoi 1 % de frais équivaut-il à un tiers de ton argent en 30 ans ?
+     `Warum sind ein Prozent Gebühren nach dreißig Jahren ein Drittel deines Geldes?`
+  149. Pourquoi le rendement affiché n'est-il pas le tien ?
+     `Warum ist die Rendite auf dem Papier nicht deine Rendite?`
+  150. Pourquoi épargner ne marche-t-il que si c'est automatique ?
+     `Warum lohnt sich Sparen erst, wenn es automatisch passiert?`
+  151. Pourquoi un versement régulier bat-il le bon moment ?
+     `Warum ist dein Sparplan besser als dein Timing?`
+  152. Pourquoi perds-tu de l'argent en le mettant à l'abri ?
+     `Warum verlierst du Geld, wenn du es sicher parkst?`
+  153. Pourquoi l'or ne produit-il aucun revenu ?
+     `Warum ist Gold kein Einkommen?`
+  154. Pourquoi ton assurance-vie n'est-elle pas un placement ?
+     `Warum ist deine Lebensversicherung keine Geldanlage?`
+  155. Pourquoi personne ne fait-il la publicité du produit le moins cher ?
+     `Warum wirbt niemand für das günstigste Produkt?`
+  156. Pourquoi les intérêts composés n'agissent-ils que tard ?
+     `Warum macht dich der Zinseszins erst spät reich?`
+  157. Pourquoi ton plus gros poste de frais est-il invisible ?
+     `Warum ist dein größter Kostenfaktor unsichtbar?`
+  158. Pourquoi ton épargne de précaution compte-t-elle plus que ton rendement ?
+     `Warum ist dein Notgroschen wichtiger als deine Rendite?`
+  159. Pourquoi rembourser avant d'investir ?
+     `Warum solltest du Schulden tilgen, bevor du investierst?`
+  160. Pourquoi l'épargnant moyen fait-il moins bien que la moyenne ?
+     `Warum ist der durchschnittliche Anleger schlechter als der Durchschnitt?`
 
-## Banques & crédit  (40)
+## steuer  (17)
 
-291. Voici pourquoi ton score de crédit décide du prix que tu paies
-     `Darum entscheidet dein Schufa-Score über deinen Zinssatz`
-292. Voici pourquoi la banque te pose autant de questions avant de prêter
-     `Darum stellt dir die Bank vor einem Kredit so viele Fragen`
-293. Voici pourquoi se porter garant coûte plus cher qu'on croit
-     `Darum ist eine Bürgschaft gefährlicher, als du denkst`
-294. Voici pourquoi les banques préfèrent les crédits longs
-     `Darum bevorzugen Banken möglichst lange Laufzeiten`
-295. Voici pourquoi rembourser en avance peut te coûter une pénalité
-     `Darum kostet dich vorzeitiges Zurückzahlen eine Strafe`
-296. Voici pourquoi ton conseiller bancaire n'est pas neutre
-     `Darum ist dein Bankberater niemals neutral`
-297. Voici pourquoi deux personnes obtiennent des taux différents
-     `Darum bekommen zwei Menschen völlig unterschiedliche Zinsen`
-298. Voici pourquoi un compte joint peut devenir un piège
-     `Darum kann ein Gemeinschaftskonto zur Falle werden`
-299. Voici pourquoi les banques ferment des agences et facturent plus
-     `Darum schließen Banken Filialen und verlangen trotzdem mehr`
-300. Voici pourquoi ton argent à la banque ne t'appartient pas vraiment
-     `Darum gehört dir dein Geld auf der Bank rechtlich nicht ganz`
+  161. Pourquoi payes-tu une taxe sur une taxe ?
+     `Warum zahlst du eine Steuer auf eine Steuer?`
+  162. Pourquoi la progressivité froide est-elle une hausse d'impôt invisible ?
+     `Warum ist die kalte Progression eine unsichtbare Steuererhöhung?`
+  163. Pourquoi un second emploi est-il plus taxé que prévu ?
+     `Warum kostet dich ein Nebenjob mehr Steuern als erwartet?`
+  164. Pourquoi reste-t-il si peu de ton augmentation ?
+     `Warum bleibt von deiner Gehaltserhöhung so wenig übrig?`
+  165. Pourquoi ton propriétaire paye-t-il moins d'impôts que toi ?
+     `Warum zahlt dein Vermieter weniger Steuern als du?`
+  166. Pourquoi une déclaration est-elle presque toujours rentable ?
+     `Warum lohnt sich eine Steuererklärung fast immer?`
+  167. Pourquoi ton net n'est-il pas ton argent ?
+     `Warum ist dein Netto nicht dein Geld?`
+  168. Pourquoi ton travail coûte-t-il plus que ce qui est écrit ?
+     `Warum kostet dich dein Job mehr, als auf dem Zettel steht?`
+  169. Pourquoi la classe d'imposition n'est-elle pas une économie ?
+     `Warum ist die Steuerklasse keine Steuerersparnis?`
+  170. Pourquoi te rembourse-t-on de l'argent qui t'appartenait déjà ?
+     `Warum bekommst du Geld zurück, das dir immer gehörte?`
+  171. Pourquoi les frais professionnels sont-ils le gain le plus facile ?
+     `Warum sind Werbungskosten der einfachste Gewinn?`
+  172. Pourquoi payer l'impôt sur des intérêts mangés par l'inflation ?
+     `Warum zahlst du Steuern auf Zinsen, die die Inflation aufgefressen hat?`
+  173. Pourquoi l'exonération est-elle rentable et presque jamais demandée ?
+     `Warum lohnt sich der Freistellungsauftrag und fast niemand stellt ihn?`
+  174. Pourquoi la prime de fin d'année est-elle si taxée ?
+     `Warum ist Weihnachtsgeld besonders hoch besteuert?`
+  175. Pourquoi donner de son vivant coûte-t-il moins que léguer ?
+     `Warum ist Schenken zu Lebzeiten günstiger als Vererben?`
+  176. Pourquoi hériter coûte-t-il de l'argent ?
+     `Warum kostet Erben Geld?`
+  177. Pourquoi le vélo de fonction coûte-t-il moins que la même somme en liquide ?
+     `Warum ist das Dienstrad günstiger als dieselbe Summe bar?`
+
+## wohnen  (17)
+
+  178. Pourquoi la commission d'agence est-elle si élevée à l'achat ?
+     `Warum ist die Maklerprovision beim Kauf so hoch?`
+  179. Pourquoi payer des droits sur un bien pas encore à toi ?
+     `Warum zahlst du Grunderwerbsteuer auf etwas, das dir noch nicht gehört?`
+  180. Pourquoi l'ancien coûte-t-il plus cher à entretenir ?
+     `Warum ist eine Altbauwohnung im Unterhalt teurer?`
+  181. Pourquoi payer un loyer sans rien construire ?
+     `Warum zahlst du Miete und baust nichts auf?`
+  182. Pourquoi acheter n'est-il pas forcément mieux que louer ?
+     `Warum ist Kaufen nicht automatisch besser als Mieten?`
+  183. Pourquoi les charges sont-elles un second loyer ?
+     `Warum sind Nebenkosten die zweite Miete?`
+  184. Pourquoi récupérer sa caution est-il si difficile ?
+     `Warum bekommst du deine Kaution so schwer zurück?`
+  185. Pourquoi ton loyer augmente-t-il sans que rien ne change ?
+     `Warum steigt deine Miete, obwohl sich nichts ändert?`
+  186. Pourquoi déménager coûte-t-il plus que rester, même plus cher ?
+     `Warum kostet Umziehen mehr als bleiben, selbst bei höherer Miete?`
+  187. Pourquoi le meublé coûte-t-il plus cher que le vide ?
+     `Warum ist die möblierte Wohnung teurer als die leere?`
+  188. Pourquoi ta régularisation de chauffage est-elle toujours trop élevée ?
+     `Warum ist deine Heizkostenabrechnung immer zu hoch?`
+  189. Pourquoi le prix d'achat n'est-il que le début ?
+     `Warum ist der Kaufpreis nur der Anfang?`
+  190. Pourquoi payes-tu des mètres carrés où tu ne vas jamais ?
+     `Warum zahlst du für Quadratmeter, die du nie betrittst?`
+  191. Pourquoi une colocation coûte-t-elle plus cher au m² ?
+     `Warum ist ein WG-Zimmer teurer pro Quadratmeter als eine Wohnung?`
+  192. Pourquoi payes-tu l'électricité des parties communes ?
+     `Warum zahlst du Strom für den Hausflur?`
+  193. Pourquoi rénover profite-t-il surtout au propriétaire ?
+     `Warum lohnt sich Renovieren vor allem für den Vermieter?`
+  194. Pourquoi la maison de tes parents n'était-elle pas un patrimoine ?
+     `Warum war das Eigenheim deiner Eltern kein Vermögen?`
+
+## auto  (11)
+
+  195. Pourquoi l'extension de garantie auto est-elle si chère ?
+     `Warum ist die Anschlussgarantie beim Auto so teuer?`
+  196. Pourquoi ta voiture perd-elle de l'argent dès la première minute ?
+     `Warum verliert dein Auto in der ersten Minute Geld?`
+  197. Pourquoi le leasing est-il pratique et cher ?
+     `Warum ist Leasing bequem und teuer?`
+  198. Pourquoi la voiture pas chère coûte-t-elle le plus ?
+     `Warum kostet dich das günstige Auto am meisten?`
+  199. Pourquoi ta voiture est-elle inutile 95 % du temps ?
+     `Warum ist dein Auto zu fünfundneunzig Prozent der Zeit nutzlos?`
+  200. Pourquoi l'assurance tous risques devient-elle inutile après cinq ans ?
+     `Warum ist die Vollkasko nach fünf Jahren Verschwendung?`
+  201. Pourquoi une voiture d'un an coûte-t-elle presque le prix du neuf ?
+     `Warum kostet ein Jahreswagen fast wie ein Neuwagen?`
+  202. Pourquoi payes-tu deux fois pour tes pneus hiver ?
+     `Warum zahlst du für Winterreifen zweimal?`
+  203. Pourquoi le carburant change-t-il de prix dans la journée ?
+     `Warum ist der Spritpreis morgens anders als abends?`
+  204. Pourquoi la révision coûte-t-elle plus que nécessaire ?
+     `Warum ist die Inspektion teurer als nötig?`
+  205. Pourquoi l'autopartage coûte-t-il moins que tu ne crois ?
+     `Warum ist Carsharing günstiger, als du denkst?`
+
+## digital  (13)
+
+  206. Pourquoi des films achetés disparaissent-ils de ta bibliothèque ?
+     `Warum verschwinden gekaufte Filme aus deiner Bibliothek?`
+  207. Pourquoi ton livre numérique ne t'appartient-il pas ?
+     `Warum gehört dir dein E-Book nicht?`
+  208. Pourquoi une batterie usée coûte-t-elle un téléphone neuf ?
+     `Warum kostet dich ein alter Akku ein neues Handy?`
+  209. Pourquoi l'appli est-elle gratuite si tu es le produit ?
+     `Warum ist die App gratis, wenn du das Produkt bist?`
+  210. Pourquoi le jeu gratuit coûte-t-il si cher ?
+     `Warum kostet das Spiel nichts und trotzdem viel?`
+  211. Pourquoi l'appli te donne-t-elle de l'argent pour un ami ?
+     `Warum schenkt dir die App Geld für einen Freund?`
+  212. Pourquoi le crédit gratuit s'arrête-t-il au meilleur moment ?
+     `Warum endet das Gratis-Guthaben im spannendsten Moment?`
+  213. Pourquoi achètes-tu une monnaie virtuelle plutôt que dépenser ?
+     `Warum kaufst du Spielwährung statt Geld auszugeben?`
+  214. Pourquoi ton stockage est-il toujours presque plein ?
+     `Warum ist dein Cloudspeicher immer fast voll?`
+  215. Pourquoi le prix dans l'appli dépasse-t-il celui du navigateur ?
+     `Warum ist der Preis in der App höher als im Browser?`
+  216. Pourquoi la plateforme te montre-t-elle ce que tu viens de regarder ?
+     `Warum zeigt dir die Plattform genau das, was du gerade angeschaut hast?`
+  217. Pourquoi commander via l'appli coûte-t-il plus cher qu'au restaurant ?
+     `Warum kostet Lieferung per App mehr als im Restaurant?`
+  218. Pourquoi la version gratuite est-elle volontairement pénible ?
+     `Warum ist die kostenlose Variante absichtlich unbequem?`
+
+## arbeit  (12)
+
+  219. Pourquoi le télétravail coûte-t-il moins cher à l'employeur ?
+     `Warum ist Homeoffice für deinen Arbeitgeber billiger?`
+  220. Pourquoi reçois-tu un titre plutôt qu'une augmentation ?
+     `Warum bekommst du einen Titel statt einer Gehaltserhöhung?`
+  221. Pourquoi gagne-t-on plus en changeant d'emploi qu'en restant ?
+     `Warum bekommst du mehr Gehalt beim Wechseln als beim Bleiben?`
+  222. Pourquoi les heures supplémentaires sont-elles souvent non payées ?
+     `Warum sind Überstunden oft unbezahlt?`
+  223. Pourquoi personne ne te dit-il le salaire des autres ?
+     `Warum nennt dir niemand im Betrieb das Gehalt der anderen?`
+  224. Pourquoi un stage non payé coûte-t-il double ?
+     `Warum kostet dich ein unbezahltes Praktikum doppelt?`
+  225. Pourquoi une augmentation sous l'inflation est-elle une baisse ?
+     `Warum ist eine Gehaltserhöhung unter der Inflation eine Kürzung?`
+  226. Pourquoi ton patron préfère-t-il les primes au salaire ?
+     `Warum zahlt dein Chef lieber Boni als Gehalt?`
+  227. Pourquoi le temps partiel coûte-t-il cher plus tard ?
+     `Warum lohnt sich Teilzeit später weniger als gedacht?`
+  228. Pourquoi la voiture de fonction n'est-elle pas un cadeau ?
+     `Warum ist der Firmenwagen kein Geschenk?`
+  229. Pourquoi une promotion rapporte-t-elle parfois moins ?
+     `Warum bringt dir eine Beförderung manchmal weniger Geld?`
+  230. Pourquoi personne ne négocie-t-il son premier salaire ?
+     `Warum verhandelt niemand das Einstiegsgehalt und alle bereuen es?`
+
+## gesundheit  (8)
+
+  231. Pourquoi le même médicament est-il moins cher à l'étranger ?
+     `Warum ist dasselbe Medikament im Ausland billiger?`
+  232. Pourquoi payer un simple certificat chez le médecin ?
+     `Warum zahlst du beim Arzt für ein Blatt Papier?`
+  233. Pourquoi le médecin propose-t-il un acte non remboursé ?
+     `Warum bietet dir der Arzt eine Leistung an, die die Kasse nicht zahlt?`
+  234. Pourquoi les mêmes lunettes coûtent-elles trois fois plus ?
+     `Warum kostet dieselbe Brille beim Optiker das Dreifache?`
+  235. Pourquoi les prothèses dentaires coûtent-elles si cher ?
+     `Warum sind Zahnersatz und Zuzahlung so teuer?`
+  236. Pourquoi l'assurance santé privée se retourne-t-elle contre toi ?
+     `Warum lohnt sich die private Krankenversicherung später nicht mehr?`
+  237. Pourquoi la caisse ne rembourse-t-elle pas l'option la moins chère ?
+     `Warum zahlt die Kasse die günstigere Variante nicht?`
+  238. Pourquoi les compléments alimentaires sont-ils si rentables ?
+     `Warum sind Nahrungsergänzungsmittel so profitabel?`
+
+## rente  (8)
+
+  239. Pourquoi le plan Riester fait-il perdre de l'argent à beaucoup ?
+     `Warum ist Riester für viele ein Verlustgeschäft?`
+  240. Pourquoi ta retraite ne suffit-elle pas malgré une vie de cotisations ?
+     `Warum reicht deine Rente nicht, obwohl du immer gezahlt hast?`
+  241. Pourquoi l'écart de retraite est-il plus grand qu'annoncé ?
+     `Warum ist die Rentenlücke größer, als die Post dir schreibt?`
+  242. Pourquoi payes-tu des impôts sur ta retraite ?
+     `Warum zahlst du Steuern auf deine Rente?`
+  243. Pourquoi commencer tôt bat-il verser beaucoup ?
+     `Warum lohnt sich früh anfangen mehr als viel einzahlen?`
+  244. Pourquoi chaque année d'attente coûte-t-elle cher ?
+     `Warum kostet dich jedes Jahr Warten spürbar Rente?`
+  245. Pourquoi la retraite d'entreprise n'est-elle pas toujours avantageuse ?
+     `Warum ist die betriebliche Altersvorsorge nicht immer gut?`
+  246. Pourquoi les points retraite ne sont-ils pas de l'argent ?
+     `Warum sind Rentenpunkte kein Geld?`
+
+## freizeit  (9)
+
+  247. Pourquoi le billet coûte-t-il plus cher que le billet ?
+     `Warum kostet das Ticket mehr als das Ticket?`
+  248. Pourquoi les prix de concert deviennent-ils dynamiques ?
+     `Warum sind Konzertpreise plötzlich dynamisch?`
+  249. Pourquoi la salle de sport ne veut-elle pas que tu viennes ?
+     `Warum will das Fitnessstudio nicht, dass du kommst?`
+  250. Pourquoi le même vol coûte-t-il plus cher demain ?
+     `Warum kostet derselbe Flug morgen mehr?`
+  251. Pourquoi payer en plus le siège, le bagage et l'enregistrement ?
+     `Warum zahlst du für Sitzplatz, Gepäck und Einchecken extra?`
+  252. Pourquoi changer de l'argent à l'aéroport coûte-t-il le plus cher ?
+     `Warum kostet Geldwechseln am Flughafen am meisten?`
+  253. Pourquoi l'hôtel en formule est-il moins cher et moins bon ?
+     `Warum ist das Hotel im Paket günstiger und schlechter?`
+  254. Pourquoi l'abonnement annuel n'est-il rentable qu'à douze visites ?
+     `Warum ist die Jahreskarte erst ab zwölf Besuchen günstig?`
+  255. Pourquoi l'assurance annulation coûte-t-elle le plus cher à la caisse ?
+     `Warum ist die Reiserücktrittsversicherung an der Kasse am teuersten?`

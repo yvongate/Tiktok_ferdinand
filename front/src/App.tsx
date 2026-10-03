@@ -38,7 +38,7 @@ function App() {
     mode: '60s',
     lang: 'de',
     videoModel: 'runway',
-    style: 'ferdinand',
+    style: 'vox',
     quality: '720p',
   })
   const [jobs, setJobs] = useState<Job[]>([])
@@ -164,7 +164,7 @@ function App() {
       <header>
         <h1>Ferdinand Renard</h1>
         {/* Le format garde sa structure, seule l'accroche change selon la
-            langue : « Darum » (de), « Voici pourquoi » (fr), « Here's why » (en). */}
+            langue : « Warum » (de), « Pourquoi » (fr), « Why » (en). */}
         <p className="subtitle">Generateur de shorts explicatifs</p>
       </header>
 

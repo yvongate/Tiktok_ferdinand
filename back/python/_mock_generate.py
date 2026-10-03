@@ -65,8 +65,8 @@ if args.subject:
 elif args.idea:
     print(f"-> Idee imposee : {args.idea}")
 else:
-    print("1. Voici pourquoi ton salaire disparait si vite")
-    print("-> Idee choisie : Voici pourquoi ton salaire disparait si vite")
+    print("1. Pourquoi ton salaire disparait-il si vite ?")
+    print("-> Idee choisie : Pourquoi ton salaire disparait-il si vite ?")
 time.sleep(STEP)
 
 if "quota" in FAULTS:
@@ -80,12 +80,12 @@ if "retries" in FAULTS:
     print("  Erreur reseau (TimeoutError): timed out")
     print("  (retry 1/4 apres echec GPT-5.2)")
     time.sleep(STEP)
-    print("  (tentative 2/3 rejetee : ne commence pas par \"Voici pourquoi\" -> \"Le salaire...\")")
+    print("  (tentative 2/3 rejetee : ne commence pas par \"Pourquoi\" -> \"Le salaire...\")")
     time.sleep(STEP)
 if "fatal" in FAULTS:
     print("ECHEC : le script ne commence jamais correctement apres 3 tentatives. Arret.")
     sys.exit(1)
-print("[curious] Voici pourquoi ton salaire disparait si vite.")
+print("[curious] Pourquoi ton salaire disparait-il si vite ?")
 time.sleep(STEP)
 
 if args.mode == "60s":
